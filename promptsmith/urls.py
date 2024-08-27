@@ -20,4 +20,11 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),
+
+    # Even when using headless, the third-party provider endpoints are stil
+    # needed for handling e.g. the OAuth handshake. The account views
+    # can be disabled using `HEADLESS_ONLY = True`.
+    path("accounts/", include("allauth.urls")),
+    # Include the API endpoints:
+    path("api/auth/", include("allauth.headless.urls")),
 ]
