@@ -42,15 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'project.apps.ProjectConfig',
+    'user_organisation.apps.UserOrganisationConfig',
 
     # Required
-    'allauth.account',
-    'allauth.headless',
+    # 'allauth.account',
+    # 'allauth.headless',
 
     # Optional
-    'allauth.socialaccount',
-    'allauth.mfa',
-    'allauth.usersessions',
+    # 'allauth.socialaccount',
+    # 'allauth.mfa',
+    # 'allauth.usersessions',
 ]
 
 MIDDLEWARE = [
