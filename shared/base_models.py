@@ -1,8 +1,8 @@
 from django.db import models
+from django.core.validators import MinLengthValidator
 
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(primary_key=True, editable=False, auto_created=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -10,7 +10,14 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class SoftDeleteBaseModel(BaseModel):
+class UniqueNameBasedBaseModel(BaseModel):
+    unique_key = models.CharField(max_length=512, unique=True, validators=[MinLengthValidator(4)])
+
+    class Meta:
+        abstract = True
+
+
+class SoftDeleteBaseModel(UniqueNameBasedBaseModel):
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def delete(self, *args, **kwargs):
