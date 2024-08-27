@@ -2,7 +2,7 @@ from django.db import models
 from shared.base_models import BaseModel, SoftDeleteBaseModel
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
-from project.models import Project
+# from project.models import Project
 
 
 # Create your models here.
@@ -10,7 +10,7 @@ class Prompt(BaseModel):
     key = models.CharField(max_length=512, unique=True)
     description = models.TextField(max_length=2048)
     enabled = models.BooleanField(default=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.text
