@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'user_organisation.apps.UserOrganisationConfig',
 
     # Required
-    # 'allauth.account',
-    # 'allauth.headless',
+    'allauth.account',
+    'allauth.headless',
 
     # Optional
     # 'allauth.socialaccount',
@@ -63,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'promptsmith.urls'
@@ -149,7 +151,15 @@ HEADLESS_FRONTEND_URLS = {
 }
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True # require by the config above
+ACCOUNT_EMAIL_CONFIRMATION_HMAC = True # default
 HEADLESS_ONLY = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False  # do not send email if account does not exist when reset password
+
+SOCIALACCOUNT_PROVIDERS = {
+
+}
+
+## END Allauth settings
