@@ -1,6 +1,6 @@
 from ninja import Router
-from .schemas import PromptSchema as PromptInSchema, PromptSchema as PromptOutSchema
-from .models import Prompt
+from .models.prompt import Prompt
+from .schemas.prompt import PromptSchema as PromptInSchema, PromptSchema as PromptOutSchema
 from django.shortcuts import get_object_or_404, aget_object_or_404
 
 router = Router()
