@@ -11,7 +11,7 @@ class BaseModel(models.Model):
 
 
 class UniqueNameBasedBaseModel(BaseModel):
-    unique_key = models.CharField(max_length=512, unique=True, validators=[MinLengthValidator(4)])
+    unique_key = models.CharField(max_length=512, unique=True)
 
     class Meta:
         abstract = True
