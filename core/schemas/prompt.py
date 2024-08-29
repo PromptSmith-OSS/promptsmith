@@ -1,5 +1,6 @@
 from ninja import ModelSchema
-from .models import Prompt
+
+from core.models import Prompt
 
 
 class PromptSchema(ModelSchema):
