@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ninja import ModelSchema
+from ninja import ModelSchema, Schema
 from pydantic import constr
 
 from core.models import Prompt
@@ -23,3 +23,9 @@ class PromptSchema(ModelSchema):
 PromptOutSchema = PromptSchema
 
 PromptInSchema = PromptSchema
+
+
+class PromptUpdateSchema(Schema):
+    # unique_key: Optional[constr(max_length=512, min_length=4)] = None
+    description: Optional[str] = None
+    enabled: Optional[bool] = None
