@@ -10,4 +10,4 @@ class PromptVariant(UniqueNameBasedBaseModel):
     percentage = models.FloatField()  # todo give a max and min value
     segment = models.ForeignKey(Segment, on_delete=models.CASCADE, blank=True, null=True)
     # when it is null, it will be random based on percentage
-    selected_version_uuid = models.UUIDField(blank=True, null=True)
+    selected_version_key = models.CharField(blank=True, null=True)
