@@ -9,8 +9,8 @@ from shared.base_models import UniqueNameBasedBaseModel, BaseModel
 
 class Project(UniqueNameBasedBaseModel):
     description = models.TextField(max_length=2048)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, to_field='username')
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, to_field='name')
 
     def __str__(self):
         return self.unique_key

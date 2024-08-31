@@ -5,7 +5,7 @@ from shared.base_models import SoftDeleteBaseModel
 
 
 class PromptVersion(SoftDeleteBaseModel):
-    prompt_variant = models.ForeignKey(PromptVariant, on_delete=models.CASCADE)
+    prompt_variant = models.ForeignKey(PromptVariant, on_delete=models.CASCADE, related_name='versions', to_field='unique_key')
     # created by
     # updated by
     model_name = models.TextField(max_length=128)  # better to provide a list of model names
