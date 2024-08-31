@@ -1,9 +1,20 @@
-from ninja import NinjaAPI
-from core.routers.prompt import prompt_router
+from ninja import NinjaAPI, Router
+
+from core.routers import core_router
 
 api = NinjaAPI(
     version="1.0.0",
     # openapi_url=None, # to disable auto generated openapi docs
 )
 
-api.add_router("/prompt/", prompt_router)
+#  router for management through dashboard and in the future through API
+management_router = Router()
+management_router.add_router("/", core_router)
+
+
+# sdk router, focused on serving the SDK, so mainly for read operations
+sdk_router = Router()
+
+api.add_router("/sdk/", sdk_router)
+
+api.add_router("/m", management_router)

@@ -2,8 +2,11 @@ from ninja import Router
 from ..models.prompt import Prompt
 from ..schemas.prompt import PromptInSchema, PromptOutSchema, PromptUpdateSchema
 from django.shortcuts import get_object_or_404, aget_object_or_404
+from .prompt_variant import prompt_variant_router
 
-prompt_router = Router()
+prompt_router = Router(
+    tags=['Prompt'],
+)
 
 
 @prompt_router.get('/{unique_key}', response=PromptOutSchema)
@@ -43,3 +46,8 @@ async def delete_prompt(request, unique_key: str):
     obj = await aget_object_or_404(Prompt, unique_key=unique_key)
     await obj.adelete()
     return {'success': True}
+
+
+# to make something like /prompt/{prompt_key}/variant/{unique_key}
+prompt_router.add_router("/", prompt_variant_router)
+
