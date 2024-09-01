@@ -1,12 +1,24 @@
+from django.shortcuts import aget_object_or_404
 from ninja import Router
+
+from shared.utils import convert_query_set_to_list
+from .prompt_variant import prompt_variant_router
 from ..models.prompt import Prompt
 from ..schemas.prompt import PromptInSchema, PromptOutSchema, PromptUpdateSchema
-from django.shortcuts import get_object_or_404, aget_object_or_404
-from .prompt_variant import prompt_variant_router
+from typing import List
 
 prompt_router = Router(
     tags=['Prompt'],
 )
+
+
+@prompt_router.get('/', response=List[PromptOutSchema])
+async def get_all_prompts(request):
+    """
+    Get all prompts
+    """
+    qs = Prompt.objects.all()
+    return await convert_query_set_to_list(qs)
 
 
 @prompt_router.get('/{unique_key}', response=PromptOutSchema)
@@ -48,6 +60,5 @@ async def delete_prompt(request, unique_key: str):
     return {'success': True}
 
 
-# to make something like /prompt/{prompt_key}/variant/{unique_key}
+# to make something like /prompt/{prompt_unique_key}/variant/{unique_key}
 prompt_router.add_router("/", prompt_variant_router)
-
