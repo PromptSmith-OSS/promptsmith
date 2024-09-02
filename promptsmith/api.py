@@ -15,6 +15,6 @@ management_router.add_router("/", core_router)
 # sdk router, focused on serving the SDK, so mainly for read operations
 sdk_router = Router()
 
-api.add_router("/sdk/", sdk_router)
+api.add_router("/sdk/", sdk_router) # we use key for sdk
 
-api.add_router("/m", management_router)
+api.add_router("/management", management_router) # we use UUID for management
