@@ -8,6 +8,7 @@ from shared.base_models import UniqueNameBasedBaseModel, BaseModel
 
 
 class Project(UniqueNameBasedBaseModel):
+    unique_key = models.CharField(max_length=512, unique=True, editable=True)
     description = models.TextField(max_length=2048)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, to_field='username')
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, to_field='name')
@@ -23,7 +24,7 @@ class Project(UniqueNameBasedBaseModel):
 
 class ClientPublicKey(BaseModel):
     public_key = models.CharField(max_length=2048, unique=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -37,7 +38,7 @@ class ClientPublicKey(BaseModel):
 
 class ServerPrivateKey(BaseModel):
     private_key = models.CharField(max_length=2048, unique=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

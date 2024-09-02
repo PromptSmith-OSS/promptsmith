@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, \
     Group as Organization  # use default User and Group Model to represent User and Organization
+# todo use extended User and Group model to represent User and Organization
 
 
 # Create your models here.

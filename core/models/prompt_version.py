@@ -1,11 +1,13 @@
 from django.db import models
 
-from .prompt_variant import PromptVariant
 from shared.base_models import SoftDeleteBaseModel
+from .prompt_variant import PromptVariant
 
 
 class PromptVersion(SoftDeleteBaseModel):
-    prompt_variant = models.ForeignKey(PromptVariant, on_delete=models.CASCADE, related_name='versions', to_field='unique_key')
+    name = models.TextField(max_length=128)
+    prompt_variant = models.ForeignKey(PromptVariant, on_delete=models.CASCADE, related_name='versions',
+                                       to_field='uuid')
     # created by
     # updated by
     model_name = models.TextField(max_length=128)  # better to provide a list of model names
@@ -16,6 +18,7 @@ class PromptVersion(SoftDeleteBaseModel):
 
     class Meta:
         indexes = [
-            models.Index(fields=['unique_key']),
-            models.Index(fields=['model_name'])
+            models.Index(fields=['name']),
+            models.Index(fields=['model_name']),
+            models.Index(fields=['prompt_variant']),
         ]

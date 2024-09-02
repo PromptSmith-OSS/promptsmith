@@ -1,15 +1,12 @@
 from typing import Optional
 
-from ninja import ModelSchema, Schema
-from pydantic import constr
+from ninja import ModelSchema
 
 from core.models import PromptVariant
 
-from pydantic import Field
 
-
-
-class PromptVariantSchema(ModelSchema):
+class PromptVariantInSchema(ModelSchema):
+    unique_key: str
     percentage: float
     segment_unique_key: Optional[str]
     selected_version_key: Optional[str]
@@ -19,6 +16,5 @@ class PromptVariantSchema(ModelSchema):
         exclude = ('id',)
 
 
-
-PromptVariantOutSchema = PromptVariantSchema
-PromptVariantInSchema = PromptVariantSchema
+class PromptVariantOutSchema(PromptVariantInSchema):
+    uuid: str
