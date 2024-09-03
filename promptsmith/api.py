@@ -17,4 +17,4 @@ sdk_router = Router()
 
 api.add_router("/sdk/", sdk_router) # we use key for sdk
 
-api.add_router("/management", management_router) # we use UUID for management
+api.add_router("/", management_router) # we use UUID for management
