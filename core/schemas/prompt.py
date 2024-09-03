@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from ninja import ModelSchema, Schema
@@ -5,15 +6,32 @@ from pydantic import constr
 
 from core.models import Prompt
 
+from uuid import UUID
 
-class PromptInSchema(ModelSchema):
+from shared.constants import EXCLUDE_FOR_CREATE, EXCLUDE_FOR_UPDATE, EXCLUDE_FOR_RESPONSE
+
+
+class PromptCreateSchema(ModelSchema):
     unique_key: constr(max_length=512, min_length=4)
     description: str
     enabled: Optional[bool] = True
 
     class Meta:
         model = Prompt
-        exclude = ('id',)
+        exclude = EXCLUDE_FOR_CREATE
 
-class PromptOutSchema(PromptInSchema):
-    uuid: str
+
+class PromptUpdateSchema(Schema):
+    unique_key: Optional[str] = None
+    description: Optional[str] = None
+    enabled: Optional[bool] = None
+
+
+class PromptOutSchema(PromptCreateSchema):
+    uuid: UUID
+    updated_at: datetime
+    created_at: datetime
+
+    class Meta:
+        model = Prompt
+        exclude = EXCLUDE_FOR_RESPONSE
