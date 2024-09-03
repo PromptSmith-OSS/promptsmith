@@ -31,7 +31,7 @@ class PromptOutSchema(PromptCreateSchema):
         exclude = EXCLUDE_FOR_RESPONSE
 
 
-class PromptUpdateSchema(Schema):
+class PromptUpdateSchema(PromptCreateSchema):
     unique_key: Optional[str] = None
     description: Optional[str] = None
     enabled: Optional[bool] = None
