@@ -1,20 +1,50 @@
+from datetime import datetime
 from typing import Optional
 
-from ninja import ModelSchema
+from ninja import ModelSchema, Schema
 
 from core.models import PromptVariant
+from shared.constants import EXCLUDE_FOR_CREATE, EXCLUDE_FOR_RESPONSE, EXCLUDE_FOR_UPDATE
+from pydantic import constr, validator, field_validator
+from uuid import UUID
 
 
-class PromptVariantInSchema(ModelSchema):
-    unique_key: str
+class PromptVariantCreateSchema(ModelSchema):
+    name: constr(max_length=2, min_length=1)
     percentage: float
-    segment_unique_key: Optional[str]
-    selected_version_key: Optional[str]
+    selected_version_uuid: Optional[str] = None
+    segment_id: Optional[str] = None
+
+    @field_validator("name")
+    def validate_name(cls, v):
+        """
+            validate name is uppercase
+        :param v:
+        :return:
+        """
+        if not v.isupper():
+            raise ValueError("name must be uppercase")
+        return v
 
     class Meta:
         model = PromptVariant
-        exclude = ('id',)
+        exclude = EXCLUDE_FOR_CREATE + ('prompt',)
 
 
-class PromptVariantOutSchema(PromptVariantInSchema):
-    uuid: str
+class PromptVariantOutSchema(PromptVariantCreateSchema):
+    uuid: UUID
+    updated_at: datetime
+    created_at: datetime
+    prompt_id: UUID
+    segment_id: Optional[str] = None
+
+    class Meta:
+        model = PromptVariant
+        exclude = EXCLUDE_FOR_RESPONSE
+
+
+class PromptVariantUpdateSchema(PromptVariantCreateSchema):
+    name: Optional[constr(max_length=2, min_length=1)] = None
+    percentage: Optional[float] = None
+    segment_id: Optional[str] = None
+    selected_version_uuid: Optional[str] = None

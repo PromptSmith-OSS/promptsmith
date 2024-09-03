@@ -33,12 +33,7 @@ class PromptVariant(UniqueNameBasedBaseModel):
         ]
 
     def __str__(self):
-        return self.unique_key
-
-    # make sure name always uppercase
-    def save(self, *args, **kwargs):
-        self.name = self.name.upper()
-        super().save(*args, **kwargs)
+        return self.name
 
     def selected_version(self):
         """

@@ -21,12 +21,6 @@ class PromptCreateSchema(ModelSchema):
         exclude = EXCLUDE_FOR_CREATE
 
 
-class PromptUpdateSchema(Schema):
-    unique_key: Optional[str] = None
-    description: Optional[str] = None
-    enabled: Optional[bool] = None
-
-
 class PromptOutSchema(PromptCreateSchema):
     uuid: UUID
     updated_at: datetime
@@ -35,3 +29,9 @@ class PromptOutSchema(PromptCreateSchema):
     class Meta:
         model = Prompt
         exclude = EXCLUDE_FOR_RESPONSE
+
+
+class PromptUpdateSchema(Schema):
+    unique_key: Optional[str] = None
+    description: Optional[str] = None
+    enabled: Optional[bool] = None
