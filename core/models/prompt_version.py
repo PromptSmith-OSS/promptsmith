@@ -10,7 +10,8 @@ class PromptVersion(SoftDeleteBaseModel):
                                to_field='uuid')
     # created by
     # updated by
-    model_name = models.TextField(max_length=128)  # better to provide a list of model names
+    model_name = models.TextField(max_length=128, null=True,
+                                  blank=True)  # This is a label - better to provide a list of model names
     content = models.TextField(max_length=1000000)  # hard limit to 1 million characters
 
     def __str__(self):
