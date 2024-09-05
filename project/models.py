@@ -30,7 +30,6 @@ class ClientPublicKey(BaseModel):
     Client public key
     Public Key, which can be used in Front-End
     Which is used in remote evaluation mode
-    todo enable this
     """
     public_key = models.CharField(max_length=2048, unique=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
@@ -50,6 +49,7 @@ class ServerPrivateKey(BaseModel):
     Server private key
     Private Key, which should be kept secret
     Which is used in local evaluation mode
+    todo enable this
     """
     private_key = models.CharField(max_length=2048, unique=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
