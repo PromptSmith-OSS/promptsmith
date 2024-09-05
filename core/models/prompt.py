@@ -16,5 +16,4 @@ class Prompt(UniqueNameBasedBaseModel):
     class Meta:
         indexes = [
             models.Index(fields=['unique_key']),
-            models.Index(fields=['enabled'])
         ]

@@ -17,8 +17,7 @@ class PromptVersion(SoftDeleteBaseModel):
         return self.unique_key + " - " + self.content[:50]
 
     class Meta:
-        indexes = [
-            models.Index(fields=['name']),
-            models.Index(fields=['model_name']),
-            models.Index(fields=['prompt']),
+        indexes = []
+        constraints = [
+            models.UniqueConstraint(fields=['prompt', 'name'], name='unique_prompt_version_name')
         ]

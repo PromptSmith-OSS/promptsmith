@@ -25,11 +25,9 @@ class PromptVariant(UniqueNameBasedBaseModel):
     selected_version_uuid = models.UUIDField(blank=True, null=True)
 
     class Meta:
-        indexes = [
-            models.Index(fields=['prompt', ]),
-        ]
+        indexes = []
         constraints = [
-            models.UniqueConstraint(fields=['prompt', 'name'], name='unique_prompt_variant_key')
+            models.UniqueConstraint(fields=['prompt', 'name'], name='unique_prompt_variant_name')
         ]
 
     def __str__(self):
