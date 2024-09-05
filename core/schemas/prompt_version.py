@@ -12,7 +12,7 @@ from uuid import UUID
 
 class PromptVersionCreateSchema(ModelSchema):
     name: constr(max_length=128, min_length=4)
-    content: constr(max_length=100000, min_length=1)
+    content: constr(max_length=100000, min_length=1) # limit to 100k characters
     model_name: Optional[constr(max_length=128, min_length=4)] = None
 
     class Meta:

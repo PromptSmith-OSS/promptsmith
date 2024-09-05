@@ -5,6 +5,7 @@ from core.models.prompt_version import PromptVersion
 from core.schemas.prompt_version import PromptVersionCreateSchema, PromptVersionOutSchema, PromptVersionUpdateSchema
 from shared.utils import convert_query_set_to_list
 from uuid import UUID
+from django.shortcuts import aget_object_or_404
 
 version_router = Router(
     tags=['Prompt Version'],
@@ -16,7 +17,7 @@ async def create_version(request, prompt_uuid: UUID, version: PromptVersionCreat
     """
     Create a new version
     """
-    return await PromptVersion.objects.acreate(prompt__uuid=prompt_uuid, **version.dict())
+    return await PromptVersion.objects.acreate(prompt_id=prompt_uuid, **version.dict())
 
 
 @version_router.get('/{prompt_uuid}/version', response=List[PromptVersionOutSchema])
@@ -55,5 +56,5 @@ async def delete_version(request, prompt_uuid: UUID, uuid: UUID):
     Delete a version
     """
     obj = await aget_object_or_404(PromptVersion, prompt__uuid=prompt_uuid, uuid=uuid)
-    await obj.delete()
+    await obj.adelete()
     return {'success': True}

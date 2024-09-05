@@ -18,7 +18,7 @@ async def create_prompt_variant(request, prompt_uuid: UUID, variant: PromptVaria
     """
     Create a new prompt variant
     """
-    new_variant = await PromptVariant.objects.acreate(prompt__uuid=prompt_uuid, **variant.dict())
+    new_variant = await PromptVariant.objects.acreate(prompt_id=prompt_uuid, **variant.dict())
     return new_variant
 
 
