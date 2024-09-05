@@ -1,13 +1,10 @@
 from typing import List
 
-from django.db.models import F
 from django.shortcuts import aget_object_or_404
 from ninja import Router
 
 from core.models.prompt_variant import PromptVariant
-from core.models.prompt import Prompt
-from core.schemas.prompt_variant import PromptVariantOutSchema, PromptVariantCreateSchema, PromptVariantUpdateSchema
-
+from core.schemas.prompt_variant import PromptVariantCreateSchema, PromptVariantOutSchema, PromptVariantUpdateSchema
 from shared.utils import convert_query_set_to_list
 from uuid import UUID
 
@@ -17,7 +14,7 @@ prompt_variant_router = Router(
 
 
 @prompt_variant_router.post('/{prompt_uuid}/variant/', response=PromptVariantOutSchema)
-async def create_prompt_variant(request, prompt_uuid: str, variant: PromptVariantCreateSchema):
+async def create_prompt_variant(request, prompt_uuid: UUID, variant: PromptVariantCreateSchema):
     """
     Create a new prompt variant
     """
@@ -26,7 +23,7 @@ async def create_prompt_variant(request, prompt_uuid: str, variant: PromptVarian
 
 
 @prompt_variant_router.get('/{prompt_uuid}/variant/', response=List[PromptVariantOutSchema])
-async def get_all_prompt_variants(request, prompt_uuid: str):
+async def get_all_prompt_variants(request, prompt_uuid: UUID):
     """
     Get all variants for a prompt
     """
@@ -36,7 +33,7 @@ async def get_all_prompt_variants(request, prompt_uuid: str):
 
 
 @prompt_variant_router.get('/{prompt_uuid}/variant/{uuid}', response=PromptVariantOutSchema)
-async def get_prompt_variant(request, prompt_uuid: str, uuid: str):
+async def get_prompt_variant(request, prompt_uuid: UUID, uuid: UUID):
     """
     Get the prompt variant by uuid
     """
@@ -44,7 +41,7 @@ async def get_prompt_variant(request, prompt_uuid: str, uuid: str):
 
 
 @prompt_variant_router.put('/{prompt_uuid}/variant/{uuid}', response=PromptVariantOutSchema)
-async def update_prompt_variant(request, prompt_uuid: str, uuid: str, variant: PromptVariantUpdateSchema):
+async def update_prompt_variant(request, prompt_uuid: UUID, uuid: UUID, variant: PromptVariantUpdateSchema):
     """
     Update an existing prompt variant
     """
@@ -57,7 +54,7 @@ async def update_prompt_variant(request, prompt_uuid: str, uuid: str, variant: P
 
 
 @prompt_variant_router.delete('/{prompt_uuid}/variant/{uuid}')
-async def delete_prompt_variant(request, prompt_uuid: str, uuid: str):
+async def delete_prompt_variant(request, prompt_uuid: UUID, uuid: UUID):
     """
     Delete a prompt variant
     """

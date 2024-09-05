@@ -1,45 +1,20 @@
 from typing import List
+from uuid import UUID
 
 from django.shortcuts import aget_object_or_404
-from ninja.errors import ValidationError
 from ninja import Router
 from ninja.pagination import paginate
 
-from shared.utils import convert_query_set_to_list
+from core.models.prompt import Prompt
+from core.schemas.prompt import PromptCreateSchema, PromptOutSchema, PromptUpdateSchema
 from shared.errors import raise_duplication_error
+from shared.utils import convert_query_set_to_list
 from .prompt_variant import prompt_variant_router
-from ..models.prompt import Prompt
-from ..schemas.prompt import PromptCreateSchema, PromptOutSchema, PromptUpdateSchema
+from .prompt_version import version_router
 
 prompt_router = Router(
     tags=['Prompt'],
 )
-
-
-@prompt_router.get('/', response=List[PromptOutSchema])
-@paginate
-async def get_all_prompts(request):
-    """
-    Get all prompts
-    """
-    qs = Prompt.objects.all()
-    return await convert_query_set_to_list(qs)
-
-
-@prompt_router.get('/{uuid}', response=PromptOutSchema)
-async def get_prompt(request, uuid: str):
-    """
-    Get the prompt by uuid
-    """
-    return await aget_object_or_404(Prompt, uuid=uuid)
-
-
-@prompt_router.get('/key/{unique_key}', response=PromptOutSchema)
-async def get_prompt_by_key(request, unique_key: str):
-    """
-    Get the prompt by uuid
-    """
-    return await aget_object_or_404(Prompt, unique_key=unique_key)
 
 
 @prompt_router.post('/', response=PromptOutSchema)
@@ -54,8 +29,34 @@ async def create_prompt(request, prompt: PromptCreateSchema):
     return await Prompt.objects.acreate(**prompt.dict())
 
 
+@prompt_router.get('/', response=List[PromptOutSchema])
+@paginate
+async def get_all_prompts(request):
+    """
+    Get all prompts
+    """
+    qs = Prompt.objects.all()
+    return await convert_query_set_to_list(qs)
+
+
+@prompt_router.get('/{uuid}', response=PromptOutSchema)
+async def get_prompt(request, uuid: UUID):
+    """
+    Get the prompt by uuid
+    """
+    return await aget_object_or_404(Prompt, uuid=uuid)
+
+
+@prompt_router.get('/key/{unique_key}', response=PromptOutSchema)
+async def get_prompt_by_key(request, unique_key: str):
+    """
+    Get the prompt by uuid
+    """
+    return await aget_object_or_404(Prompt, unique_key=unique_key)
+
+
 @prompt_router.put('/{uuid}', response=PromptOutSchema)
-async def update_prompt(request, uuid: str, prompt: PromptUpdateSchema):
+async def update_prompt(request, uuid: UUID, prompt: PromptUpdateSchema):
     """
     Update an existing prompt
     """
@@ -69,7 +70,7 @@ async def update_prompt(request, uuid: str, prompt: PromptUpdateSchema):
 
 
 @prompt_router.delete('/{uuid}', response=dict)
-async def delete_prompt(request, uuid: str):
+async def delete_prompt(request, uuid: UUID):
     """
     Delete a prompt
     """
@@ -80,3 +81,4 @@ async def delete_prompt(request, uuid: str):
 
 # to make something like /prompt/{prompt_unique_key}/variant/{unique_key}
 prompt_router.add_router("/", prompt_variant_router)
+prompt_router.add_router("/", version_router)

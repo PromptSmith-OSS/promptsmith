@@ -12,7 +12,7 @@ from uuid import UUID
 
 class PromptVersionCreateSchema(ModelSchema):
     name: constr(max_length=128, min_length=4)
-    content: str
+    content: constr(max_length=100000, min_length=1)
     model_name: Optional[constr(max_length=128, min_length=4)] = None
 
     class Meta:
@@ -33,5 +33,5 @@ class PromptVersionOutSchema(PromptVersionCreateSchema):
 
 class PromptVersionUpdateSchema(PromptVersionCreateSchema):
     name: Optional[constr(max_length=128, min_length=4)] = None
-    content: Optional[str] = None
+    content: Optional[constr(max_length=100000, min_length=1)] = None
     model_name: Optional[constr(max_length=128, min_length=4)] = None
