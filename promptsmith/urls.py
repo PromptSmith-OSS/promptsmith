@@ -17,14 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .api import api
-from .api_sdk import api_sdk
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
 
     path("api/", api.urls),
-    path("api/sdk/", api_sdk.urls),
 
     # Even when using headless, the third-party provider endpoints are stil
     # needed for handling e.g. the OAuth handshake. The account views
