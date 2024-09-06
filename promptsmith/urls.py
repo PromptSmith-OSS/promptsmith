@@ -29,5 +29,5 @@ urlpatterns = [
     # can be disabled using `HEADLESS_ONLY = True`.
     path("accounts/", include("allauth.urls")),
     # # Include the API endpoints:
-    path("api/auth/", include("allauth.headless.urls")),
+    path("auth/", include("allauth.headless.urls")),
 ]
