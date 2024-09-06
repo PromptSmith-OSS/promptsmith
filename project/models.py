@@ -1,13 +1,13 @@
 from django.contrib.auth.models import Group as Organization, User
 from django.db import models
 
-from shared.base_models import UniqueNameBasedBaseModel, BaseModel
+from shared.base_models import UUIDBasedBaseModel, BaseModel
 
 
 # Create your models here.
 
 
-class Project(UniqueNameBasedBaseModel):
+class Project(UUIDBasedBaseModel):
     unique_key = models.CharField(max_length=512, unique=True, editable=True)
     description = models.TextField(max_length=2048)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, to_field='username')

@@ -1,9 +1,9 @@
 from django.db import models
 
-from shared.base_models import UniqueNameBasedBaseModel
+from shared.base_models import UUIDBasedBaseModel
 
 
-class Prompt(UniqueNameBasedBaseModel):
+class Prompt(UUIDBasedBaseModel):
     unique_key = models.CharField(max_length=512, unique=True, editable=True)
     description = models.TextField(max_length=2048)
     enabled = models.BooleanField(default=True)

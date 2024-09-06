@@ -1,10 +1,10 @@
 from django.db import models
 
-from shared.base_models import SoftDeleteBaseModel
+from shared.base_models import SoftDeleteUUIDBaseModel
 from .prompt import Prompt
 
 
-class PromptVersion(SoftDeleteBaseModel):
+class PromptVersion(SoftDeleteUUIDBaseModel):
     name = models.TextField(max_length=128)
     prompt = models.ForeignKey(Prompt, on_delete=models.CASCADE, related_name='versions',
                                to_field='uuid')

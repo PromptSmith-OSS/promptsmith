@@ -2,11 +2,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 
-from shared.base_models import UniqueNameBasedBaseModel
+from shared.base_models import UUIDBasedBaseModel
 from project.models import Project
 
 
-class Segment(UniqueNameBasedBaseModel):
+class Segment(UUIDBasedBaseModel):
     """
     This is the model for the Segment
     We use ArrayField and GinIndex to better performance for Array Field lookups

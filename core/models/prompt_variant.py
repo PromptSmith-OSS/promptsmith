@@ -1,13 +1,13 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from shared.base_models import UniqueNameBasedBaseModel
+from shared.base_models import UUIDBasedBaseModel
 from shared.validators import validate_uppercase_letters
 from .prompt import Prompt
 from .segment import Segment
 
 
-class PromptVariant(UniqueNameBasedBaseModel):
+class PromptVariant(UUIDBasedBaseModel):
     name = models.CharField(max_length=2, editable=True, default='A', validators=[
         validate_uppercase_letters
     ])
