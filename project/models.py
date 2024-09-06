@@ -30,6 +30,7 @@ class ClientPublicKey(BaseModel):
     Client public key
     Public Key, which can be used in Front-End
     Which is used in remote evaluation mode
+    It can only get the prompt based on request body, not the user segment
     """
     public_key = models.CharField(max_length=2048, unique=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
@@ -49,7 +50,7 @@ class ServerPrivateKey(BaseModel):
     Server private key
     Private Key, which should be kept secret
     Which is used in local evaluation mode
-    todo enable this
+    todo - It can get the prompts and the user segment, to calculate the rigth prompt locally
     """
     private_key = models.CharField(max_length=2048, unique=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')

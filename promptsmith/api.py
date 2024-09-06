@@ -1,6 +1,7 @@
 from ninja import NinjaAPI, Router
 from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 from core.routers import core_router
+from core.routers.sdk import sdk_router
 
 """
 Session or cookie based authentication for management API
@@ -20,14 +21,6 @@ management_router = Router(
     auth=None,
 )
 management_router.add_router("/", core_router)
-
-sdk_router = Router(
-    throttle=[
-        AnonRateThrottle('50/s'),
-        AuthRateThrottle('500/s'),
-    ],
-    auth=None,
-)
 
 general_api.add_router("/", management_router)  # we use UUID for management
 general_api.add_router("/sdk/", sdk_router)  # we use key for sdk

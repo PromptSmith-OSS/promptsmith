@@ -2,6 +2,9 @@ from ninja.security import HttpBearer
 from models import ClientPublicKey, ServerPrivateKey
 from django.shortcuts import get_object_or_404
 from ninja.errors import AuthenticationError
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class AuthBearer(HttpBearer):
@@ -21,3 +24,5 @@ class AuthBearer(HttpBearer):
                 return get_object_or_404(ClientPublicKey, public_key=token)
             except ClientPublicKey.DoesNotExist:
                 raise AuthenticationError('Invalid token')
+
+
