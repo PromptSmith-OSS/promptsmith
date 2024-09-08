@@ -20,8 +20,7 @@ class PromptVariant(UUIDBasedBaseModel):
             MinValueValidator(0),  # Minimum value allowed
             MaxValueValidator(100)  # Maximum value allowed
         ])
-    segment = models.ForeignKey(Segment, on_delete=models.CASCADE, blank=True, null=True, to_field='uuid')
-    # when it is null, it will be random based on percentage
+    segment = models.ForeignKey(Segment, on_delete=models.CASCADE, blank=True, null=True, to_field='uuid') # when it is null, it will be random based on percentage
     selected_version_uuid = models.UUIDField(blank=True, null=True)
 
     class Meta:
