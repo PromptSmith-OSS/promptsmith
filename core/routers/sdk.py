@@ -9,7 +9,7 @@ from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
 from core.models import PromptVariant, PromptVersion
 from core.schemas.sdk import PromptSchema
-from core.simple_auth import SimpleAuthBearer
+from core.auth import SDKAuthBearer
 from shared.utils import convert_query_set_to_list
 
 sdk_router = Router(
@@ -18,7 +18,7 @@ sdk_router = Router(
         AnonRateThrottle('50/s'),
         AuthRateThrottle('500/s'),
     ],
-    auth=SimpleAuthBearer(),
+    auth=SDKAuthBearer(),
 )
 
 

@@ -9,8 +9,6 @@ from core.models.prompt import Prompt
 from core.schemas.prompt import PromptCreateSchema, PromptOutSchema, PromptUpdateSchema
 from shared.errors import raise_duplication_error
 from shared.utils import convert_query_set_to_list
-from .prompt_variant import prompt_variant_router
-from .prompt_version import version_router
 
 prompt_router = Router(
     tags=['Prompt'],
@@ -77,8 +75,3 @@ async def delete_prompt(request, uuid: UUID):
     obj = await aget_object_or_404(Prompt, uuid=uuid)
     await obj.adelete()
     return {'success': True}
-
-
-# to make something like /prompt/{prompt_unique_key}/variant/{unique_key}
-prompt_router.add_router("/", prompt_variant_router)
-prompt_router.add_router("/", version_router)

@@ -1,12 +1,12 @@
-import jwt
 import datetime
+import os
+import secrets
 from uuid import UUID
 
-import os
+import jwt
 from dotenv import load_dotenv
 
 load_dotenv()
-import secrets
 
 jwt_secret = os.getenv('JWT_SECRET')
 
