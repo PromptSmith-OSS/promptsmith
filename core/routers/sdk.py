@@ -74,21 +74,31 @@ async def get_prompt(request, prompt_key: str, distinct_id: str = None):
         prompt = await prompt_variant_qs.afirst()
     else:
         # get the random prompt variant based on the percentage
-        prompt_variant_qs = prompt_variant_qs
-
         prompts = await convert_query_set_to_list(prompt_variant_qs.all())
 
         # choose the prompt variant based on the percentage
         prompt = random_choose_variant(prompts)
 
     # use selected version uuid to get the version content
+
+    version_qs = PromptVersion.objects.filter(prompt__unique_key=prompt_key).annotate(
+        prompt_key=models.F('prompt__unique_key'),
+        prompt_description=models.F('prompt__description'),
+    ).values(
+        'uuid',
+        'name',
+        'content',
+        'model_name',
+        'prompt_key',
+        'prompt_description',
+    )
+
     if prompt['selected_version_uuid']:
-        version = await PromptVersion.objects.aget(uuid=prompt['selected_version_uuid'])
+        version = await version_qs.aget(uuid=prompt['selected_version_uuid'])
     else:
         # find latest version
-        version = await PromptVersion.objects.filter(prompt__unique_key=prompt_key).order_by('-created_at').afirst()
+        version = await (version_qs.order_by('-created_at')).afirst()
         if not version:
             raise Http404("Prompt not found")
 
-    prompt['context'] = version.content
-    return prompt
+    return version
