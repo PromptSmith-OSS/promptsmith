@@ -11,6 +11,9 @@ general_api = NinjaAPI(
     version="1.0.0",
     # openapi_url=None, # to disable auto generated openapi docs
 )
+# We have set up CORS in the settings.py file
+# We don't need CSRF, because we are using Bearer token for authentication, Use an authentication method not automatically embedded in the request
+#  https://django-ninja.dev/reference/csrf/
 
 
 @general_api.get("/ping")
