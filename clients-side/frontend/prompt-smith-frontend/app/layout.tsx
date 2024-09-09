@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import {ThemeProvider} from "@/components/client/theme-provider"
 import Head from "next/head";
+import * as React from "react"
+import SideBar from "@/components/layout/sideBar";
+import Header from "@/components/layout/header";
 
 
 const geistSans = localFont({
@@ -19,7 +22,10 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Prompt Smith",
   description: "Manage your AI prompt with ease.",
+  keywords: ["AI", "LLM", "Prompt", "Prompt Smith"],
+
 };
+
 
 export default function RootLayout({
                                      children,
@@ -30,25 +36,10 @@ export default function RootLayout({
     <html lang="en">
     <Head>
       <meta charSet="utf-8"/>
-      <meta
-        name="keywords"
-        key="keywords"
-        content="Blog, content"
-      />
-      <meta
-        name="viewport"
-        key="viewport"
-        content="width=device-width, initial-scale=1.0"
-      />
-      <meta
-        name="description"
-        key="description"
-        content="Welcome to Debjit blog."
-      />
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
     </Head>
     <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased `}
     >
     <ThemeProvider
       attribute="class"
@@ -56,9 +47,18 @@ export default function RootLayout({
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <div className="flex min-h-screen w-full flex-col bg-muted/40">
+        <SideBar/>
+        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+          <Header/>
+          <main >
+            {children}
+          </main>
+        </div>
+      </div>
     </ThemeProvider>
     </body>
     </html>
-  );
+  )
 }
+
