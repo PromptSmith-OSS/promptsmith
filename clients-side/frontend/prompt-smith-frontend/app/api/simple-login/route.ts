@@ -40,5 +40,5 @@ export async function POST(req: Request) {
 
 
   await createSimpleAuthSession(bearerToken);
-  return NextResponse.json({message: 'Logged in successfully'});
+  return NextResponse.redirect('http://localhost:3000/dashboard');
 }
