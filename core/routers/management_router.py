@@ -14,6 +14,17 @@ management_router = Router(
     auth=ManagementAuthBearer(),
 )
 
+
+@management_router.get("/protected-ping")
+def ping(request):
+    """
+    Ping the server - Protected Health Check
+    :param request:
+    :return:
+    """
+    return {"ping": "pong"}
+
+
 management_router.add_router("/prompt/", prompt_router)
 management_router.add_router("/prompt/", prompt_variant_router)
 management_router.add_router("/prompt/", version_router)
