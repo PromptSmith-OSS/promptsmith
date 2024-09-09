@@ -307,6 +307,21 @@ socialaccount = ["pyjwt[crypto] (>=1.7)", "requests (>=2.0.0)", "requests-oauthl
 steam = ["python3-openid (>=3.0.8)"]
 
 [[package]]
+name = "django-cors-headers"
+version = "4.4.0"
+description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_cors_headers-4.4.0-py3-none-any.whl", hash = "sha256:5c6e3b7fe870876a1efdfeb4f433782c3524078fa0dc9e0195f6706ce7a242f6"},
+    {file = "django_cors_headers-4.4.0.tar.gz", hash = "sha256:92cf4633e22af67a230a1456cb1b7a02bb213d6536d2dcb2a4a24092ea9cebc2"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+django = ">=3.2"
+
+[[package]]
 name = "django-ninja"
 version = "1.3.0"
 description = "Django Ninja - Fast Django REST framework"
@@ -967,4 +982,4 @@ lxml = ">=3.8"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "e3f0d6993c1fc573e6c6790aba235e9480f1e29634722077e0afed172697f33f"
+content-hash = "05c9eda6702141047d8614582152b62bce1c0b60d09d8caeae2c9f0bc876df98"
