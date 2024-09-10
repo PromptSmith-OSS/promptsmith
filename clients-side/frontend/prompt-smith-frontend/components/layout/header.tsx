@@ -12,8 +12,15 @@ import {
 import * as React from "react";
 import {ModeToggle} from "@/components/client/theme-toggle";
 import SideBarWithToggleForMobile from "./sideBarWithToggleForMobile";
+import Link from "next/link";
 
 const Header = () => {
+
+  const logout = () => {
+
+
+  }
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <SideBarWithToggleForMobile/>
@@ -47,7 +54,9 @@ const Header = () => {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator/>
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/api/logout">Logout</Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

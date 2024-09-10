@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { deleteSession } from '@/lib/session';
+import {NextResponse} from 'next/server';
+import {deleteSession} from '@/lib/session';
 
 export async function GET() {
   deleteSession();
@@ -8,9 +8,8 @@ export async function GET() {
 }
 
 
-
 export async function POST() {
   deleteSession();
 
-  return NextResponse.json({ message: 'Logged out successfully' });
+  return NextResponse.redirect('http://localhost:3000/login');
 }
