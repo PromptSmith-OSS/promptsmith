@@ -1,7 +1,5 @@
-import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
-import {CircleUser, Home, LineChart, Menu, Package, Package2, Search, ShoppingCart, Users} from "lucide-react";
-import Link from "next/link";
+import {Bell, CircleUser, Search} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -13,9 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import * as React from "react";
 import {ModeToggle} from "@/components/client/theme-toggle";
-import {Badge} from "@/components/ui/badge";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import SideBarWithToggleForMobile  from "./sideBarWithToggleForMobile";
+import SideBarWithToggleForMobile from "./sideBarWithToggleForMobile";
 
 const Header = () => {
   return (
@@ -34,6 +30,10 @@ const Header = () => {
         </form>
       </div>
       <ModeToggle/>
+      <Button variant="outline" size="icon" className="ml-auto h-9 w-9">
+        <Bell className="h-4 w-4"/>
+        <span className="sr-only">Toggle notifications</span>
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">

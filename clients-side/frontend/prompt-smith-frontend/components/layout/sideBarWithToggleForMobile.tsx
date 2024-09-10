@@ -21,7 +21,7 @@ const SideBarWithToggleForMobile = () => {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col bg-muted/90">
+        <SheetContent side="left" className="flex flex-col bg-muted/90 min-w-64">
           <nav className="grid gap-2 text-lg font-medium">
             <Link
               href="#"
@@ -70,11 +70,9 @@ const SideBarWithToggleForMobile = () => {
             </Link>
           </nav>
 
-          <div className="mt-auto">
+          <div className="mt-auto p-4">
             <SideBarUpgradeCard/>
           </div>
-
-
         </SheetContent>
       </Sheet>
     </div>
