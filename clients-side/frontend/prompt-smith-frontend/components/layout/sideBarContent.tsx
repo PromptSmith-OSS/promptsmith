@@ -24,7 +24,7 @@ const SideBarContent = () => {
         {/*  Dashboard*/}
         {/*</Link>*/}
         <Link
-          href="/projects"
+          href="/project"
           className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
         >
           <Package className="h-5 w-5 md:h-4 md:w-4"/>
@@ -34,7 +34,7 @@ const SideBarContent = () => {
           </Badge>
         </Link>
         <Link
-          href="/prompts"
+          href="/prompt"
           className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
         >
           <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
