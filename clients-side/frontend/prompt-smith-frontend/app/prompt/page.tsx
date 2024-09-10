@@ -54,9 +54,27 @@ const invoices = [
   },
 ]
 
-export function TableDemo() {
+const getAllPrompts = async () => {
+  const response = await fetch('http://localhost:3000/api/prompt', {
+    method: 'GET',
+    credentials: 'include' // Ensure cookies are sent with the request
+  })
+  const data = await response.json()
+  return data
+}
+
+
+export async function TableDemo() {
+
+  const prompts = await getAllPrompts()
+
   return (
     <div className='w-full'>
+      <pre>
+        <code>
+          {JSON.stringify(prompts, null, 2)}
+        </code>
+      </pre>
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
