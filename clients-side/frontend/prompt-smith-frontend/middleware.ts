@@ -1,73 +1,69 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {decrypt} from '@/lib/session'
 import {cookies} from 'next/headers'
-
-// 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard', '/logout']
-const publicRoutes = ['/login', '/signup', '/', 'simple-login']
-
-const allowedOrigins = ['https://acme.com', 'https://my-app.org']
-
-const corsOptions = {
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-}
+import {IS_IN_DEVELOPMENT} from "@/lib/utils";
 
 
-const setHeaders = async (request: NextRequest) => {
-  // Check the origin from the request
-  const origin = request.headers.get('origin') ?? ''
-  const isAllowedOrigin = allowedOrigins.includes(origin)
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:8000',].concat(IS_IN_DEVELOPMENT ? ['*'] : [])
 
-  // Handle preflighted requests
-  const isPreflight = request.method === 'OPTIONS'
 
-  if (isPreflight) {
-    const preflightHeaders = {
-      ...(isAllowedOrigin && {'Access-Control-Allow-Origin': origin}),
-      ...corsOptions,
-    }
-    return NextResponse.json({}, {headers: preflightHeaders})
+const apiMiddleware = async (req: NextRequest) => {
+  const origin = req.headers.get('Origin') || '*' // * only be allowed in development
+  if (!allowedOrigins.includes(origin)) {
+    // secure middleware
+    console.error('403 Forbidden', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
+    return new Response('Forbidden', {status: 403})
+  }
+  const auth = req.headers.get('Authorization') || false
+  if (!auth) {
+    // secure auth
+    console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
+    return new Response('Unauthorized', {status: 401})
   }
 
-  // Handle simple requests
+
   const response = NextResponse.next()
 
-  if (isAllowedOrigin) {
-    response.headers.set('Access-Control-Allow-Origin', origin)
+  // Set CORS headers
+  response.headers.set('Access-Control-Allow-Origin', origin)
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+  // Handle preflight request (OPTIONS method)
+  if (req.method === 'OPTIONS') {
+    response.headers.set('Access-Control-Max-Age', '86400') // Cache preflight for 24 hours
+    return new Response(null, {status: 204, headers: response.headers})
   }
-
-  Object.entries(corsOptions).forEach(([key, value]) => {
-    response.headers.set(key, value)
-  })
-
-  const cookie = cookies().get('session')?.value
-  const session = await decrypt(cookie)
-  if (session?.bearerToken) {
-    response.headers.set('Authorization', `Bearer ${session.bearerToken}`)
-  }
-
   return response
 }
 
+/**
+ * Middleware for page routes
+ * Static or Server-Rendered Pages: These pages are loaded directly from the same origin, so CORS doesn't apply in this case.
+ * @param req
+ */
+const pageMiddleware = async (req: NextRequest) => {
 
-const checkRedirect = async (req: NextRequest) => {
+  // 1. Specify protected and public routes
+  const protectedRoutes = ['/dashboard', '/logout']
+  const publicRoutes = ['/login', '/signup', '/', 'simple-login']
 
-  // 2. Check if the current route is protected or public
+
+  // Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
 
-  // 3. Decrypt the session from the cookie
+  // Decrypt the session from the cookie
   const cookie = cookies().get('session')?.value
   const session = await decrypt(cookie)
 
-  // 5. Redirect to /login if the user is not authenticated
+  // Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.bearerToken) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
 
-  // 6. Redirect to /dashboard if the user is authenticated
+  // Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&
     session?.bearerToken &&
@@ -75,18 +71,20 @@ const checkRedirect = async (req: NextRequest) => {
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
   }
-
   return NextResponse.next()
 }
 
-
+/**
+ * Middleware here will be called for both page and api routes requests
+ * @param req
+ */
 export default async function middleware(req: NextRequest) {
-
-
   if (req.nextUrl.pathname.startsWith('/api')) {
-    return setHeaders(req)
+    // we cannot access cookie here, because it not from browser, but from the server rendering the server component pages
+    return apiMiddleware(req)
   } else {
-    return checkRedirect(req)
+    // we can access the cookie session here, because it is directly request from browser
+    return pageMiddleware(req)
   }
 }
 

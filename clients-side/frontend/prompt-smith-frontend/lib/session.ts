@@ -1,7 +1,8 @@
-import 'server-only'
+import 'server-only' // this could not be used in the client side
 import {cookies} from 'next/headers'
 import {SignJWT, jwtVerify} from 'jose'
 import {SessionPayload} from '@/lib/definitions'
+import {IS_IN_DEVELOPMENT} from "@/lib/utils";
 
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
@@ -26,16 +27,20 @@ export async function decrypt(session: string | undefined = '') {
 }
 
 export async function createSimpleAuthSession(bearerToken: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
   const session = await encrypt({bearerToken})
+
+  console.log('session', process.env.NODE_ENV)
 
   cookies().set('session', session, {
     httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: 'lax',
+    secure: !IS_IN_DEVELOPMENT,
+    maxAge: 7 * 24 * 60 * 60,
+    // sameSite: 'lax,
+    sameSite: 'none',
     path: '/',
   })
+
+  console.log('session', cookies().get('session')?.value)
 }
 
 
@@ -60,4 +65,19 @@ export async function updateSimpleAuthSession() {
 
 export function deleteSession() {
   cookies().delete('session')
+}
+
+
+export const getBearerTokenFromSession = async (): Promise<string> => {
+  const cookie = cookies().get('session')?.value
+  if (!cookie) {
+    return ''
+  }
+
+  const session = await decrypt(cookie)
+  if (session?.bearerToken) {
+    return session.bearerToken as string
+  } else {
+    return ''
+  }
 }

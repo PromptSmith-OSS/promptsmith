@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {getBearerTokenFromSession} from "@/lib/session";
 
 const invoices = [
   {
@@ -55,17 +56,18 @@ const invoices = [
 ]
 
 const getAllPrompts = async () => {
+  const token = await getBearerTokenFromSession();
   const response = await fetch('http://localhost:3000/api/prompt', {
     method: 'GET',
-    credentials: 'include' // Ensure cookies are sent with the request
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
   })
   const data = await response.json()
   return data
 }
 
-
 export async function TableDemo() {
-
   const prompts = await getAllPrompts()
 
   return (
