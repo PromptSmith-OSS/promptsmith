@@ -5,6 +5,7 @@ from core.auth import ManagementAuthBearer
 from .prompt import prompt_router
 from .prompt_variant import prompt_variant_router
 from .prompt_version import version_router
+from .prompt_details import prompt_details_router
 
 management_router = Router(
     throttle=[
@@ -25,6 +26,8 @@ def ping(request):
     return {"ping": "pong"}
 
 
+# the core CRUD endpoints
 management_router.add_router("/prompt/", prompt_router)
 management_router.add_router("/prompt/", prompt_variant_router)
 management_router.add_router("/prompt/", version_router)
+management_router.add_router("/prompt-details/", prompt_details_router)
