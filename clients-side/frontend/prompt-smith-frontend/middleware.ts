@@ -17,11 +17,10 @@ const apiMiddleware = async (req: NextRequest) => {
   const auth = req.headers.get('Authorization') || false
   if (!auth) {
     // secure auth
+    // check authorization between server side pages to api routes
     console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
     return new Response('Unauthorized', {status: 401})
   }
-
-
   const response = NextResponse.next()
 
   // Set CORS headers
