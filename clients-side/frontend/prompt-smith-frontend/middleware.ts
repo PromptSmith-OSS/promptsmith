@@ -5,34 +5,47 @@ import {IS_IN_DEVELOPMENT} from "@/lib/utils";
 
 
 const allowedOrigins = ['http://localhost:3000', 'http://localhost:8000',].concat(IS_IN_DEVELOPMENT ? ['*'] : [])
+const authRoutes = ['/login', '/signup']
+const authAPIRoutes = ['/api/login-through-management-key'] // to be same as api route endpoint
 
 
 const apiMiddleware = async (req: NextRequest) => {
-  const origin = req.headers.get('Origin') || '*' // * only be allowed in development
-  if (!allowedOrigins.includes(origin)) {
-    // secure middleware
-    console.error('403 Forbidden', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
-    return new Response('Forbidden', {status: 403})
-  }
-  const auth = req.headers.get('Authorization') || false
-  if (!auth) {
-    // secure auth
-    // check authorization between server side pages to api routes
-    console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
-    return new Response('Unauthorized', {status: 401})
-  }
-  const response = NextResponse.next()
+  const isInPublicRoutes = authAPIRoutes.includes(req.nextUrl.pathname)
 
-  // Set CORS headers
-  response.headers.set('Access-Control-Allow-Origin', origin)
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  let response;
 
-  // Handle preflight request (OPTIONS method)
-  if (req.method === 'OPTIONS') {
-    response.headers.set('Access-Control-Max-Age', '86400') // Cache preflight for 24 hours
-    return new Response(null, {status: 204, headers: response.headers})
+  if (isInPublicRoutes) {
+    // if the route is not protected, then we can skip the auth check
+    response = NextResponse.next()
+  } else {
+    const origin = req.headers.get('Origin') || '*' // * only be allowed in development
+    if (!allowedOrigins.includes(origin)) {
+      // secure middleware
+      console.error('403 Forbidden', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
+      return new Response('Forbidden', {status: 403})
+    }
+    const auth = req.headers.get('Authorization') || false
+    if (!auth) {
+      // secure auth
+      // check authorization between server side pages to api routes
+      console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
+      return new Response('Unauthorized', {status: 401})
+    }
+    response = NextResponse.next()
+
+
+    // Set CORS headers
+    response.headers.set('Access-Control-Allow-Origin', origin)
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+    // Handle preflight request (OPTIONS method)
+    if (req.method === 'OPTIONS') {
+      response.headers.set('Access-Control-Max-Age', '86400') // Cache preflight for 24 hours
+      return new Response(null, {status: 204, headers: response.headers})
+    }
   }
+
   return response
 }
 
@@ -42,16 +55,10 @@ const apiMiddleware = async (req: NextRequest) => {
  * @param req
  */
 const pageMiddleware = async (req: NextRequest) => {
-
-  // 1. Specify protected and public routes
-  const protectedRoutes = ['/dashboard', '/logout']
-  const publicRoutes = ['/login', '/signup', '/', 'simple-login']
-
-
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
+  const isPublicRoute = authRoutes.includes(path)
+  const isProtectedRoute = !isPublicRoute
 
   // Decrypt the session from the cookie
   const cookie = cookies().get('session')?.value

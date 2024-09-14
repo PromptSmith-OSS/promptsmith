@@ -2,14 +2,15 @@ import {NextResponse} from 'next/server';
 import {createSimpleAuthSession} from '@/lib/session';
 import {SimpleSigninSchema} from '@/lib/definitions'
 
+
+/**
+ * Simple key login
+ * @param req
+ * @constructor
+ */
 export async function POST(req: Request) {
-
   const formData = await req.formData();
-  console.log('formData', formData);
-
   const bearerToken = formData.get('bearerToken') as string;
-
-
   const validatedFields = SimpleSigninSchema.safeParse({
     bearerToken,
   })
