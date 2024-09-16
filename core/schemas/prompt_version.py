@@ -24,7 +24,7 @@ class PromptVersionOutSchema(PromptVersionCreateSchema):
     uuid: UUID
     updated_at: datetime
     created_at: datetime
-    prompt_id: UUID
+    prompt_uuid: UUID
 
     class Meta:
         model = PromptVersion

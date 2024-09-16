@@ -8,10 +8,10 @@ from shared.base_models import UUIDBasedBaseModel, BaseModel
 
 
 class Project(UUIDBasedBaseModel):
-    unique_key = models.CharField(max_length=512, unique=True, editable=True)
+    unique_key = models.CharField(max_length=256, unique=True, editable=True)
     description = models.TextField(max_length=2048)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, to_field='username')
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, to_field='name')
+    # created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, to_field='username')
+    # organization = models.ForeignKey(Organization, on_delete=models.CASCADE, to_field='name')
 
     def __str__(self):
         return self.unique_key
@@ -33,8 +33,8 @@ class ClientPublicKey(BaseModel):
     It can only get the prompt based on request body, not the user segment
     """
     public_key = models.CharField(max_length=2048, unique=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.project.unique_key + " " + self.public_key[:10]
@@ -53,8 +53,8 @@ class ServerPrivateKey(BaseModel):
     todo - It can get the prompts and the user segment, to calculate the rigth prompt locally
     """
     private_key = models.CharField(max_length=2048, unique=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, to_field='uuid')
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.project.unique_key + " " + self.private_key[:10]

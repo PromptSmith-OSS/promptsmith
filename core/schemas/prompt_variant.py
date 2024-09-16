@@ -9,11 +9,11 @@ from pydantic import constr, validator, field_validator
 from uuid import UUID
 
 
-class PromptVariantCreateSchema(ModelSchema):
+class PromptVariantCreateSchema(Schema):
     name: constr(max_length=2, min_length=1)
     percentage: float
     selected_version_uuid: Optional[str] = None
-    segment_id: Optional[str] = None
+    segment_uuid: Optional[UUID] = None
 
     @field_validator("name")
     def validate_name(cls, v):
@@ -26,17 +26,13 @@ class PromptVariantCreateSchema(ModelSchema):
             raise ValueError("name must be uppercase")
         return v
 
-    class Meta:
-        model = PromptVariant
-        exclude = EXCLUDE_FOR_CREATE + ('prompt',)
-
 
 class PromptVariantOutSchema(PromptVariantCreateSchema):
     uuid: UUID
     updated_at: datetime
     created_at: datetime
     prompt_uuid: UUID
-    segment_id: Optional[str] = None
+    segment_uuid: Optional[UUID] = None
 
     class Meta:
         model = PromptVariant
@@ -46,5 +42,5 @@ class PromptVariantOutSchema(PromptVariantCreateSchema):
 class PromptVariantUpdateSchema(PromptVariantCreateSchema):
     name: Optional[constr(max_length=2, min_length=1)] = None
     percentage: Optional[float] = None
-    segment_id: Optional[str] = None
+    segment_uuid: Optional[UUID] = None
     selected_version_uuid: Optional[str] = None

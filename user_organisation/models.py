@@ -11,20 +11,20 @@ class Role(models.TextChoices):
     EDITOR = 'e', 'Editor'
     VIEWER = 'v', 'Viewer'
 
-
-class UserPermissionGroup(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    permission = models.CharField(max_length=1, choices=Role.choices, default=Role.VIEWER)
-
-    def __str__(self):
-        return self.user.username
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['user']),
-            models.Index(fields=['organization']),
-        ]
+#
+# class UserPermissionGroup(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+#     permission = models.CharField(max_length=1, choices=Role.choices, default=Role.VIEWER)
+#
+#     def __str__(self):
+#         return self.user.username
+#
+#     class Meta:
+#         indexes = [
+#             models.Index(fields=['user']),
+#             models.Index(fields=['organization']),
+#         ]
 
 
 class DeveloperAPIKey(models.Model):

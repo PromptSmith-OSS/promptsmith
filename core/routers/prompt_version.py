@@ -5,7 +5,8 @@ from core.models.prompt_version import PromptVersion
 from core.schemas.prompt_version import PromptVersionCreateSchema, PromptVersionOutSchema, PromptVersionUpdateSchema
 from shared.utils import convert_query_set_to_list
 from uuid import UUID
-from django.shortcuts import aget_object_or_404
+from django.shortcuts import aget_object_or_404, aget_list_or_404
+from django.db import models
 
 version_router = Router(
     tags=['Prompt Version'],
@@ -17,7 +18,8 @@ async def create_version(request, prompt_uuid: UUID, version: PromptVersionCreat
     """
     Create a new version
     """
-    return await PromptVersion.objects.acreate(prompt_id=prompt_uuid, **version.dict())
+    the_prompt = await aget_object_or_404(Prompt, uuid=prompt_uuid)
+    return await PromptVersion.objects.acreate(prompt=the_prompt, **version.dict())
 
 
 @version_router.get('/{prompt_uuid}/version', response=List[PromptVersionOutSchema])
@@ -25,8 +27,11 @@ async def get_all_versions(request, prompt_uuid: UUID):
     """
     Get all versions for a prompt
     """
-    qs = PromptVersion.objects.filter(prompt__uuid=prompt_uuid).all()
-    return await convert_query_set_to_list(qs)
+
+    qs = PromptVersion.objects.filter(prompt__uuid=prompt_uuid).all().select_related('prompt').annotate(
+        prompt_uuid=models.F('prompt__uuid'),
+    )
+    return await aget_list_or_404(qs)
 
 
 @version_router.get('/{prompt_uuid}/version/{uuid}', response=PromptVersionOutSchema)

@@ -4,11 +4,10 @@ from shared.base_models import UUIDBasedBaseModel
 
 
 class Prompt(UUIDBasedBaseModel):
-    unique_key = models.CharField(max_length=512, unique=True, editable=True)
+    unique_key = models.CharField(max_length=256, unique=True, editable=True)
     description = models.TextField(max_length=2048)
     enabled = models.BooleanField(default=True)
-
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, to_field='uuid')
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.text

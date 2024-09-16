@@ -12,7 +12,7 @@ from shared.constants import EXCLUDE_FOR_CREATE, EXCLUDE_FOR_UPDATE, EXCLUDE_FOR
 
 
 class PromptCreateSchema(ModelSchema):
-    unique_key: constr(max_length=512, min_length=4)
+    unique_key: constr(max_length=256, min_length=4)
     description: str
     enabled: Optional[bool] = True
 

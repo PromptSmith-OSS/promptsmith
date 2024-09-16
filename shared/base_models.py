@@ -13,7 +13,8 @@ class BaseModel(models.Model):
 
 
 class UUIDBasedBaseModel(BaseModel):
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid4, )  # use for external FK reference
+    uuid = models.UUIDField(editable=False, default=uuid4, )  # uneditabe uuid, exposed to the outside world
+
     # unique_key = models.CharField(max_length=512, unique=True,
     #                               editable=True)  # we don't want to use this for external FK reference, because it can be changed
 
