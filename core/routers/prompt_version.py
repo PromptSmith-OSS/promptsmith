@@ -2,11 +2,13 @@ from ninja import Router
 from typing import List
 
 from core.models.prompt_version import PromptVersion
+from core.models.prompt import Prompt
 from core.schemas.prompt_version import PromptVersionCreateSchema, PromptVersionOutSchema, PromptVersionUpdateSchema
 from shared.utils import convert_query_set_to_list
 from uuid import UUID
 from django.shortcuts import aget_object_or_404, aget_list_or_404
 from django.db import models
+from ninja.errors import ValidationError
 
 version_router = Router(
     tags=['Prompt Version'],
@@ -19,7 +21,13 @@ async def create_version(request, prompt_uuid: UUID, version: PromptVersionCreat
     Create a new version
     """
     the_prompt = await aget_object_or_404(Prompt, uuid=prompt_uuid)
-    return await PromptVersion.objects.acreate(prompt=the_prompt, **version.dict())
+
+    # check if the name is unique
+    if await PromptVersion.objects.filter(prompt=the_prompt, name=version.name).aexists():
+        raise ValidationError([{'type': 'duplication', 'name': version.name, 'msg': f'Same name has already existed.'}])
+    obj = await PromptVersion.objects.acreate(prompt=the_prompt, **version.dict())
+    obj.prompt_uuid = the_prompt.uuid
+    return obj
 
 
 @version_router.get('/{prompt_uuid}/version', response=List[PromptVersionOutSchema])
@@ -27,7 +35,6 @@ async def get_all_versions(request, prompt_uuid: UUID):
     """
     Get all versions for a prompt
     """
-
     qs = PromptVersion.objects.filter(prompt__uuid=prompt_uuid).all().select_related('prompt').annotate(
         prompt_uuid=models.F('prompt__uuid'),
     )
@@ -39,7 +46,10 @@ async def get_version(request, prompt_uuid: UUID, uuid: UUID):
     """
     Get the version by uuid
     """
-    return await aget_object_or_404(PromptVersion, prompt__uuid=prompt_uuid, uuid=uuid)
+    qs = PromptVersion.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt').annotate(
+        prompt_uuid=models.F('prompt__uuid'),
+    )
+    return await aget_object_or_404(qs)
 
 
 @version_router.put('/{prompt_uuid}/version/{uuid}', response=PromptVersionOutSchema)
@@ -47,7 +57,10 @@ async def update_version(request, prompt_uuid: UUID, uuid: UUID, version: Prompt
     """
     Update an existing version
     """
-    obj = await aget_object_or_404(PromptVersion, prompt__uuid=prompt_uuid, uuid=uuid)
+    qs = PromptVersion.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt').annotate(
+        prompt_uuid=models.F('prompt__uuid'),
+    )
+    obj = await aget_object_or_404(qs)
     for k, v in version.dict().items():
         if v is not None and k != "uuid":
             setattr(obj, k, v)

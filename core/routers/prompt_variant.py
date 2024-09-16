@@ -9,6 +9,7 @@ from core.schemas.prompt_variant import PromptVariantCreateSchema, PromptVariant
 from shared.utils import convert_query_set_to_list
 from uuid import UUID
 from django.db import models
+from ninja.errors import ValidationError
 
 prompt_variant_router = Router(
     tags=['Prompt Variant'],
@@ -24,8 +25,12 @@ async def create_prompt_variant(request, prompt_uuid: UUID, variant: PromptVaria
         segment = await aget_object_or_404(Segment, uuid=variant.segment_uuid)
         variant.segment = segment
     del variant.segment_uuid
-
     the_prompt = await aget_object_or_404(Prompt, uuid=prompt_uuid)
+
+    # check if the name is unique
+    if await PromptVariant.objects.filter(prompt=the_prompt, name=variant.name).aexists():
+        raise ValidationError([{'type': 'duplication',  'name': version.name, 'msg': f'Same name has already existed.'}])
+
     new_variant = await PromptVariant.objects.acreate(prompt=the_prompt, **variant.dict())
     new_variant.prompt_uuid = the_prompt.uuid
     return new_variant
