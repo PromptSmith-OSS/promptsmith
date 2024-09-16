@@ -35,7 +35,7 @@ class PromptVariantOutSchema(PromptVariantCreateSchema):
     uuid: UUID
     updated_at: datetime
     created_at: datetime
-    prompt_id: UUID
+    prompt_uuid: UUID
     segment_id: Optional[str] = None
 
     class Meta:

@@ -1,12 +1,13 @@
 from typing import List
 
-from django.shortcuts import aget_object_or_404
+from django.shortcuts import aget_object_or_404, aget_list_or_404
 from ninja import Router
 
 from core.models.prompt_variant import PromptVariant
 from core.schemas.prompt_variant import PromptVariantCreateSchema, PromptVariantOutSchema, PromptVariantUpdateSchema
 from shared.utils import convert_query_set_to_list
 from uuid import UUID
+from django.db import models
 
 prompt_variant_router = Router(
     tags=['Prompt Variant'],
@@ -28,8 +29,10 @@ async def get_all_prompt_variants(request, prompt_uuid: UUID):
     Get all variants for a prompt
     """
     # django queryset cannot be used to return as List[PrompVariantOutSchema] directly
-    qs = PromptVariant.objects.filter(prompt__uuid=prompt_uuid).all()
-    return await convert_query_set_to_list(qs)
+    qs = PromptVariant.objects.filter(prompt__uuid=prompt_uuid).all().select_related('prompt').annotate(
+        prompt_uuid=models.F('prompt__uuid'),
+    )
+    return await aget_list_or_404(qs)
 
 
 @prompt_variant_router.get('/{prompt_uuid}/variant/{uuid}', response=PromptVariantOutSchema)
@@ -37,7 +40,10 @@ async def get_prompt_variant(request, prompt_uuid: UUID, uuid: UUID):
     """
     Get the prompt variant by uuid
     """
-    return await aget_object_or_404(PromptVariant, prompt__uuid=prompt_uuid, uuid=uuid)
+    qs = PromptVariant.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt').annotate(
+        prompt_uuid=models.F('prompt__uuid'),
+    )
+    return await aget_object_or_404(qs)
 
 
 @prompt_variant_router.put('/{prompt_uuid}/variant/{uuid}', response=PromptVariantOutSchema)
@@ -45,7 +51,10 @@ async def update_prompt_variant(request, prompt_uuid: UUID, uuid: UUID, variant:
     """
     Update an existing prompt variant
     """
-    obj = await aget_object_or_404(PromptVariant, prompt__uuid=prompt_uuid, uuid=uuid)
+    qs = PromptVariant.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt').annotate(
+        prompt_uuid=models.F('prompt__uuid'),
+    )
+    obj = await aget_object_or_404(qs)
     for k, v in variant.dict().items():
         if v is not None and k != "uuid":
             setattr(obj, k, v)
