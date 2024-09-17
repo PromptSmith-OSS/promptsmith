@@ -81,7 +81,7 @@ async def get_prompt(request, prompt_key: str, distinct_id: str = None, llm_mode
         prompt_variant = await prompt_variant_qs.afirst()
     else:
         # get the random prompt variant based on the weight percentage
-        all_prompt_variants = await agent_list_or_404(prompt_variant_qs)
+        all_prompt_variants = await aget_list_or_404(prompt_variant_qs)
         # choose the prompt variant based on the percentage
         prompt_variant = random_choose_variant(all_prompt_variants)
 
