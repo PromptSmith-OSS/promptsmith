@@ -37,8 +37,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+SITE_DOMAIN = os.getenv('DOMAIN', 'localhost')
 
-CORS_ALLOWED_ORIGINS =[
+CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
@@ -46,16 +47,13 @@ CORS_ALLOWED_ORIGINS =[
 
 ROOT_URLCONF = 'promptsmith.urls'
 
-CSRF_USE_SESSIONS = True
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": '{}/1'.format(os.getenv('REDIS_URL', 'redis://localhost:6379')),
-    }
-}
-
+CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simplify the frontend authentication
+CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+CSRF_COOKIE_DOMAIN = '.{}'.format(SITE_DOMAIN)
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -79,6 +77,7 @@ INSTALLED_APPS = [
     'user_organisation.apps.UserOrganisationConfig',
 
     # Required
+    'allauth',
     'allauth.account',
     'allauth.headless',
 
@@ -88,6 +87,8 @@ INSTALLED_APPS = [
     # 'allauth.usersessions',
 ]
 
+
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -101,13 +102,10 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        "DIRS": [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,6 +129,13 @@ DATABASES = {
         'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
         'NAME': os.getenv('POSTGRES_DB', 'postgres'),
         'USER': os.getenv('POSTGRES_USER', 'postgres'),
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": '{}/1'.format(os.getenv('REDIS_URL', 'redis://localhost:6379')),
     }
 }
 
@@ -173,24 +178,31 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 ## Allauth settings
 # https://docs.allauth.org/en/latest/account/configuration.html
 # https://docs.allauth.org/en/latest/headless/configuration.html
 # These are the URLs to be implemented by your single-page application.
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "https://app.project.org/account/verify-email/{key}",
-    "account_reset_password_from_key": "https://app.org/account/password/reset/key/{key}",
-    "account_signup": "https://app.org/account/signup",
+    # "account_confirm_email": "https://app.project.org/account/verify-email/{key}",
+    # "account_reset_password_from_key": "https://app.org/account/password/reset/key/{key}",
+    # "account_signup": "https://app.org/account/signup",
+    "account_confirm_email": "/account/verify-email/{key}",
+    "account_reset_password": "/account/password/reset",
+    "account_reset_password_from_key": "/account/password/reset/key/{key}",
+    "account_signup": "/account/signup",
+    "socialaccount_login_error": "/account/provider/callback",
 }
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True  # require by the config above
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = True  # default
 HEADLESS_ONLY = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False  # do not send email if account does not exist when reset password
+# USERSESSIONS_ENABLED = True
+
 
 SOCIALACCOUNT_PROVIDERS = {
 

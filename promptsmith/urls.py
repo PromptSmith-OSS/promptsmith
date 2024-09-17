@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .api import api
+from allauth.headless.account.views import SignupView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +30,7 @@ urlpatterns = [
     # can be disabled using `HEADLESS_ONLY = True`.
     path("accounts/", include("allauth.urls")),
     # # Include the API endpoints:
+
+    path("auth/browser/", include("allauth.headless.urls")),
     path("auth/", include("allauth.headless.urls")),
 ]

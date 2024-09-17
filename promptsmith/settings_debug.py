@@ -8,3 +8,11 @@ if DEBUG or RUNNING_DEVELOPMENT_SERVER:
         }
     }
     SESSION_ENGINE = "django.contrib.sessions.backends.file"
+
+
+    CSRF_COOKIE_SECURE = False # not using https
+
+    ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+
+
