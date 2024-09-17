@@ -13,5 +13,9 @@ class PromptSchema(Schema):
     prompt_description: Optional[str] = None
     name: str
 
+    # from variant
+    llm_model_name: Optional[str] = None
+
+    # from version
     content: str
-    model_name: Optional[str] = None
+
