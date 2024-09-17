@@ -1,4 +1,4 @@
-from user_organisation.models import Organization, User
+from user_organization.models import Organization, User
 from django.db import models
 
 from shared.base_models import UUIDBasedBaseModel, BaseModel
@@ -11,7 +11,7 @@ class Project(UUIDBasedBaseModel):
     unique_key = models.CharField(max_length=256, unique=True, editable=True)
     description = models.TextField(max_length=2048)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    # organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.unique_key

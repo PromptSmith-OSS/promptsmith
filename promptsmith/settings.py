@@ -31,6 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'prompt_smith')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False) == '1'
 RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
+ENABLE_DJANO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -75,7 +76,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'core.apps.CoreConfig',
     'project.apps.ProjectConfig',
-    'user_organisation.apps.UserOrganisationConfig',
+    'user_organization.apps.UserOrganisationConfig',
 
     # mailer
     "mailer",
