@@ -32,12 +32,12 @@ class Command(BaseCommand):
         try:
             # Use transaction.atomic() to wrap the operations in a single transaction
             with transaction.atomic():
-                # is_user_table_empty = User.objects.count() == 0
-                # is_org_table_empty = Organization.objects.count() == 0
-                #
-                # if not is_user_table_empty or not is_org_table_empty:
-                #     raise ValueError(
-                #         'User or Organization table is not empty, you have already initialized the user and organization')
+                is_user_table_empty = User.objects.count() == 0
+                is_org_table_empty = Organization.objects.count() == 0
+
+                if not is_user_table_empty or not is_org_table_empty:
+                    raise ValueError(
+                        'User or Organization table is not empty, you have already initialized the user and organization')
 
                 # Create user
                 existing_user = User.objects.filter(Q(email=email) | Q(username=username)).exists()
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 # Create organisation
                 if Organization.objects.filter(name=org_name).exists():
                     raise ValueError(f"Organization {org_name} already exists")
-                organization = Organization.objects.create(name=org_name, address=org_address,
+                organization = Organization.objects.create(name=org_name,
                                                            description=org_description)
                 organization.save()
                 self.stdout.write(self.style.SUCCESS(f'Organization {org_name} created successfully!'))
