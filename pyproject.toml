@@ -15,6 +15,7 @@ python3-saml = "^1.16.0"
 django-allauth = { version = "^64.2.1", extras = ["socialaccount"] }
 python-dotenv = "^1.0.1"
 django-cors-headers = "^4.4.0"
+django-mailer = "^2.3.2"
 
 
 [build-system]

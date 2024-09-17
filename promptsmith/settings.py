@@ -77,6 +77,9 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'user_organisation.apps.UserOrganisationConfig',
 
+    # mailer
+    "mailer",
+
     # Required
     'allauth',
     'allauth.account',
@@ -87,7 +90,6 @@ INSTALLED_APPS = [
     # 'allauth.mfa',
     # 'allauth.usersessions',
 ]
-
 
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 MIDDLEWARE = [
@@ -210,3 +212,45 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 ## END Allauth settings
+
+
+## START Email settings
+MAILER_EMAIL_MAX_RETRIES = 1
+MAILER_EMAIL_MAX_BATCH = 1  # this will be honoured however, but not efficient on runmailer_pg
+MAILER_EMAIL_LOG_MESSAGE_DATA = False  # don't log the email content, we can see in resend anyway
+MAILER_EMPTY_QUEUE_SLEEP = 60  # check to send email every 60 seconds
+MAILER_EMAIL_THROTTLE = 1  # wait 1 second between sending each email
+
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" # django default smtp email backend, send in sync
+EMAIL_BACKEND = "mailer.backend.DbBackend"  # mailer, run in async
+
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', '')
+EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True) != 'False'
+
+## END Email settings
+
+
+
+
+
+
+
+# setting in local development and debug mode
+if DEBUG or RUNNING_DEVELOPMENT_SERVER:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
+    SESSION_ENGINE = "django.contrib.sessions.backends.file"
+
+    CSRF_COOKIE_SECURE = False  # not using https
+
+    ACCOUNT_EMAIL_VERIFICATION = 'optional'
+    CSRF_COOKIE_DOMAIN = 'localhost'
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
