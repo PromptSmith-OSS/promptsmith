@@ -9,6 +9,8 @@ class Organization(UUIDBasedBaseModel):
     This is the model for the Organization
     """
     name = models.CharField(max_length=255)
+    description = models.TextField(max_length=512, blank=True)
+    address = models.TextField(max_length=256, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
