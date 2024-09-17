@@ -18,19 +18,45 @@ from django.contrib import admin
 from django.urls import path, include
 from .api import api
 from allauth.headless.account.views import SignupView
+from django.http import JsonResponse
+
+from django.http import JsonResponse
+
+
+def get_csrf_token_view(request):
+    return JsonResponse({
+        "status": "ok",
+    }, status=200)
+
+
+def overrider_configuration_view(request):
+    """
+    Do not expose all auth headless congifuration to the public
+    Even there is no sensitive data, it is better to hide it
+    :param request:
+    :return:
+    """
+    data = {
+        "status": "ok"
+    }
+    # Return the response with a 200 OK status
+    return JsonResponse(data, status=200)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-
     path("api/", api.urls),
 
     # Even when using headless, the third-party provider endpoints are stil
     # needed for handling e.g. the OAuth handshake. The account views
     # can be disabled using `HEADLESS_ONLY = True`.
     path("accounts/", include("allauth.urls")),
-    # # Include the API endpoints:
 
-    path("auth/browser/", include("allauth.headless.urls")),
+    path("auth/browser/v1/config", overrider_configuration_view),
+    path("auth/app/v1/config", overrider_configuration_view),
+
+    path("auth/browser/init/", get_csrf_token_view),
+
+    # Include the API endpoints:
     path("auth/", include("allauth.headless.urls")),
 ]

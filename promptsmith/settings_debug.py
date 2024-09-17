@@ -13,6 +13,5 @@ if DEBUG or RUNNING_DEVELOPMENT_SERVER:
     CSRF_COOKIE_SECURE = False # not using https
 
     ACCOUNT_EMAIL_VERIFICATION = 'none'
-
-
+    CSRF_COOKIE_DOMAIN = 'localhost'
 
