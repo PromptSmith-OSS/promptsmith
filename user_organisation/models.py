@@ -1,35 +1,46 @@
+from django.contrib.auth.models import User, AbstractUser  # use default User Model to represent User
 from django.db import models
-from django.contrib.auth.models import User, \
-    Group as Organization  # use default User and Group Model to represent User and Organization
-# todo use extended User and Group model to represent User and Organization
+
+from shared.base_models import UUIDBasedBaseModel
 
 
-# Create your models here.
+class Organization(UUIDBasedBaseModel):
+    """
+    This is the model for the Organization
+    """
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Role(models.TextChoices):
     OWNER = 'o', 'Owner'
     EDITOR = 'e', 'Editor'
     VIEWER = 'v', 'Viewer'
 
-#
-# class UserPermissionGroup(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-#     permission = models.CharField(max_length=1, choices=Role.choices, default=Role.VIEWER)
-#
-#     def __str__(self):
-#         return self.user.username
-#
-#     class Meta:
-#         indexes = [
-#             models.Index(fields=['user']),
-#             models.Index(fields=['organization']),
-#         ]
+
+class UserPermissionOrganization(models.Model):
+    """
+    Intermediate model for User and Organization to contain the user role
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    user_role = models.CharField(max_length=1, choices=Role.choices, default=Role.VIEWER)
+
+    def __str__(self):
+        return self.user.username
 
 
 class DeveloperAPIKey(models.Model):
     """
-    This is the model for the DeveloperAPIKey
-    to be defined
+    This is the model for the Developer API Key
+    This could be used to be authenticated as a user
     """
-    pass
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    key = models.CharField(max_length=255)
+    api_key_role = models.CharField(max_length=1, choices=Role.choices, default=Role.VIEWER)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
