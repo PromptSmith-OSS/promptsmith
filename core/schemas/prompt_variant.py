@@ -14,6 +14,7 @@ class PromptVariantCreateSchema(Schema):
     percentage: float
     selected_version_uuid: Optional[str] = None
     segment_uuid: Optional[UUID] = None
+    llm_model_name: Optional[str] = None
 
     @field_validator("name")
     def validate_name(cls, v):

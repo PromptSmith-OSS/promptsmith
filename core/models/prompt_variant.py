@@ -22,6 +22,8 @@ class PromptVariant(UUIDBasedBaseModel):
         ])
     segment = models.ForeignKey(Segment, on_delete=models.CASCADE, blank=True, null=True) # when it is null, it will be random based on percentage
     selected_version_uuid = models.UUIDField(blank=True, null=True)
+    llm_model_name = models.TextField(max_length=128, null=True,
+                                  blank=True)
 
     class Meta:
         indexes = []
