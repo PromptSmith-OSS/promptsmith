@@ -21,11 +21,16 @@ from allauth.headless.account.views import SignupView, LoginView
 from django.http import JsonResponse
 from django.conf import settings
 
+from django.middleware.csrf import get_token
+
 
 def get_csrf_token_view(request):
+    get_token(request) # not sure why, if we do not call this, the csrf token will not be set
     return JsonResponse({
         "status": "ok",
-    }, status=200)
+    },
+        status=200,
+    )
 
 
 def overrider_configuration_view(request):

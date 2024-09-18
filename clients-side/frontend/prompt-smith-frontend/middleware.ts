@@ -24,13 +24,13 @@ const apiMiddleware = async (req: NextRequest) => {
       console.error('403 Forbidden', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
       return new Response('Forbidden', {status: 403})
     }
-    const auth = req.headers.get('Authorization') || false
-    if (!auth) {
-      // secure auth
-      // check authorization between server side pages to api routes
-      console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
-      return new Response('Unauthorized', {status: 401})
-    }
+    // const auth = req.headers.get('Authorization') || false
+    // if (!auth) {
+    //   // secure auth
+    //   // check authorization between server side pages to api routes
+    //   console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
+    //   return new Response('Unauthorized', {status: 401})
+    // }
     response = NextResponse.next()
 
 

@@ -38,10 +38,14 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+from corsheaders.defaults import default_headers
+
 SITE_DOMAIN = os.getenv('DOMAIN', 'localhost')
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
@@ -96,12 +100,13 @@ ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 
     "allauth.account.middleware.AccountMiddleware",
 ]
@@ -235,11 +240,6 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True) != 'False'
 ## END Email settings
 
 
-
-
-
-
-
 # setting in local development and debug mode
 if DEBUG or RUNNING_DEVELOPMENT_SERVER:
     CACHES = {
@@ -247,11 +247,13 @@ if DEBUG or RUNNING_DEVELOPMENT_SERVER:
             "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         }
     }
-    SESSION_ENGINE = "django.contrib.sessions.backends.file"
 
+    SESSION_ENGINE = "django.contrib.sessions.backends.file"  # use file session for development, we cannot use cache, because it will be deleted immediately
+
+    SESSION_COOKIE_SECURE = False  # not using https
     CSRF_COOKIE_SECURE = False  # not using https
+    CSRF_COOKIE_DOMAIN = 'localhost'
 
     ACCOUNT_EMAIL_VERIFICATION = 'optional'
-    CSRF_COOKIE_DOMAIN = 'localhost'
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

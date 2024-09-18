@@ -1,3 +1,4 @@
+
 import {Button} from "@/components/ui/button"
 import {
   Card,
@@ -9,12 +10,18 @@ import {
 } from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
+import CSRFInit from "@/components/client/csrf-init"
+
 
 
 function LoginForm() {
+
+
+
   return (
     <div
       className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <CSRFInit/>
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Card className="w-full max-w-sm">
           <form action="/api/login-through-management-key" method="POST">
