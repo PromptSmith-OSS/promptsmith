@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from .api import api
 from allauth.headless.account.views import SignupView, LoginView
 from django.http import JsonResponse
@@ -24,10 +24,13 @@ from django.conf import settings
 from django.middleware.csrf import get_token
 
 
-def get_csrf_token_view(request):
-    get_token(request) # not sure why, if we do not call this, the csrf token will not be set
+def get_csrf_token_view(request, client):
+    # Ensure the CSRF token is set
+    get_token(request)
+
     return JsonResponse({
         "status": "ok",
+        "client": client,  # Include the client parameter in the response
     },
         status=200,
     )
@@ -47,6 +50,23 @@ def overrider_configuration_view(request):
     return JsonResponse(data, status=200)
 
 
+def not_found_view(request, *args, **kwargs):
+    return JsonResponse(
+        {'error': 'Not found'},
+        status=404  # Or another appropriate status code
+    )
+
+
+from django.http import JsonResponse
+
+
+def unsupported_view(request, *args, **kwargs):
+    return JsonResponse(
+        {'error': 'Unsupported'},
+        status=405  # Or another appropriate status code
+    )
+
+
 urlpatterns = [
     path("api/", api.urls),
 
@@ -55,16 +75,24 @@ urlpatterns = [
     # can be disabled using `HEADLESS_ONLY = True`.
     path("accounts/", include("allauth.urls")),
 
-    path("auth/browser/v1/config", overrider_configuration_view),
-    path("auth/app/v1/config", overrider_configuration_view),
+    # override url start with 'app' to unsupported
+    # re_path(r'^auth/app/.*$', unsupported_view),  # disable app related url for now
 
-    path("auth/browser/init/", get_csrf_token_view),
+    path("auth/browser/v1/config", overrider_configuration_view),
+
+    re_path(r'^auth/(?P<client>browser|app)/init/$', get_csrf_token_view),
 
     # Include the API endpoints:
     path("auth/", include("allauth.headless.urls")),
+
 ]
 
 if settings.DEBUG:
     urlpatterns += [
         path("admin/", admin.site.urls),
     ]
+
+urlpatterns += [
+    # Catch all other URLs and return a RESTful 404
+    re_path(r".*", not_found_view),
+]
