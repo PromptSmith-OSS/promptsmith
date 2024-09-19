@@ -1,14 +1,16 @@
 'use client'
 import {useEffect} from "react";
-import {getCSRFToken} from "@/lib/session";
+
+
+import {getCSRFToken} from "@/lib/auth/cookieUtils";
 
 
 const CSRFInit = () => {
-  const url = 'http://localhost:8000/auth/browser/init/'
+  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
     // fetch init url to set up csrf and session cookie
-    fetch(url, {
+    fetch(`${url}/auth/browser/init/`, {
       method: 'GET',
       credentials: 'include', // Ensures cookies are included in the request
       headers: {
@@ -35,10 +37,10 @@ const CSRFInit = () => {
 
   const loginIn = async () => {
 
-    const csrfValue = getCSRFToken()
+    const csrfValue = getCSRFToken() || ''
 
     //   login through email and password
-    fetch('http://localhost:8000/auth/browser/v1/auth/login', {
+    fetch(`${url}/auth/browser/v1/auth/login`, {
       method: 'POST',
       credentials: 'include',
       headers: {
