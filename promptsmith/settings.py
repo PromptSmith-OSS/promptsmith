@@ -54,12 +54,15 @@ ROOT_URLCONF = 'promptsmith.urls'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_COOKIE_DOMAIN = SITE_DOMAIN
+SESSION_COOKIE_SAMESITE = 'Lax' # default
 
 CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simplify the frontend authentication
 CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
 CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CSRF_COOKIE_DOMAIN = '{}'.format(SITE_DOMAIN)
+CSRF_COOKIE_SAMESITE = 'Lax'  # default
+
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -254,6 +257,11 @@ if DEBUG or RUNNING_DEVELOPMENT_SERVER:
     CSRF_COOKIE_SECURE = False  # not using https
     CSRF_COOKIE_DOMAIN = 'localhost'
 
+    # CSRF_COOKIE_SAMESITE = 'None'
+    # SESSION_COOKIE_SAMESITE = 'None'
+
     ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+    CORS_ALLOW_ALL_ORIGINS = True

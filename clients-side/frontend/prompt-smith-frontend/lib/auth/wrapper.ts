@@ -10,8 +10,30 @@ const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const BASE_URL = `${url}/auth/${CLIENT}/v1`
 const ACCEPT_JSON = {
-  accept: 'application/json'
+  accept: 'application/json',
 }
+
+interface PayloadBody extends Record<string, unknown> {
+}
+
+interface Headers extends Record<string, string> {
+}
+
+
+
+interface RequestOptions {
+    method: string;
+    headers: {
+      accept?: string;
+      'X-CSRFToken'?: string;
+      'Content-Type'?: string;
+      'X-Email-Verification-Key'?: string;
+      'X-Password-Reset-Key'?: string;
+
+    };
+    credentials?: string;
+    body?: string;
+  }
 
 export const AuthProcess = Object.freeze({
   LOGIN: 'login',
@@ -33,6 +55,7 @@ export const Flows = Object.freeze({
 export const URLs = Object.freeze({
   // Meta
   CONFIG: BASE_URL + '/config',
+  INIT: url + '/auth/browser/init/',
 
   // Account management
   CHANGE_PASSWORD: BASE_URL + '/account/password/change',
@@ -80,11 +103,7 @@ export const AuthenticatorType = Object.freeze({
   WEBAUTHN: 'webauthn'
 })
 
-interface PayloadBody extends Record<string, unknown> {
-}
 
-interface Headers extends Record<string, string> {
-}
 
 function postForm(action: string, data: PayloadBody) {
   const f = document.createElement('form')
@@ -104,27 +123,17 @@ function postForm(action: string, data: PayloadBody) {
 
 
 async function request(method: string, path: string, data?: PayloadBody, headers?: Headers) {
-  const options: {
-    method: string;
-    headers: {
-      accept?: string;
-      'X-CSRFToken'?: string;
-      'Content-Type'?: string;
-      'X-Email-Verification-Key'?: string;
-      'X-Password-Reset-Key'?: string;
-
-    };
-    body?: string;
-  } = {
+  const options: RequestOptions = {
     method,
     headers: {
       ...ACCEPT_JSON,
       ...headers
     },
+    credentials: 'include',
     body: undefined
   }
   // Don't pass along authentication related headers to the config endpoint.
-  if (path !== URLs.CONFIG) {
+  if (path !== URLs.CONFIG && path !== URLs.INIT) {
     options.headers['X-CSRFToken'] = getCSRFToken()
   }
 
@@ -132,11 +141,12 @@ async function request(method: string, path: string, data?: PayloadBody, headers
     options.body = JSON.stringify(data)
     options.headers['Content-Type'] = 'application/json'
   }
-  const resp = await fetch(path, options)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  const resp = await fetch(path, options as RequestOptions )
   const msg = await resp.json()
   if (msg.status === 410) {
     if (typeof window !== 'undefined') {
-
       const tokenStorage = window?.sessionStorage
       tokenStorage.removeItem('sessionToken')
     }
@@ -157,6 +167,7 @@ async function request(method: string, path: string, data?: PayloadBody, headers
 export async function login(data: PayloadBody) {
   return await request('POST', URLs.LOGIN, data)
 }
+
 
 export async function reauthenticate(data: PayloadBody) {
   return await request('POST', URLs.REAUTHENTICATE, data)
@@ -244,6 +255,10 @@ export async function generateRecoveryCodes() {
 
 export async function getConfig() {
   return await request('GET', URLs.CONFIG)
+}
+
+export async function init() {
+  return await request('GET', URLs.INIT)
 }
 
 export async function addEmail(email: string) {

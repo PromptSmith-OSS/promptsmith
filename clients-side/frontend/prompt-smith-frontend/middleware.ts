@@ -65,9 +65,9 @@ const pageMiddleware = async (req: NextRequest) => {
   const session = await decrypt(cookie)
 
   // Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.bearerToken) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
-  }
+  // if (isProtectedRoute && !session?.bearerToken) {
+  //   return NextResponse.redirect(new URL('/login', req.nextUrl))
+  // }
 
   // Redirect to /dashboard if the user is authenticated
   if (

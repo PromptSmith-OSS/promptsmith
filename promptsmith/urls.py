@@ -67,6 +67,7 @@ def unsupported_view(request, *args, **kwargs):
     )
 
 
+
 urlpatterns = [
     path("api/", api.urls),
 

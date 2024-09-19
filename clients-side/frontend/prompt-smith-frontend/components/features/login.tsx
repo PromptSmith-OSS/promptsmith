@@ -1,12 +1,12 @@
-'user client'
+'use client'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import CSRFInit from "@/components/client/csrf-init";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 
-import { login } from "@/lib/auth/wrapper";
-import {useState} from "react";
+import {login, init, logout} from "@/lib/auth/wrapper";
+import {useEffect, useState} from "react";
 
 const Login = () => {
 
@@ -14,6 +14,11 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [response, setResponse] = useState({ fetching: false, content: null })
   // const config = useConfig()
+
+  useEffect(() => {
+    init()
+  }, [])
+
 
   const submit = async () => {
     setResponse({ ...response, fetching: true })
@@ -59,6 +64,7 @@ const Login = () => {
           </CardContent>
           <CardFooter>
             <Button className="w-full" onClick={submit}>Sign in</Button>
+            <Button className="w-full" onClick={logout}>Logout</Button>
           </CardFooter>
       </Card>
     </main>
