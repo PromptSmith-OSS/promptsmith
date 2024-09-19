@@ -4,14 +4,13 @@ from typing import List
 from django.db import models
 # import 404 error
 from django.http import Http404
+from django.shortcuts import aget_list_or_404
 from ninja import Router
 from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
+from core.auth import SDKAuthBearer
 from core.models import PromptVariant, PromptVersion
 from core.schemas.sdk import PromptSchema
-from core.auth import SDKAuthBearer
-from shared.utils import convert_query_set_to_list
-from django.shortcuts import aget_list_or_404
 
 sdk_router = Router(
     tags=['SDK'],

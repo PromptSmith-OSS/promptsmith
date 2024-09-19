@@ -1,14 +1,13 @@
 from typing import List
 from uuid import UUID
 
-from django.shortcuts import aget_object_or_404
+from django.shortcuts import aget_object_or_404, aget_list_or_404
 from ninja import Router
 from ninja.pagination import paginate
 
 from core.models.prompt import Prompt
 from core.schemas.prompt import PromptCreateSchema, PromptOutSchema, PromptUpdateSchema
 from shared.errors import raise_duplication_error
-from shared.utils import convert_query_set_to_list
 
 prompt_router = Router(
     tags=['Prompt'],
@@ -34,7 +33,7 @@ async def get_all_prompts(request):
     Get all prompts
     """
     qs = Prompt.objects.all()
-    return await convert_query_set_to_list(qs)
+    return await aget_list_or_404(qs)
 
 
 @prompt_router.get('/{uuid}', response=PromptOutSchema)

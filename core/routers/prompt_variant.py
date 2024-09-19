@@ -1,15 +1,14 @@
 from typing import List
+from uuid import UUID
 
+from django.db import models
 from django.shortcuts import aget_object_or_404, aget_list_or_404
 from ninja import Router
-
-from core.models.prompt_variant import PromptVariant
-from core.models.prompt import Prompt
-from core.schemas.prompt_variant import PromptVariantCreateSchema, PromptVariantOutSchema, PromptVariantUpdateSchema
-from shared.utils import convert_query_set_to_list
-from uuid import UUID
-from django.db import models
 from ninja.errors import ValidationError
+
+from core.models.prompt import Prompt
+from core.models.prompt_variant import PromptVariant
+from core.schemas.prompt_variant import PromptVariantCreateSchema, PromptVariantOutSchema, PromptVariantUpdateSchema
 
 prompt_variant_router = Router(
     tags=['Prompt Variant'],
