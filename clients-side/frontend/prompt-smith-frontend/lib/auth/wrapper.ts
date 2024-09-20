@@ -6,9 +6,9 @@ import {getCSRFToken} from './cookieUtils'
 
 const CLIENT = 'browser'
 
-const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL + '/api/bff';
 
-const BASE_URL = `${url}/auth/${CLIENT}/v1`
+const BASE_URL = `${siteUrl}/auth/${CLIENT}/v1`
 const ACCEPT_JSON = {
   accept: 'application/json',
 }
@@ -20,20 +20,19 @@ interface Headers extends Record<string, string> {
 }
 
 
-
 interface RequestOptions {
-    method: string;
-    headers: {
-      accept?: string;
-      'X-CSRFToken'?: string;
-      'Content-Type'?: string;
-      'X-Email-Verification-Key'?: string;
-      'X-Password-Reset-Key'?: string;
+  method: string;
+  headers: {
+    accept?: string;
+    'X-CSRFToken'?: string;
+    'Content-Type'?: string;
+    'X-Email-Verification-Key'?: string;
+    'X-Password-Reset-Key'?: string;
 
-    };
-    credentials?: string;
-    body?: string;
-  }
+  };
+  credentials?: string;
+  body?: string;
+}
 
 export const AuthProcess = Object.freeze({
   LOGIN: 'login',
@@ -55,7 +54,7 @@ export const Flows = Object.freeze({
 export const URLs = Object.freeze({
   // Meta
   CONFIG: BASE_URL + '/config',
-  INIT: url + '/auth/browser/init/',
+  INIT: siteUrl + '/auth/browser/init',
 
   // Account management
   CHANGE_PASSWORD: BASE_URL + '/account/password/change',
@@ -104,7 +103,6 @@ export const AuthenticatorType = Object.freeze({
 })
 
 
-
 function postForm(action: string, data: PayloadBody) {
   const f = document.createElement('form')
   f.method = 'POST'
@@ -143,7 +141,7 @@ async function request(method: string, path: string, data?: PayloadBody, headers
   }
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
-  const resp = await fetch(path, options as RequestOptions )
+  const resp = await fetch(path, options as RequestOptions)
   const msg = await resp.json()
   if (msg.status === 410) {
     if (typeof window !== 'undefined') {

@@ -67,9 +67,13 @@ def unsupported_view(request, *args, **kwargs):
     )
 
 
-
 urlpatterns = [
-    path("api/", api.urls),
+    path("api/", api.urls),  # API related urls have trailing slash
+
+]
+
+urlpatterns += [
+    # Auth related urls, withour trailing slash
 
     # Even when using headless, the third-party provider endpoints are stil
     # needed for handling e.g. the OAuth handshake. The account views
@@ -81,11 +85,10 @@ urlpatterns = [
 
     path("auth/browser/v1/config", overrider_configuration_view),
 
-    re_path(r'^auth/(?P<client>browser|app)/init/$', get_csrf_token_view),
+    re_path(r'^auth/(?P<client>browser|app)/init$', get_csrf_token_view),
 
     # Include the API endpoints:
     path("auth/", include("allauth.headless.urls")),
-
 ]
 
 if settings.DEBUG:
