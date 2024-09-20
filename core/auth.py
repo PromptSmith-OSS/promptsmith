@@ -5,7 +5,8 @@ from django.contrib.auth import aget_user
 from django.http import HttpRequest
 
 from ninja.errors import AuthenticationError
-from ninja.security import HttpBearer, SessionAuth
+from ninja.security import HttpBearer, SessionAuth, django_auth
+from asgiref.sync import sync_to_async
 
 
 class SDKAuthBearer(HttpBearer):
@@ -31,10 +32,26 @@ class AsyncDjangoAuth(SessionAuth):
     https://docs.allauth.org/en/latest/headless/openapi-specification/
     """
     async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[Any]:
-        user = await aget_user(request)
-        if user.is_authenticated:
-            return user
-        return None
+        """
+        Authenticate the user
+        Get session id from cookies
+        Or get from headers X-Session-Token
+        :param request:
+        :param key:
+        :return:
+        """
+        print('AsyncDjangoAuth.authenticate', request, key, )
+        # print request origin
+        scheme = request.scheme
+
+        # Get the host (domain + port)
+        host = request.get_host()
+
+        # Combine scheme and host to get the full origin
+        origin = f"{scheme}://{host}"
+
+        print('origin', origin)
+        return sync_to_async(super().authenticate)(request, key)
 
 
 async_django_auth = AsyncDjangoAuth()

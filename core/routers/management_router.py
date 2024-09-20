@@ -28,7 +28,7 @@ def ping(request):
 
 
 # the core CRUD endpoints
-management_router.add_router("/prompt/", prompt_router)
-management_router.add_router("/prompt/", prompt_variant_router)
-management_router.add_router("/prompt/", version_router)
-management_router.add_router("/prompt-details/", prompt_details_router)
+management_router.add_router("/prompt", prompt_router)
+management_router.add_router("/prompt", prompt_variant_router)
+management_router.add_router("/prompt", version_router)
+management_router.add_router("/prompt-details", prompt_details_router)
