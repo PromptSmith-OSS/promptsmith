@@ -13,6 +13,7 @@ import * as React from "react";
 import {ModeToggle} from "@/components/client/theme-toggle";
 import SideBarWithToggleForMobile from "./sideBarWithToggleForMobile";
 import Link from "next/link";
+import Logout from "@/components/features/logout";
 
 const Header = () => {
 
@@ -52,7 +53,7 @@ const Header = () => {
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator/>
           <DropdownMenuItem>
-            <Link href="/api/logout">Logout</Link>
+            <Logout/>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
