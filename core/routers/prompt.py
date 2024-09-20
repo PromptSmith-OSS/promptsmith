@@ -26,7 +26,7 @@ async def create_prompt(request, prompt: PromptCreateSchema):
     return await Prompt.objects.acreate(**prompt.dict())
 
 
-@prompt_router.get('/', response=List[PromptOutSchema])
+@prompt_router.get('', response=List[PromptOutSchema])
 @paginate
 async def get_all_prompts(request):
     """
