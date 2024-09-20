@@ -1,5 +1,4 @@
 import {NextRequest, NextResponse} from 'next/server'
-import {decrypt} from '@/lib/session'
 import {cookies} from 'next/headers'
 import {IS_IN_DEVELOPMENT} from "@/lib/utils";
 
@@ -9,6 +8,10 @@ const authRoutes = ['/login', '/signup']
 const authAPIRoutes = ['/api/login-through-management-key'] // to be same as api route endpoint
 
 
+/**
+ * This will not be used because of rewrite rule in next.config.js
+ * @param req
+ */
 const apiMiddleware = async (req: NextRequest) => {
   const isInPublicRoutes = authAPIRoutes.includes(req.nextUrl.pathname)
 
@@ -18,7 +21,7 @@ const apiMiddleware = async (req: NextRequest) => {
     // if the route is not protected, then we can skip the auth check
     response = NextResponse.next()
   } else {
-    const origin = req.headers.get('Origin') || '*' // * only be allowed in development
+    const origin = req.headers.get('Origin') || '*' // todo * only be allowed in development
     if (!allowedOrigins.includes(origin)) {
       // secure middleware
       console.error('403 Forbidden', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
@@ -61,18 +64,17 @@ const pageMiddleware = async (req: NextRequest) => {
   const isProtectedRoute = !isPublicRoute
 
   // Decrypt the session from the cookie
-  const cookie = cookies().get('session')?.value
-  const session = await decrypt(cookie)
+  const authenticatedInSession = cookies().get('sessionid')?.value
 
   // Redirect to /login if the user is not authenticated
-  // if (isProtectedRoute && !session?.bearerToken) {
-  //   return NextResponse.redirect(new URL('/login', req.nextUrl))
-  // }
+  if (isProtectedRoute && !authenticatedInSession) {
+    return NextResponse.redirect(new URL('/login', req.nextUrl))
+  }
 
   // Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&
-    session?.bearerToken &&
+    authenticatedInSession &&
     !req.nextUrl.pathname.startsWith('/dashboard')
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
