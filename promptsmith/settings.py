@@ -22,6 +22,8 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+APPEND_SLASH = True
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -31,14 +33,12 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'prompt_smith')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False) == '1'
 RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
-ENABLE_DJANO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
+ENABLE_DJANGO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
 ]
-
-from corsheaders.defaults import default_headers
 
 SITE_DOMAIN = os.getenv('DOMAIN', 'localhost')
 
@@ -49,19 +49,22 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
+CORS_ALLOW_CREDENTIALS = True # allow cookies in Lax mode managed in session cookie same site
 
 ROOT_URLCONF = 'promptsmith.urls'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_COOKIE_DOMAIN = SITE_DOMAIN
-SESSION_COOKIE_SAMESITE = 'Lax' # default
+SESSION_COOKIE_SAMESITE = 'Strict' # default
 
 CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simplify the frontend authentication
 CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
 CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CSRF_COOKIE_DOMAIN = '{}'.format(SITE_DOMAIN)
-CSRF_COOKIE_SAMESITE = 'Lax'  # default
+CSRF_COOKIE_SAMESITE = 'Strict'  # default
+
+
 
 
 AUTHENTICATION_BACKENDS = [
