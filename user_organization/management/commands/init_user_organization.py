@@ -55,6 +55,11 @@ class Command(BaseCommand):
                 organization.save()
                 self.stdout.write(self.style.SUCCESS(f'Organization {org_name} created successfully!'))
 
+                # Create user permission for the organization
+                user_permission = UserPermissionOrganization.objects.create(user=user, organization=organization,
+                                                                            user_role=Role.OWNER)
+                user_permission.save()
+
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error occurred: {e}"))
             # At this point, any database changes made within the `atomic()` block are rolled back.
