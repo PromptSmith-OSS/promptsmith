@@ -35,6 +35,9 @@ class UserPermissionOrganization(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        unique_together = ['user', 'organization']
+
 
 class DeveloperAPIKey(models.Model):
     """
