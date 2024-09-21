@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from user_organization.models import Organization, UserPermissionOrganization, Role
+from project.models import Project
 
 from dotenv import load_dotenv
 import os
@@ -12,6 +13,9 @@ load_dotenv()
 User = get_user_model()  # Get the user model (custom or default)
 
 ORG_NAME = 'Default Organization'
+PROJECT_DEFAULT_KEY = 'default'
+
+
 
 
 class Command(BaseCommand):
@@ -32,13 +36,6 @@ class Command(BaseCommand):
         try:
             # Use transaction.atomic() to wrap the operations in a single transaction
             with transaction.atomic():
-                is_user_table_empty = User.objects.count() == 0
-                is_org_table_empty = Organization.objects.count() == 0
-
-                if not is_user_table_empty or not is_org_table_empty:
-                    raise ValueError(
-                        'User or Organization table is not empty, you have already initialized the user and organization')
-
                 # Create user
                 existing_user = User.objects.filter(Q(email=email) | Q(username=username)).exists()
                 if existing_user:
@@ -59,6 +56,12 @@ class Command(BaseCommand):
                 user_permission = UserPermissionOrganization.objects.create(user=user, organization=organization,
                                                                             user_role=Role.OWNER)
                 user_permission.save()
+
+                # Create a default project
+                project = Project.objects.create(unique_key=PROJECT_DEFAULT_KEY, description=PROJECT_DEFAULT_KEY, created_by=user,
+                                                 organization=organization)
+                project.save()
+
 
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error occurred: {e}"))
