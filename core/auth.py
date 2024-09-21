@@ -41,16 +41,12 @@ class AsyncDjangoAuth(SessionAuth):
         :return:
         """
         print('AsyncDjangoAuth.authenticate', request, key, )
-        # print request origin
-        scheme = request.scheme
-
-        # Get the host (domain + port)
-        host = request.get_host()
-
-        # Combine scheme and host to get the full origin
-        origin = f"{scheme}://{host}"
-
-        print('origin', origin)
+        # scheme = request.scheme
+        # # Get the host (domain + port)
+        # host = request.get_host()
+        # # Combine scheme and host to get the full origin
+        # origin = f"{scheme}://{host}"
+        # print('origin', origin)
         return sync_to_async(super().authenticate)(request, key)
 
 

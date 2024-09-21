@@ -4,10 +4,13 @@ from uuid import UUID
 from django.shortcuts import aget_object_or_404, aget_list_or_404
 from ninja import Router
 from ninja.pagination import paginate
+from ninja.errors import AuthenticationError, ValidationError
 
 from core.models.prompt import Prompt
 from core.schemas.prompt import PromptCreateSchema, PromptOutSchema, PromptUpdateSchema
 from shared.errors import raise_duplication_error
+from project.models import Project
+from user_organization.models import Organization
 
 prompt_router = Router(
     tags=['Prompt'],
@@ -32,7 +35,32 @@ async def get_all_prompts(request):
     """
     Get all prompts
     """
-    qs = Prompt.objects.all()
+
+    user = await request.auth
+    if not user:
+        raise AuthenticationError('User is required')
+
+    project_uuid = request.headers.get('X-Project-UUID')
+    if not project_uuid:
+        raise ValidationError([{
+            'X-Project-UUID': 'Project UUID is required'
+        }])
+
+    user_orgnizations = Organization.objects.filter(users=user,
+                                                    userpermissionorganization__user_role__in=['o', 'e',
+                                                                                               'v']).values_list(
+        'id', flat=True).all()
+
+    user_has_permission = await Project.objects.filter(uuid=project_uuid,
+                                                       organization__in=user_orgnizations
+                                                       # organization__users=user, organization__user_permissions__user_role__in=['o', 'e', 'v']
+                                                       ).aexists()
+    if not user_has_permission:
+        raise AuthenticationError('User does not have permission to access this project')
+
+    qs = Prompt.objects.filter(
+        project__uuid=project_uuid
+    )
     return await aget_list_or_404(qs)
 
 
