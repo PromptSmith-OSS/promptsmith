@@ -1,8 +1,30 @@
 from django.core.cache import cache
 import functools
 
+from django.utils.decorators import method_decorator
 
-def async_cache(ttl=60):
+from django.core.cache import cache
+from asgiref.sync import sync_to_async
+
+
+def cache_result(ttl=60):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            cache_key = f"cache_{func.__name__}_{args}_{kwargs}"
+            result = cache.get(cache_key)
+            if result is not None:
+                return result
+
+            result = func(*args, **kwargs)
+            cache.set(cache_key, result, ttl)
+            return result
+
+        return wrapper
+
+    return decorator
+
+
+def async_cache_result(ttl=60):
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
@@ -20,5 +42,5 @@ def async_cache(ttl=60):
             return result
 
         return wrapper
-
     return decorator
+

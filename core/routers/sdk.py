@@ -8,7 +8,7 @@ from django.shortcuts import aget_list_or_404
 from ninja import Router
 from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
-from core.auth import SDKAuthBearer
+from shared.auth import SDKAuthBearer
 from core.models import PromptVariant, PromptVersion
 from core.schemas.sdk import PromptSchema
 

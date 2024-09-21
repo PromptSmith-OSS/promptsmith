@@ -4,7 +4,7 @@ from typing import Literal
 from django.utils.functional import cached_property
 
 from shared.base_models import UUIDBasedBaseModel
-from shared.decorators import async_cache
+from shared.decorators import async_cache_result
 
 
 class Organization(UUIDBasedBaseModel):
@@ -50,7 +50,6 @@ class Organization(UUIDBasedBaseModel):
         """
         return UserPermissionOrganization.objects.filter(organization=self, user_role=role)
 
-    @async_cache
     async def check_user_is_owner(self, user):
         """
         Check if the user is owner of the organization
@@ -59,7 +58,6 @@ class Organization(UUIDBasedBaseModel):
         """
         return UserPermissionOrganization.objects.filter(user=user, organization=self, user_role='o').exists()
 
-    @async_cache
     async def check_user_is_editor(self, user):
         """
         Check if the user can edit the organization
@@ -70,7 +68,6 @@ class Organization(UUIDBasedBaseModel):
         return UserPermissionOrganization.objects.filter(user=user, organization=self,
                                                          user_role__in=['o', 'e']).exists()
 
-    @async_cache
     async def check_user_is_viewer(self, user):
         """
         Check if the user can view the organization

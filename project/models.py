@@ -1,8 +1,11 @@
-from user_organization.models import Organization, User
+from typing import Literal
+
+from django.core.cache import cache
 from django.db import models
+from ninja.errors import AuthenticationError
 
 from shared.base_models import UUIDBasedBaseModel, BaseModel
-from typing import Literal
+from user_organization.models import Organization, User
 
 
 # Create your models here.
@@ -42,7 +45,7 @@ class Project(UUIDBasedBaseModel):
         if role not in self.metadata:
             self.metadata[role] = []
         self.metadata[role].append(user)
-        await self.save()
+        await self.asave()
 
     async def remove_user(self, user, role: Literal['owners', 'editors', 'viewers']):
         """
@@ -53,7 +56,7 @@ class Project(UUIDBasedBaseModel):
         """
         if role in self.metadata:
             self.metadata[role].remove(user)
-            await self.save()
+            await self.asave()
 
     async def add_owner(self, user):
         """
@@ -63,29 +66,54 @@ class Project(UUIDBasedBaseModel):
         """
         await self.add_user(user, 'owners')
 
-    async def has_view_permission(self, user):
+    async def has_view_permission_for_user(self, user):
         """
         Check if user has view permission
         :param user: User
         :return: bool
         """
-        return user in self.metadata.get('viewers', []) or await self.has_edit_permission(user)
+        return user in self.metadata.get('viewers', []) or await self.has_edit_permission_for_user(user)
 
-    async def has_edit_permission(self, user):
+    async def has_edit_permission_for_user(self, user):
         """
         Check if user has edit permission
         :param user: User
         :return: bool
         """
-        return user in self.metadata.get('editors', []) or await self.has_owner_permission(user)
+        return user in self.metadata.get('editors', []) or await self.has_owner_permission_for_user(user)
 
-    async def has_owner_permission(self, user):
+    async def has_owner_permission_for_user(self, user):
         """
         Check if user has owner permission
         :param user: User
         :return: bool
         """
         return user in self.metadata.get('owners', [])
+
+
+    async def is_viewable_to_user_organization(self, user):
+        cache_key = f"cache_{self.is_viewable_to_user_organization.__name__}_{self.uuid}_{user}"
+        ttl = 60
+        result = await cache.aget(cache_key)
+        if result is not None:
+            return result
+        
+        user_organizations =  Organization.objects.filter(
+            users=user,
+            userpermissionorganization__user_role__in=['o', 'e',
+                                                       'v']).values_list(
+            'id', flat=True
+        ).all()
+
+        user_has_permission = await Project.objects.filter(uuid=self.uuid,
+                                                     organization__in=user_organizations
+                                                     ).aexists()
+        if not user_has_permission:
+            await cache.aset(cache_key, user_has_permission, ttl)
+            raise AuthenticationError('User does not have permission to access this project')
+
+        await cache.aset(cache_key, user_has_permission, ttl)
+        return True
 
 
 class ClientPublicKey(BaseModel):

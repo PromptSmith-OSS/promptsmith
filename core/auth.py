@@ -1,36 +1,24 @@
-import os
 from typing import Optional, Any
 
-from django.contrib.auth import aget_user
 from django.http import HttpRequest
+from django.utils.decorators import method_decorator
 
-from ninja.errors import AuthenticationError
-from ninja.security import HttpBearer, SessionAuth, django_auth
+from project.models import Project
+from shared.auth import AsyncDjangoNinjaAuth
+from ninja.errors import AuthenticationError, ValidationError
+
 from asgiref.sync import sync_to_async
 
-
-class SDKAuthBearer(HttpBearer):
-    def authenticate(self, request, token) -> bool:
-        if token == os.getenv('SDK_KEY'):
-            return True
-        else:
-            raise AuthenticationError('Invalid token')
+from django.shortcuts import aget_object_or_404
 
 
-class ManagementAuthBearer(HttpBearer):
-    def authenticate(self, request, token) -> bool:
-        if token == os.getenv('MANAGEMENT_KEY'):
-            return True
-        else:
-            raise AuthenticationError('Invalid token')
-
-
-class AsyncDjangoAuth(SessionAuth):
+class AsyncCoreResourceAuth(AsyncDjangoNinjaAuth):
     """
     Reusing Django session authentication
     This decouple the authentication from Ninja routers and Django All Auth
     https://docs.allauth.org/en/latest/headless/openapi-specification/
     """
+
     async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[Any]:
         """
         Authenticate the user
@@ -40,14 +28,25 @@ class AsyncDjangoAuth(SessionAuth):
         :param key:
         :return:
         """
-        print('AsyncDjangoAuth.authenticate', request, key, )
-        # scheme = request.scheme
-        # # Get the host (domain + port)
-        # host = request.get_host()
-        # # Combine scheme and host to get the full origin
-        # origin = f"{scheme}://{host}"
-        # print('origin', origin)
-        return sync_to_async(super().authenticate)(request, key)
+        # Authentication
+        user = await super().authenticate(request, key)
+        if not user:
+            return None
+
+        # Authorization of project and related resources
+        # get the project uuid from headers
+        project_uuid = request.headers.get('X-Project-UUID')
+        if not project_uuid:
+            raise ValidationError([{'X-Project-UUID': 'Project UUID is required'}])
+
+        # get the project
+        qs = Project.objects.filter(uuid=project_uuid)
+        project = await aget_object_or_404(qs)
+
+        # check if user has view permission
+        if not await project.is_viewable_to_user_organization(user):
+            return None
+        return project
 
 
-async_django_auth = AsyncDjangoAuth()
+async_core_resource_auth = AsyncCoreResourceAuth()

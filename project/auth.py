@@ -1,13 +1,16 @@
-from ninja.security import HttpBearer
-from models import ClientPublicKey, ServerPrivateKey
 from django.shortcuts import get_object_or_404
 from ninja.errors import AuthenticationError
-from dotenv import load_dotenv
-
-load_dotenv()
+from ninja.security import HttpBearer
 
 
-class AuthBearer(HttpBearer):
+from project.models import ServerPrivateKey, ClientPublicKey
+
+
+
+class ProjectKeyAuthentication(HttpBearer):
+    """
+    Authenticate the project key (private key or public key)
+    """
     def authenticate(self, request, token) -> ServerPrivateKey or ClientPublicKey:
         if token[:4] == 'pri_':
             # this is a server side private token
@@ -24,5 +27,6 @@ class AuthBearer(HttpBearer):
                 return get_object_or_404(ClientPublicKey, public_key=token)
             except ClientPublicKey.DoesNotExist:
                 raise AuthenticationError('Invalid token')
+
 
 

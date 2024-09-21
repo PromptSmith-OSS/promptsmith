@@ -35,29 +35,7 @@ async def get_all_prompts(request):
     """
     Get all prompts
     """
-
-    user = await request.auth
-    if not user:
-        raise AuthenticationError('User is required')
-
     project_uuid = request.headers.get('X-Project-UUID')
-    if not project_uuid:
-        raise ValidationError([{
-            'X-Project-UUID': 'Project UUID is required'
-        }])
-
-    user_orgnizations = Organization.objects.filter(users=user,
-                                                    userpermissionorganization__user_role__in=['o', 'e',
-                                                                                               'v']).values_list(
-        'id', flat=True).all()
-
-    user_has_permission = await Project.objects.filter(uuid=project_uuid,
-                                                       organization__in=user_orgnizations
-                                                       # organization__users=user, organization__user_permissions__user_role__in=['o', 'e', 'v']
-                                                       ).aexists()
-    if not user_has_permission:
-        raise AuthenticationError('User does not have permission to access this project')
-
     qs = Prompt.objects.filter(
         project__uuid=project_uuid
     )
