@@ -39,7 +39,7 @@ export default function RootLayout({
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
     </Head>
     <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased min-w-sm`}
     >
     <ThemeProvider
       attribute="class"

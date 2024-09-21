@@ -40,8 +40,8 @@ const Login = () => {
   return <div
     className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
     <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-      <Card className="w-full w-sm">
-        <CardHeader>
+      <Card className="w-full min-w-sm">
+        <CardHeader className={'min-w-sm'}>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
             Login to your dashboard.
@@ -57,7 +57,7 @@ const Login = () => {
             }/>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="password">Your Management Token</Label>
+            <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" name="password" required onChange={
               (e) => {
                 setPassword(e.target.value)

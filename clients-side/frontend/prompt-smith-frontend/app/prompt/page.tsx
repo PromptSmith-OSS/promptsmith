@@ -9,7 +9,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const getAllPrompts = async () => {
+type Prompt = {
+  unique_key: string
+  description: string
+  uuid: string
+}
+
+const getAllPrompts = async ():Promise<Prompt[]> => {
   const selfUrl = process.env.NEXT_PUBLIC_BASE_URL
   const response = await fetch(selfUrl+'/api/bff/api/prompt', {
     method: 'GET',
@@ -18,10 +24,11 @@ const getAllPrompts = async () => {
       'Content-Type': 'application/json',
     }
   })
-  console.log(response)
   const data = await response.json()
   return data.items
 }
+
+
 
 export async function Page() {
   const prompts = await getAllPrompts()
