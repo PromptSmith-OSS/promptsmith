@@ -1,0 +1,40 @@
+{
+  "include": [
+    "./**/*.py"
+  ],
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true,
+  "reportAttributeAccessIssue": "warning",
+  "reportOperatorIssue": "warning",
+  "reportIndexIssue": "warning",
+  "reportMissingImports": "warning",
+  "exclude": [
+    "client-side/frontend",
+    "migrations",
+    "static",
+    "templates",
+    "node_modules",
+    "dist",
+    "build",
+    "venv",
+    ".venv",
+    ".vscode",
+    ".git",
+    "__pycache__",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".cache",
+    ".vscode-test",
+    ".github",
+    ".github-actions",
+    ".github-workflows"
+  ],
+  "ignore": [
+  ],
+  "defineConstant": {
+    "DEBUG": true
+  },
+  "pythonVersion": "3.12",
+  "executionEnvironments": [
+  ]
+}
