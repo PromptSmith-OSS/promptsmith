@@ -11,7 +11,7 @@ class Project(UUIDBasedBaseModel):
     unique_key = models.CharField(max_length=256, unique=True, editable=True)
     description = models.TextField(max_length=2048)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    # organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.unique_key
@@ -49,7 +49,7 @@ class ServerPrivateKey(BaseModel):
     Server private key
     Private Key, which should be kept secret
     Which is used in local evaluation mode
-    todo - It can get the prompts and the user segment, to calculate the rigth prompt locally
+    todo - It can get the prompts and the user segment, to calculate the right prompt locally
     """
     private_key = models.CharField(max_length=2048, unique=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
