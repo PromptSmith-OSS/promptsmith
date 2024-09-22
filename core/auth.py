@@ -37,7 +37,7 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
 
         if not project_uuid:
             # try get from cookies
-            project_uuid = request.COOKIES.get(settings.SHARED_CONFIGURATION.get('project_cookie_name'), None)
+            project_uuid = request.COOKIES.get(settings.SHARED_CONFIGURATION.get('project_cookie_key'), None)
 
         if not project_uuid:
             raise ValidationError([{'Project-UUID': 'Project UUID is required'}])

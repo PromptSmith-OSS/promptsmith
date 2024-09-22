@@ -1,5 +1,5 @@
 {
   "session_age": 604800,
-  "org_cookie_name": "organization_uuid",
-  "project_cookie_name": "project_uuid"
+  "org_cookie_key": "organization_uuid",
+  "project_cookie_key": "project_uuid"
 }
