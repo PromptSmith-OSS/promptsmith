@@ -7,6 +7,8 @@ from ninja.errors import ValidationError
 from project.models import Project
 from shared.auth import AsyncDjangoNinjaAuth
 
+from django.conf import settings
+
 
 class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
     """
@@ -32,8 +34,13 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
         # Authorization of project and related resources
         # get the project uuid from headers
         project_uuid = request.headers.get('X-Project-UUID')
+
         if not project_uuid:
-            raise ValidationError([{'X-Project-UUID': 'Project UUID is required'}])
+            # try get from cookies
+            project_uuid = request.COOKIES.get(settings.SHARED_CONFIGURATION.get('project_cookie_name'), None)
+
+        if not project_uuid:
+            raise ValidationError([{'Project-UUID': 'Project UUID is required'}])
 
         # get the project
         qs = Project.objects.filter(uuid=project_uuid)

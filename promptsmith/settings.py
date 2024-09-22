@@ -16,13 +16,20 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+import json
+
 # load .env file
 load_dotenv()
 
+# import json as a dict the configuration file shared between backend and frontend
+
+configuration_path = os.path.join(os.path.dirname(__file__),
+                                  '../clients-side/frontend/prompt-smith-frontend/config/configuration.json')
+with open(configuration_path) as f:
+    SHARED_CONFIGURATION = json.load(f)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -49,13 +56,14 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
-CORS_ALLOW_CREDENTIALS = True # allow cookies in Lax mode managed in session cookie same site
+CORS_ALLOW_CREDENTIALS = True  # allow cookies in Lax mode managed in session cookie same site
 
 ROOT_URLCONF = 'promptsmith.urls'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_COOKIE_DOMAIN = SITE_DOMAIN
-SESSION_COOKIE_SAMESITE = 'Strict' # default
+SESSION_COOKIE_SAMESITE = 'Strict'  # default
+SESSION_COOKIE_AGE = SHARED_CONFIGURATION.get('session_age', 60 * 60 * 24 * 7)  # 7 days by default
 
 CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simplify the frontend authentication
 CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
@@ -63,9 +71,6 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CSRF_COOKIE_DOMAIN = '{}'.format(SITE_DOMAIN)
 CSRF_COOKIE_SAMESITE = 'Strict'  # default
-
-
-
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -112,7 +117,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 
     "allauth.account.middleware.AccountMiddleware",
 ]

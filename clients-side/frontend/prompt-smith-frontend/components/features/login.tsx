@@ -7,6 +7,22 @@ import {useRouter} from "next/navigation";
 
 import {login, init} from "@/lib/auth/wrapper";
 import {useEffect, useState} from "react";
+import {setProjectUUID} from "@/lib/auth/cookieUtils";
+import {Project} from "@/lib/interfaces";
+
+
+// const getProjects = async (): Promise<Project[]> => {
+//   const selfUrl = process.env.NEXT_PUBLIC_BASE_URL
+//   const response = await fetch(selfUrl + '/api/bff/api/prompt', {
+//     method: 'GET',
+//     credentials: 'include',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     }
+//   })
+//   const data = await response.json()
+//   return data.items
+// }
 
 const Login = () => {
 
@@ -29,12 +45,15 @@ const Login = () => {
       console.log(response)
       setResponse({...response, fetching: false})
 
+
       router.push('/dashboard')
     } catch (e) {
       console.error(e)
       window.alert(e)
       setResponse({...response, fetching: false})
     }
+
+    setProjectUUID('d4c5cd68-56f6-4777-a5e6-4e0eefa32bf7')
   }
 
   return <div
