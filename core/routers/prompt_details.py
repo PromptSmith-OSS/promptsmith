@@ -11,7 +11,7 @@ prompt_details_router = Router(
     tags=['Prompt with details'],
 )
 
-@prompt_details_router.get('/', response=List[PromptOutSchema])
+@prompt_details_router.get('', response=List[PromptOutSchema])
 @paginate
 async def get_all_prompts_with_details(request):
     """

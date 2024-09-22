@@ -17,7 +17,7 @@ prompt_router = Router(
 )
 
 
-@prompt_router.post('/', response=PromptOutSchema)
+@prompt_router.post('', response=PromptOutSchema)
 async def create_prompt(request, prompt: PromptCreateSchema):
     """
     Create a new prompt
@@ -29,7 +29,7 @@ async def create_prompt(request, prompt: PromptCreateSchema):
     return await Prompt.objects.acreate(**prompt.dict())
 
 
-@prompt_router.get('/', response=List[PromptOutSchema])
+@prompt_router.get('', response=List[PromptOutSchema])
 @paginate
 async def get_all_prompts(request):
     """

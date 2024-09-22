@@ -37,6 +37,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'prompt_smith')
 
+TRAILING_SLASH = False
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False) == '1'
 RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
