@@ -20,7 +20,7 @@ const getAllPrompts = async ():Promise<Prompt[]> => {
     }
   })
   const data = await response.json()
-  console.log(response)
+  console.log(response.status, data, response.statusText)
   return data.items
 }
 
