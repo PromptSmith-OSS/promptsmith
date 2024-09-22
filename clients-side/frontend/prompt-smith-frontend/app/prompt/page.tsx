@@ -8,12 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-type Prompt = {
-  unique_key: string
-  description: string
-  uuid: string
-}
+import {Prompt} from "@/lib/interfaces";
 
 const getAllPrompts = async ():Promise<Prompt[]> => {
   const selfUrl = process.env.NEXT_PUBLIC_BASE_URL
@@ -25,6 +20,7 @@ const getAllPrompts = async ():Promise<Prompt[]> => {
     }
   })
   const data = await response.json()
+  console.log(response)
   return data.items
 }
 
