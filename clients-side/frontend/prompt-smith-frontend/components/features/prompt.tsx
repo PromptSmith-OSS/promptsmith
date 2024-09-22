@@ -13,7 +13,7 @@ import {useEffect, useState} from "react";
 
 const getAllPrompts = async () => {
   // const token = await getBearerTokenFromSession();
-  const response = await fetch('http://localhost:8000/api/prompt/', {
+  const response = await fetch('http://localhost:3000/api/bff/api/prompt', {
     method: 'GET',
     credentials: 'include',
     headers: {
