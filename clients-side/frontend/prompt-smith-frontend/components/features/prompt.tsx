@@ -13,6 +13,17 @@ import {
 
 import {Prompt} from "@/lib/api/interfaces";
 import {resourceFetcher, usePaginatedSWR} from "@/lib/api/fetcher";
+import {formatRelativeTime} from "@/lib/utils";
+import {Badge} from "@/components/ui/badge";
+import {Ellipsis} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 
 function PromptComponent() {
@@ -32,18 +43,14 @@ function PromptComponent() {
 
   return (
     <div className='w-full'>
-      {/*<pre>*/}
-      {/*  <code>*/}
-      {/*    {JSON.stringify(prompts, null, 2)}*/}
-      {/*  </code>*/}
-      {/*</pre>*/}
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>A list of your AI prompts.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Key</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead>Key</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Created</TableHead>
+            <TableHead className="text-right w-5 "></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -54,8 +61,26 @@ function PromptComponent() {
                 <br/>
                 <span className="text-xs text-gray-500">{prompt?.description}</span>
               </TableCell>
-              <TableCell></TableCell>
-              {/*<TableCell>{invoice.paymentMethod}</TableCell>*/}
+              <TableCell>
+                {prompt?.enabled ?
+                  <Badge variant="default">Enabled</Badge> : <Badge variant="secondary">Disabled</Badge>}
+              </TableCell>
+              <TableCell className="text-right">
+                {prompt?.created_at ? formatRelativeTime(prompt?.created_at) : 'N/A'}
+              </TableCell>
+              <TableCell className="p-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger><Ellipsis/></DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator/>
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Team</DropdownMenuItem>
+                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
               {/*<TableCell className="text-right">{invoice.totalAmount}</TableCell>*/}
             </TableRow>
           ))}

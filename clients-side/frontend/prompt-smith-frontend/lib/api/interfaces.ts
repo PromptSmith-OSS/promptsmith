@@ -2,6 +2,8 @@ export type Prompt = {
   unique_key: string
   description: string
   uuid: string
+  enabled: boolean
+  created_at: Date
 }
 export type Organization = {
   name: string

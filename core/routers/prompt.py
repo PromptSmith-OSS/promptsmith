@@ -1,6 +1,7 @@
 from typing import List
 from uuid import UUID
 
+from django.db import models
 from django.shortcuts import aget_object_or_404, aget_list_or_404
 from ninja import Router
 from ninja.pagination import paginate
@@ -38,8 +39,11 @@ async def get_all_prompts(request):
     project_uuid = request.auth.uuid
     qs = Prompt.objects.filter(
         project__uuid=project_uuid
+    ).annotate(
+        project_uuid=models.F('project__uuid'),
     )
-    return await aget_list_or_404(qs)
+    results = await aget_list_or_404(qs)
+    return results
 
 
 @prompt_router.get('/{uuid}', response=PromptOutSchema)
