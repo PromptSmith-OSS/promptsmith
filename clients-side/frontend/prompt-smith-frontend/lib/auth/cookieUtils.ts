@@ -23,7 +23,7 @@ function getCookie(name: string) {
 
 const setCookie = (name: string, value: string, seconds: number = SESSION_AGE) => {
   const date = new Date()
-  date.setTime(date.getTime() + seconds)
+  date.setTime(date.getTime() + seconds * 1000)
   const expires = `expires=${date.toUTCString()}`
   document.cookie = `${name}=${value};${expires};path=/`
 }

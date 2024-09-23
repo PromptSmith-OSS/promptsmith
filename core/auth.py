@@ -17,7 +17,7 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
     https://docs.allauth.org/en/latest/headless/openapi-specification/
     """
 
-    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[Any]:
+    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[Project]:
         """
         Authenticate the user
         Get session id from cookies

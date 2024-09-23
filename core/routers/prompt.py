@@ -35,7 +35,7 @@ async def get_all_prompts(request):
     """
     Get all prompts
     """
-    project_uuid = request.headers.get('X-Project-UUID')
+    project_uuid = request.auth.uuid
     qs = Prompt.objects.filter(
         project__uuid=project_uuid
     )
