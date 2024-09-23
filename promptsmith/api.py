@@ -1,8 +1,18 @@
-from ninja import NinjaAPI, Router
-from ninja.throttling import AnonRateThrottle, AuthRateThrottle
-from core.routers.sdk import sdk_router
+import orjson
+from ninja import NinjaAPI
+from ninja.renderers import BaseRenderer
+
 from core.routers.management_router import management_router
+from core.routers.sdk import sdk_router
 from project.routers.project_router import project_router
+
+
+class ORJSONRenderer(BaseRenderer):
+    media_type = "application/json"
+
+    def render(self, request, data, *, response_status):
+        return orjson.dumps(data)
+
 
 """
 Session or cookie based authentication for management API
@@ -10,6 +20,7 @@ CORS allow front-end to access the API
 """
 general_api = NinjaAPI(
     version="1.0.0",
+    renderer=ORJSONRenderer(),
     # openapi_url=None, # to disable auto generated openapi docs
 )
 
