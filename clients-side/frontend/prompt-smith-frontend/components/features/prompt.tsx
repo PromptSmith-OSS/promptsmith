@@ -9,19 +9,15 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
-import {useState} from "react";
-import useSWR from 'swr'
 
 
 import {Prompt} from "@/lib/api/interfaces";
-import {resourceFetcher} from "@/lib/api/fetcher";
+import {resourceFetcher, usePaginatedSWR} from "@/lib/api/fetcher";
 
 
 function PromptComponent() {
-  const [pageIndex, setPageIndex] = useState(0);
-
-  const {data, error, isLoading} = useSWR(`prompt?page=${pageIndex}`, resourceFetcher)
-
+  const {data, error, isLoading, pagination} = usePaginatedSWR('prompt', resourceFetcher)
+  console.log(pagination)
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -31,7 +27,7 @@ function PromptComponent() {
     return <div>Error loading prompts</div>
   }
 
-  const prompts = data.items as Prompt[]
+  const prompts = data?.items as Prompt[]
 
 
   return (
