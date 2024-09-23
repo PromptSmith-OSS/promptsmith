@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import SkeletonCard from "@/components/custom-ui/skeleton-card";
+import Link from "next/link";
 
 
 function PromptComponent() {
@@ -40,8 +41,8 @@ function PromptComponent() {
 
 
   return (
-      <Table>
-        <TableCaption>A list of your AI prompts.</TableCaption>
+    <Table>
+      <TableCaption>A list of your AI prompts.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Key</TableHead>
@@ -69,9 +70,21 @@ function PromptComponent() {
               <DropdownMenu>
                 <DropdownMenuTrigger><Ellipsis/></DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href={`/prompt/${prompt?.uuid}`}>
+                      Edit
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator/>
-                  <DropdownMenuItem>Disable</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={
+                      () => {
+                        console.log('Disable')
+                      }
+                  }
+                  >
+                    Disable
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
@@ -86,7 +99,7 @@ function PromptComponent() {
         {/*</TableRow>*/}
       </TableFooter>
 
-      </Table>
+    </Table>
   )
 }
 
