@@ -1,6 +1,7 @@
 import Link from "next/link";
-import {Badge, Home, LineChart, Package, Package2, ShoppingCart, Users, SquareLibrary} from "lucide-react";
+import {Badge, Package, SquareLibrary, Users} from "lucide-react";
 import * as React from "react";
+import Logo from "@/components/custom-ui/logo";
 
 
 const SideBarContent = () => {
@@ -12,8 +13,7 @@ const SideBarContent = () => {
           className="flex items-center gap-2 text-lg font-semibold md:hidden mb-4"
         >
           {/*todo Logo and Title in Side Bar*/}
-          <Package2 className="h-6 w-6"/>
-          <span className="sr-only">Prompt Smith</span>
+          <Logo/>
         </Link>
 
         {/*<Link*/}
