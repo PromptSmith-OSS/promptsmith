@@ -1,6 +1,6 @@
 'use client'
 import * as React from "react";
-import {logout} from "@/lib/auth/wrapper";
+import {logout} from "@/lib/auth/authAPIWrapper";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 

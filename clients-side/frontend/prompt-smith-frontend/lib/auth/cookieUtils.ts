@@ -1,9 +1,5 @@
-import configuration from '../../config/configuration.json';
+import {ORG_COOKIE_NAME, PROJECT_COOKIE_NAME, SESSION_AGE} from "@/lib/constants"; // shared configuation file between frontend and backend
 
-
-const SESSION_AGE = configuration.session_age
-const ORG_COOKIER_NAME = configuration.org_cookie_key
-const PROEJCT_COOKIE_NAME = configuration.project_cookie_key
 
 /**
  * https://github.com/pennersr/django-allauth/blob/c031add73ccac4d2f8517037a99d56d2598377f9/examples/react-spa/frontend/src/lib/django.js#L15
@@ -25,19 +21,19 @@ function getCookie(name: string) {
   return cookieValue
 }
 
-export const setCookie = (name: string, value: string, seconds: number = SESSION_AGE) => {
+const setCookie = (name: string, value: string, seconds: number = SESSION_AGE) => {
   const date = new Date()
   date.setTime(date.getTime() + seconds)
   const expires = `expires=${date.toUTCString()}`
   document.cookie = `${name}=${value};${expires};path=/`
 }
 
-export const setProjectUUID = (uuid: string) => {
-  setCookie(PROEJCT_COOKIE_NAME, uuid)
+export const setCookieProjectUUID = (uuid: string) => {
+  setCookie(PROJECT_COOKIE_NAME, uuid)
 }
 
-export const setOrgUUID = (uuid: string) => {
-  setCookie(ORG_COOKIER_NAME, uuid)
+export const setCookieOrgUUID = (uuid: string) => {
+  setCookie(ORG_COOKIE_NAME, uuid)
 }
 
 

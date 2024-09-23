@@ -1,38 +1,12 @@
-'user client'
+import {Headers, PayloadBody, RequestOptions} from "@/lib/interfaces";
 import {getCSRFToken} from './cookieUtils'
+import {ACCEPT_JSON, PROXIED_API_URL} from "@/lib/constants";
 
 // https://github.com/pennersr/django-allauth/blob/main/examples/react-spa/frontend/src/lib/allauth.js
 
-
 const CLIENT = 'browser'
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL + '/api/bff';
-
-const BASE_URL = `${siteUrl}/auth/${CLIENT}/v1`
-const ACCEPT_JSON = {
-  accept: 'application/json',
-}
-
-interface PayloadBody extends Record<string, unknown> {
-}
-
-interface Headers extends Record<string, string> {
-}
-
-
-interface RequestOptions {
-  method: string;
-  headers: {
-    accept?: string;
-    'X-CSRFToken'?: string;
-    'Content-Type'?: string;
-    'X-Email-Verification-Key'?: string;
-    'X-Password-Reset-Key'?: string;
-
-  };
-  credentials?: string;
-  body?: string;
-}
+const AUTH_BASE_URL = `${PROXIED_API_URL}/auth/${CLIENT}/v1`
 
 export const AuthProcess = Object.freeze({
   LOGIN: 'login',
@@ -53,47 +27,47 @@ export const Flows = Object.freeze({
 
 export const URLs = Object.freeze({
   // Meta
-  CONFIG: BASE_URL + '/config',
-  INIT: siteUrl + '/auth/browser/init',
+  CONFIG: AUTH_BASE_URL + '/config',
+  INIT: PROXIED_API_URL + '/auth/browser/init',
 
   // Account management
-  CHANGE_PASSWORD: BASE_URL + '/account/password/change',
-  EMAIL: BASE_URL + '/account/email',
-  PROVIDERS: BASE_URL + '/account/providers',
+  CHANGE_PASSWORD: AUTH_BASE_URL + '/account/password/change',
+  EMAIL: AUTH_BASE_URL + '/account/email',
+  PROVIDERS: AUTH_BASE_URL + '/account/providers',
 
   // Account management: 2FA
-  AUTHENTICATORS: BASE_URL + '/account/authenticators',
-  RECOVERY_CODES: BASE_URL + '/account/authenticators/recovery-codes',
-  TOTP_AUTHENTICATOR: BASE_URL + '/account/authenticators/totp',
+  AUTHENTICATORS: AUTH_BASE_URL + '/account/authenticators',
+  RECOVERY_CODES: AUTH_BASE_URL + '/account/authenticators/recovery-codes',
+  TOTP_AUTHENTICATOR: AUTH_BASE_URL + '/account/authenticators/totp',
 
   // Auth: Basics
-  LOGIN: BASE_URL + '/auth/login',
-  REQUEST_LOGIN_CODE: BASE_URL + '/auth/code/request',
-  CONFIRM_LOGIN_CODE: BASE_URL + '/auth/code/confirm',
-  SESSION: BASE_URL + '/auth/session',
-  REAUTHENTICATE: BASE_URL + '/auth/reauthenticate',
-  REQUEST_PASSWORD_RESET: BASE_URL + '/auth/password/request',
-  RESET_PASSWORD: BASE_URL + '/auth/password/reset',
-  SIGNUP: BASE_URL + '/auth/signup',
-  VERIFY_EMAIL: BASE_URL + '/auth/email/verify',
+  LOGIN: AUTH_BASE_URL + '/auth/login',
+  REQUEST_LOGIN_CODE: AUTH_BASE_URL + '/auth/code/request',
+  CONFIRM_LOGIN_CODE: AUTH_BASE_URL + '/auth/code/confirm',
+  SESSION: AUTH_BASE_URL + '/auth/session',
+  REAUTHENTICATE: AUTH_BASE_URL + '/auth/reauthenticate',
+  REQUEST_PASSWORD_RESET: AUTH_BASE_URL + '/auth/password/request',
+  RESET_PASSWORD: AUTH_BASE_URL + '/auth/password/reset',
+  SIGNUP: AUTH_BASE_URL + '/auth/signup',
+  VERIFY_EMAIL: AUTH_BASE_URL + '/auth/email/verify',
 
   // Auth: 2FA
-  MFA_AUTHENTICATE: BASE_URL + '/auth/2fa/authenticate',
-  MFA_REAUTHENTICATE: BASE_URL + '/auth/2fa/reauthenticate',
+  MFA_AUTHENTICATE: AUTH_BASE_URL + '/auth/2fa/authenticate',
+  MFA_REAUTHENTICATE: AUTH_BASE_URL + '/auth/2fa/reauthenticate',
 
   // Auth: Social
-  PROVIDER_SIGNUP: BASE_URL + '/auth/provider/signup',
-  REDIRECT_TO_PROVIDER: BASE_URL + '/auth/provider/redirect',
-  PROVIDER_TOKEN: BASE_URL + '/auth/provider/token',
+  PROVIDER_SIGNUP: AUTH_BASE_URL + '/auth/provider/signup',
+  REDIRECT_TO_PROVIDER: AUTH_BASE_URL + '/auth/provider/redirect',
+  PROVIDER_TOKEN: AUTH_BASE_URL + '/auth/provider/token',
 
   // Auth: Sessions
-  SESSIONS: BASE_URL + '/auth/sessions',
+  SESSIONS: AUTH_BASE_URL + '/auth/sessions',
 
   // Auth: WebAuthn
-  REAUTHENTICATE_WEBAUTHN: BASE_URL + '/auth/webauthn/reauthenticate',
-  AUTHENTICATE_WEBAUTHN: BASE_URL + '/auth/webauthn/authenticate',
-  LOGIN_WEBAUTHN: BASE_URL + '/auth/webauthn/login',
-  WEBAUTHN_AUTHENTICATOR: BASE_URL + '/account/authenticators/webauthn'
+  REAUTHENTICATE_WEBAUTHN: AUTH_BASE_URL + '/auth/webauthn/reauthenticate',
+  AUTHENTICATE_WEBAUTHN: AUTH_BASE_URL + '/auth/webauthn/authenticate',
+  LOGIN_WEBAUTHN: AUTH_BASE_URL + '/auth/webauthn/login',
+  WEBAUTHN_AUTHENTICATOR: AUTH_BASE_URL + '/account/authenticators/webauthn'
 })
 
 export const AuthenticatorType = Object.freeze({

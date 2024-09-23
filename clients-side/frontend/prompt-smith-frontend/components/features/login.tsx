@@ -5,9 +5,9 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 
-import {login, init} from "@/lib/auth/wrapper";
+import {login, init} from "@/lib/auth/authAPIWrapper";
 import {useEffect, useState} from "react";
-import {setProjectUUID} from "@/lib/auth/cookieUtils";
+import {setCookieProjectUUID} from "@/lib/auth/cookieUtils";
 import {Project} from "@/lib/interfaces";
 
 
@@ -53,7 +53,7 @@ const Login = () => {
       setResponse({...response, fetching: false})
     }
 
-    setProjectUUID('d4c5cd68-56f6-4777-a5e6-4e0eefa32bf7')
+    setCookieProjectUUID('d4c5cd68-56f6-4777-a5e6-4e0eefa32bf7')
   }
 
   return <div

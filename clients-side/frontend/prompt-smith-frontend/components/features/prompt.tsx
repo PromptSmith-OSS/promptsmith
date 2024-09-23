@@ -10,31 +10,31 @@ import {
   TableRow
 } from "@/components/ui/table";
 import {useEffect, useState} from "react";
+import {fetchResource} from "@/lib/apiWrapper";
+import {Prompt} from "@/lib/interfaces";
 
 const getAllPrompts = async () => {
   // const token = await getBearerTokenFromSession();
-  const response = await fetch('http://localhost:3000/api/bff/api/prompt/', {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      // Authorization: `Bearer ${token}`,
-    }
-  })
-  console.log(response)
-  const data = await response.json()
-  return data.items
+  return  (await fetchResource('prompt'))
 }
 
-async function Prompt() {
-
-  const [prompts, setPrompts] = useState<any[]>([])
+function PromptComponent() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [prompts, setPrompts] = useState<Prompt[]>([])
 
   useEffect(() => {
-    getAllPrompts().then(data => setPrompts(data)).catch((e) => {
+    getAllPrompts().then(data => {
+      console.log('prompts data', data)
+      setPrompts(data.items)
+      setIsLoading(false)
+    }).catch((e) => {
       console.error(e)
     })
-
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className='w-full'>
@@ -77,4 +77,4 @@ async function Prompt() {
   )
 }
 
-export default Prompt
+export default PromptComponent

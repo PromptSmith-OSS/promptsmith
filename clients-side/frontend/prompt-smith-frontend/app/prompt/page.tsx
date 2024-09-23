@@ -1,13 +1,3 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import {Prompt} from "@/lib/interfaces";
 import PromptPage from "@/components/features/prompt";
 
@@ -28,8 +18,6 @@ const getAllPrompts = async ():Promise<Prompt[]> => {
 
 
 export async function Page() {
-  const prompts = await getAllPrompts()
-
   return (
     <div className='w-full'>
       {/*<pre>*/}
