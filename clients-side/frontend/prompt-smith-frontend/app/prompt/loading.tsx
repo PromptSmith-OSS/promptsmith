@@ -1,5 +1,4 @@
-import {Skeleton} from "@/components/ui/skeleton"
-
+import SkeletonCard from "@/components/custom-ui/skeleton-card";
 
 /**
  * It will automatically show a skeleton loader
@@ -7,10 +6,10 @@ import {Skeleton} from "@/components/ui/skeleton"
  * Or a suspense for a client component
  * @constructor
  */
-function SkeletonCard() {
+function Loading() {
   return (
     <SkeletonCard/>
   )
 }
 
-export default SkeletonCard
+export default Loading
