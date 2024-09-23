@@ -1,10 +1,10 @@
+from typing import Literal
+
 from django.contrib.auth.models import User, AbstractUser  # use default User Model to represent User
 from django.db import models
-from typing import Literal
-from django.utils.functional import cached_property
+from django.db.models import QuerySet
 
 from shared.base_models import UUIDBasedBaseModel
-from shared.decorators import async_cache_result
 
 
 class Organization(UUIDBasedBaseModel):
@@ -76,6 +76,22 @@ class Organization(UUIDBasedBaseModel):
         :return:
         """
         return UserPermissionOrganization.objects.filter(user=user, organization=self).exists()
+
+
+    @classmethod
+    def user_viewable_organizations(cls, user) -> QuerySet:
+        """
+        Get the organizations that the user can view
+        :param user: User
+        :return:
+        """
+        return Organization.objects.filter(
+            userpermissionorganization__user=user,
+            userpermissionorganization__user_role__in=['o', 'e', 'v']
+        )
+
+
+
 
 
 class Role(models.TextChoices):

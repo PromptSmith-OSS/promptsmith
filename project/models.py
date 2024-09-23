@@ -90,24 +90,20 @@ class Project(UUIDBasedBaseModel):
         """
         return user in self.metadata.get('owners', [])
 
-
     async def is_viewable_to_user_organization(self, user):
         cache_key = f"cache_{self.is_viewable_to_user_organization.__name__}_{self.uuid}_{user}"
         ttl = 60
         result = await cache.aget(cache_key)
         if result is not None:
             return result
-        
-        user_organizations =  Organization.objects.filter(
-            users=user,
-            userpermissionorganization__user_role__in=['o', 'e',
-                                                       'v']).values_list(
+
+        user_organizations = Organization.user_viewable_organizations(user).values_list(
             'id', flat=True
         ).all()
 
         user_has_permission = await Project.objects.filter(uuid=self.uuid,
-                                                     organization__in=user_organizations
-                                                     ).aexists()
+                                                           organization__in=user_organizations
+                                                           ).aexists()
         if not user_has_permission:
             await cache.aset(cache_key, user_has_permission, ttl)
             raise AuthenticationError('User does not have permission to access this project')
