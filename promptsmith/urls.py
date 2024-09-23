@@ -14,14 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include, re_path
-from .api import api
-from allauth.headless.account.views import SignupView, LoginView
-from django.http import JsonResponse
 from django.conf import settings
-
+from django.contrib import admin
 from django.middleware.csrf import get_token
+from django.urls import path, include, re_path
+
+from django.http import JsonResponse
+
+
+from .api import api
 
 
 def get_csrf_token_view(request, client):
@@ -57,8 +58,6 @@ def not_found_view(request, *args, **kwargs):
     )
 
 
-from django.http import JsonResponse
-
 
 def unsupported_view(request, *args, **kwargs):
     return JsonResponse(
@@ -87,7 +86,7 @@ urlpatterns += [
 
     re_path(r'^auth/(?P<client>browser|app)/init$', get_csrf_token_view),
 
-    # Include the API endpoints:
+    # Include the API endpoints: throttle was managed by all auth in settings
     path("auth/", include("allauth.headless.urls")),
 ]
 
