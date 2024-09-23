@@ -9,22 +9,19 @@ import {login, init} from "@/lib/auth/authAPIWrapper";
 import {useEffect, useState} from "react";
 import {setCookieProjectUUID} from "@/lib/auth/cookieUtils";
 
-import {Project} from "@/lib/api/interfaces";
+import {Project, UserResp} from "@/lib/api/interfaces";
 import {resourceFetcher} from "@/lib/api/fetcher";
 
 
-// const getProjects = async (): Promise<Project[]> => {
-//   const selfUrl = process.env.NEXT_PUBLIC_BASE_URL
-//   const response = await fetch(selfUrl + '/api/bff/api/prompt', {
-//     method: 'GET',
-//     credentials: 'include',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     }
-//   })
-//   const data = await response.json()
-//   return data.items
-// }
+const getProjects = async (): Promise<Project[]> => {
+  try {
+    const data = await resourceFetcher('project')
+    return data.items
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
 
 const Login = () => {
 
@@ -32,8 +29,8 @@ const Login = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [response, setResponse] = useState({fetching: false, content: null})
-  // const config = useConfig()
+  const [userResp, setUserResp] = useState<UserResp | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     init()
@@ -41,23 +38,36 @@ const Login = () => {
 
 
   const onLogin = async () => {
-    setResponse({...response, fetching: true})
     try {
       const response = await login({email, password})
-      setResponse({...response, fetching: false})
-      router.push('/dashboard')
+      setUserResp({...response})
     } catch (e) {
       console.error(e)
-      window.alert(e)
-      setResponse({...response, fetching: false})
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      setError(e.message as string)
     }
 
     // fetch user project
+    const projects = await getProjects()
+    if (projects.length > 0) {
+      setCookieProjectUUID(projects[0].uuid)
+    } else {
+      console.error('No projects found')
+    }
+    router.push('/dashboard')
+  }
 
+  useEffect(() => {
+    if (!userResp?.meta.is_authenticated) {
+      console.error('User not authenticated')
+      setError('User not authenticated, please try again')
+    }
+  }, [userResp])
 
-
-
-    setCookieProjectUUID('d4c5cd68-56f6-4777-a5e6-4e0eefa32bf7')
+  if (error) {
+    // todo show an error modal
+    return <div>{error}</div>
   }
 
   return <div

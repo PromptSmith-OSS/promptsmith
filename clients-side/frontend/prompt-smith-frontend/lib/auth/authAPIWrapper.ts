@@ -116,24 +116,24 @@ async function request(method: string, path: string, data?: PayloadBody, headers
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const resp = await fetch(path, options as RequestOptions)
-  const msg = await resp.json()
-  if (msg.status === 410) {
+  const respData = await resp.json()
+  if (respData.status === 410) {
     if (typeof window !== 'undefined') {
       const tokenStorage = window?.sessionStorage
       tokenStorage.removeItem('sessionToken')
     }
   }
-  if (msg.meta?.session_token) {
+  if (respData.meta?.session_token) {
     if (typeof window !== 'undefined') {
       const tokenStorage = window?.sessionStorage
-      tokenStorage.setItem('sessionToken', msg.meta.session_token)
+      tokenStorage.setItem('sessionToken', respData.meta.session_token)
     }
   }
-  if ([401, 410].includes(msg.status) || (msg.status === 200 && msg.meta?.is_authenticated)) {
-    const event = new CustomEvent('allauth.auth.change', {detail: msg})
+  if ([401, 410].includes(respData.status) || (respData.status === 200 && respData.meta?.is_authenticated)) {
+    const event = new CustomEvent('allauth.auth.change', {detail: respData})
     document.dispatchEvent(event)
   }
-  return msg
+  return respData
 }
 
 export async function login(data: PayloadBody) {
