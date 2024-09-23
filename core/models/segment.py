@@ -14,8 +14,7 @@ class Segment(UUIDBasedBaseModel):
     name = models.CharField(max_length=256)
     distinct_ids = ArrayField(models.CharField(max_length=256), default=list,
                               size=10000000)  # hard limit to 10 million, by default it is a new empty list, in API we should have a lower soft limit
-
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
 
     class Meta:
         indexes = [
