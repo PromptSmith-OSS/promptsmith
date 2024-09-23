@@ -1,20 +1,4 @@
-import {Prompt} from "@/lib/interfaces";
 import PromptPage from "@/components/features/prompt";
-
-const getAllPrompts = async ():Promise<Prompt[]> => {
-  const selfUrl = process.env.NEXT_PUBLIC_BASE_URL
-  const response = await fetch(selfUrl+'/api/bff/api/prompt', {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-  const data = await response.json()
-  console.log(response.status, data, response.statusText)
-  return data.items
-}
-
 
 
 export async function Page() {

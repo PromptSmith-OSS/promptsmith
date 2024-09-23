@@ -8,7 +8,9 @@ import {useRouter} from "next/navigation";
 import {login, init} from "@/lib/auth/authAPIWrapper";
 import {useEffect, useState} from "react";
 import {setCookieProjectUUID} from "@/lib/auth/cookieUtils";
-import {Project} from "@/lib/interfaces";
+
+import {Project} from "@/lib/api/interfaces";
+import {resourceFetcher} from "@/lib/api/fetcher";
 
 
 // const getProjects = async (): Promise<Project[]> => {
@@ -42,16 +44,18 @@ const Login = () => {
     setResponse({...response, fetching: true})
     try {
       const response = await login({email, password})
-      console.log(response)
       setResponse({...response, fetching: false})
-
-
       router.push('/dashboard')
     } catch (e) {
       console.error(e)
       window.alert(e)
       setResponse({...response, fetching: false})
     }
+
+    // fetch user project
+
+
+
 
     setCookieProjectUUID('d4c5cd68-56f6-4777-a5e6-4e0eefa32bf7')
   }

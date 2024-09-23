@@ -9,32 +9,30 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
-import {useEffect, useState} from "react";
-import {fetchResource} from "@/lib/apiWrapper";
-import {Prompt} from "@/lib/interfaces";
+import {useState} from "react";
+import useSWR from 'swr'
 
-const getAllPrompts = async () => {
-  // const token = await getBearerTokenFromSession();
-  return  (await fetchResource('prompt'))
-}
+
+import {Prompt} from "@/lib/api/interfaces";
+import {resourceFetcher} from "@/lib/api/fetcher";
+
 
 function PromptComponent() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [prompts, setPrompts] = useState<Prompt[]>([])
+  const [pageIndex, setPageIndex] = useState(0);
 
-  useEffect(() => {
-    getAllPrompts().then(data => {
-      console.log('prompts data', data)
-      setPrompts(data.items)
-      setIsLoading(false)
-    }).catch((e) => {
-      console.error(e)
-    })
-  }, []);
+  const {data, error, isLoading} = useSWR(`prompt?page=${pageIndex}`, resourceFetcher)
+
 
   if (isLoading) {
     return <div>Loading...</div>
   }
+
+  if (error) {
+    return <div>Error loading prompts</div>
+  }
+
+  const prompts = data.items as Prompt[]
+
 
   return (
     <div className='w-full'>
