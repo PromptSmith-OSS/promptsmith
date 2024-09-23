@@ -24,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import SkeletonCard from "@/components/custom-ui/skeleton-card";
 
 
 function PromptComponent() {
@@ -31,7 +32,7 @@ function PromptComponent() {
   console.log(pagination)
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <SkeletonCard/>
   }
 
   if (error) {
