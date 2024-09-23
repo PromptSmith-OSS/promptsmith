@@ -1,16 +1,16 @@
-from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 from ninja import Router
+from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
-from ..auth import async_core_resource_auth
-from shared.auth import async_django_ninja_auth
 from .prompt import prompt_router
+from .prompt_details import prompt_details_router
 from .prompt_variant import prompt_variant_router
 from .prompt_version import version_router
-from .prompt_details import prompt_details_router
+from ..auth import async_core_resource_auth
 
 management_router = Router(
+    tags=['Recourse Management'],
     throttle=[
-        AnonRateThrottle('10/s'),
+        AnonRateThrottle('0/s'),
         AuthRateThrottle('100/s'),
     ],
     auth=async_core_resource_auth,
