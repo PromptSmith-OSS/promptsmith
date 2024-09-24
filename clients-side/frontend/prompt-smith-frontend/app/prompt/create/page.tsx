@@ -1,8 +1,13 @@
+import PromptCreate from "@/components/features/prompt-create";
 
+function CreatePage() {
 
-const CreatePage = () => {
-
-
+  return (
+    <>
+      <PromptCreate/>
+    </>
+  )
 }
+
 
 export default CreatePage
