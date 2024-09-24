@@ -27,7 +27,7 @@ import SkeletonCard from "@/components/custom-ui/skeleton-card";
 import Link from "next/link";
 
 
-function PromptComponent() {
+function PromptTable() {
   const {data, error, isLoading, pagination} = usePaginatedSWR('prompt', resourceFetcher)
   if (isLoading) {
     return <SkeletonCard/>
@@ -103,4 +103,4 @@ function PromptComponent() {
   )
 }
 
-export default PromptComponent
+export default PromptTable

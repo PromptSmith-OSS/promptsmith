@@ -1,4 +1,4 @@
-import PromptTable from "@/components/features/prompt";
+import PromptTable from "@/components/features/prompt-table";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
