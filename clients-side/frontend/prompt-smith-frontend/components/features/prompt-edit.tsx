@@ -2,7 +2,7 @@
 
 
 import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
+import {useFieldArray, useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "@/components/ui/button"
@@ -18,15 +18,17 @@ import {
 import {Input} from "@/components/ui/input"
 
 const promptSchema = z.object({
-  prompt: z.object({
-    unique_key: z.string()
-      .regex(/^[a-z0-9_]+$/, 'Prompt Key must be lowercase alphanumeric')
-      .min(4, 'Prompt Key must be at least 4 characters')
-      .max(256, 'Prompt Key must be at most 256 characters')
-    ,
-    description: z.string().optional(),
-    enabled: z.boolean().optional(),
-  }),
+
+  uuid: z.string().uuid().optional(),
+  created_at: z.date().optional(),
+  updated_at: z.date().optional(),
+  unique_key: z.string()
+    .regex(/^[a-z0-9_]+$/, 'Prompt Key must be lowercase alphanumeric')
+    .min(4, 'Prompt Key must be at least 4 characters')
+    .max(256, 'Prompt Key must be at most 256 characters')
+  ,
+  description: z.string().optional(),
+  enabled: z.boolean().optional(),
   variants: z.array(z.object({
     name: z.string()
       .min(1, 'Please use an uppercase letter for variant name')
@@ -34,8 +36,10 @@ const promptSchema = z.object({
     percentage: z.number().min(0).max(100),
     selected_version_uuid: z.string().uuid().optional(),
     segment_uuid: z.string().uuid().optional(),
+    uuid: z.string().uuid().optional(),
   })),
   versions: z.array(z.object({
+    uuid: z.string().uuid().optional(),
     name: z.string()
       .min(4, 'Version Name must be at least 4 characters')
       .max(128, 'Version Name must be at most 128 characters'),
@@ -43,18 +47,47 @@ const promptSchema = z.object({
       .min(10, 'Prompt Content must be at least 4 characters')
       .max(100000, 'Prompt Content must be at most 1024 characters'),
   })),
+
 });
 
+type PromptEditFormData = z.infer<typeof promptSchema>;
+
 function PromptEdit() {
+  // fetch prompt data from api and use as default values todo
+
+
   // 1. Define your form.
-  const form = useForm<z.infer<typeof promptSchema>>({
+  const form = useForm<PromptEditFormData>({
     resolver: zodResolver(promptSchema),
     defaultValues: {
-      prompt: {},
+      unique_key: "",
+      description: "",
+      enabled: false,
       variants: [],
       versions: [],
     },
   })
+
+  const {control} = form;
+
+  const {
+    fields: variantFields,
+    append: appendVariant,
+    remove: removeVariant,
+  } = useFieldArray({
+    control,
+    name: "variants", // Manage the variants array
+  });
+
+  const {
+    fields: versionFields,
+    append: appendVersion,
+    remove: removeVersion,
+  } = useFieldArray({
+    control,
+    name: "versions", // Manage the versions array
+  });
+
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof promptSchema>) {
@@ -68,10 +101,10 @@ function PromptEdit() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex gap-4 flex-col md:flex-row">
           <div className="basis-full md:basis-1/3 flex flex-col gap-4">
-            <div className="">
+            <div className="border">
               <FormField
                 control={form.control}
-                name="prompt.unique_key"
+                name="unique_key"
                 render={({field}) => (
                   <FormItem>
                     <FormLabel>Prompt Key</FormLabel>
@@ -86,21 +119,113 @@ function PromptEdit() {
                 )}
               />
 
-
+              {/*  description field */}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({field}) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Description of the prompt.
+                    </FormDescription>
+                    <FormMessage/>
+                  </FormItem>
+                )}
+              />
             </div>
 
 
-            <div className="">
-
-              col2
+            <div className="border">
+              {/*  variants field with list of options */}
+              {
+                variantFields.map((field, index) => {
+                  return (
+                    <div key={field.id}>
+                      <FormField
+                        control={control}
+                        name={`variants.${index}.name`}
+                        render={({field}) => (
+                          <FormItem>
+                            <FormLabel>Variant Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Name of the variant.
+                            </FormDescription>
+                            <FormMessage/>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name={`variants.${index}.percentage`}
+                        render={({field}) => (
+                          <FormItem>
+                            <FormLabel>Percentage</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Percentage of the variant.
+                            </FormDescription>
+                            <FormMessage/>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  );
+                })
+              }
             </div>
           </div>
           <div className="basis-full md:basis-2/3">
-            prompt content
+            {versionFields.map((field, index) => {
+              return (
+                <div key={field.id}>
+                  <FormField
+                    control={control}
+                    name={`versions.${index}.name`}
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Version Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          Name of the version.
+                        </FormDescription>
+                        <FormMessage/>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name={`versions.${index}.content`}
+                    render={({field}) => (
+                      <FormItem>
+                        <FormLabel>Content</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          Content of the version.
+                        </FormDescription>
+                        <FormMessage/>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              );
+            })
+            }
+
           </div>
-
-          <Button type="submit">Submit</Button>
-
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </Form>
