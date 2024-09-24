@@ -1,6 +1,4 @@
 'use client'
-
-
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useFieldArray, useForm} from "react-hook-form"
 import {z} from "zod"
@@ -16,10 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
-import {resourceFetcher, usePaginatedSWR} from "@/lib/api/fetcher";
+import {resourceFetcher} from "@/lib/api/fetcher";
 import SkeletonCard from "@/components/custom-ui/skeleton-card";
 import ErrorAlert from "@/components/custom-ui/error-alert";
 import useSWR from "swr";
+import {Card} from "@/components/ui/card";
 
 const promptSchema = z.object({
 
@@ -56,24 +55,19 @@ const promptSchema = z.object({
 
 type PromptEditFormData = z.infer<typeof promptSchema>;
 
-function PromptEdit({uuid}: { uuid: string }) {
-  // fetch prompt data from api and use as default values todo
-
-  const {data, error, isLoading} = useSWR(`prompt/${uuid}/detail`, resourceFetcher)
+function PromptEdit({unique_key, description, enabled, variants, versions}: PromptEditFormData) {
 
   // 1. Define your form.
   const form = useForm<PromptEditFormData>({
     resolver: zodResolver(promptSchema),
     defaultValues: {
-      unique_key: data?.unique_key || "",
-      description: data?.description || "",
-      enabled: false,
-      variants: [],
-      versions: [],
+      unique_key: unique_key,
+      description: description,
+      enabled: enabled,
+      variants: variants,
+      versions: versions,
     },
   })
-
-
 
 
   const {control} = form;
@@ -97,6 +91,157 @@ function PromptEdit({uuid}: { uuid: string }) {
   });
 
 
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof promptSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values)
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div>
+          <div className="flex gap-4 flex-col md:flex-row">
+            <div className="basis-full md:basis-1/3 flex flex-col gap-4">
+              <Card className="">
+                <FormField
+                  control={form.control}
+                  name="unique_key"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Prompt Key</FormLabel>
+                      <FormControl>
+                        <Input placeholder="" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Unique key for the prompt.
+                      </FormDescription>
+                      <FormMessage/>
+                    </FormItem>
+                  )}
+                />
+
+                {/*  description field */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Input placeholder="" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Description of the prompt.
+                      </FormDescription>
+                      <FormMessage/>
+                    </FormItem>
+                  )}
+                />
+              </Card>
+
+
+              <div className="border">
+                {/*  variants field with list of options */}
+                {
+                  variantFields.map((field, index) => {
+                    return (
+                      <div key={field.id}>
+                        <FormField
+                          control={control}
+                          name={`variants.${index}.name`}
+                          render={({field}) => (
+                            <FormItem>
+                              <FormLabel>Variant Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="" {...field} />
+                              </FormControl>
+                              <FormDescription>
+                                Name of the variant.
+                              </FormDescription>
+                              <FormMessage/>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={control}
+                          name={`variants.${index}.percentage`}
+                          render={({field}) => (
+                            <FormItem>
+                              <FormLabel>Percentage</FormLabel>
+                              <FormControl>
+                                <Input type="number" placeholder="" {...field} />
+                              </FormControl>
+                              <FormDescription>
+                                Percentage of the variant.
+                              </FormDescription>
+                              <FormMessage/>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    );
+                  })
+                }
+              </div>
+            </div>
+            <div className="basis-full md:basis-2/3">
+              {versionFields.map((field, index) => {
+                return (
+                  <div key={field.id}>
+                    <FormField
+                      control={control}
+                      name={`versions.${index}.name`}
+                      render={({field}) => (
+                        <FormItem>
+                          <FormLabel>Version Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            Name of the version.
+                          </FormDescription>
+                          <FormMessage/>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={control}
+                      name={`versions.${index}.content`}
+                      render={({field}) => (
+                        <FormItem>
+                          <FormLabel>Content</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            Content of the version.
+                          </FormDescription>
+                          <FormMessage/>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                );
+              })
+              }
+
+            </div>
+
+          </div>
+          <Button type="submit">Save</Button>
+        </div>
+      </form>
+    </Form>
+  )
+}
+
+const PromptDetail = ({uuid}: { uuid: string }) => {
+
+  // fetch prompt data from api and use as default values todo
+
+  const {data, error, isLoading, mutate} = useSWR(`prompt/${uuid}/detail`, resourceFetcher)
 
   if (isLoading) {
     return <SkeletonCard/>
@@ -108,151 +253,10 @@ function PromptEdit({uuid}: { uuid: string }) {
 
   console.log(data)
 
-
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof promptSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-  }
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex gap-4 flex-col md:flex-row">
-          <div className="basis-full md:basis-1/3 flex flex-col gap-4">
-            <div className="border">
-              <FormField
-                control={form.control}
-                name="unique_key"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Prompt Key</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" {...field} value={data?.unique_key} />
-                    </FormControl>
-                    <FormDescription>
-                      Unique key for the prompt.
-                    </FormDescription>
-                    <FormMessage/>
-                  </FormItem>
-                )}
-              />
-
-              {/*  description field */}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({field}) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" {...field} value={data?.description}/>
-                    </FormControl>
-                    <FormDescription>
-                      Description of the prompt.
-                    </FormDescription>
-                    <FormMessage/>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-
-            <div className="border">
-              {/*  variants field with list of options */}
-              {
-                variantFields.map((field, index) => {
-                  return (
-                    <div key={field.id}>
-                      <FormField
-                        control={control}
-                        name={`variants.${index}.name`}
-                        render={({field}) => (
-                          <FormItem>
-                            <FormLabel>Variant Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Name of the variant.
-                            </FormDescription>
-                            <FormMessage/>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={control}
-                        name={`variants.${index}.percentage`}
-                        render={({field}) => (
-                          <FormItem>
-                            <FormLabel>Percentage</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Percentage of the variant.
-                            </FormDescription>
-                            <FormMessage/>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  );
-                })
-              }
-            </div>
-          </div>
-          <div className="basis-full md:basis-2/3">
-            {versionFields.map((field, index) => {
-              return (
-                <div key={field.id}>
-                  <FormField
-                    control={control}
-                    name={`versions.${index}.name`}
-                    render={({field}) => (
-                      <FormItem>
-                        <FormLabel>Version Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Name of the version.
-                        </FormDescription>
-                        <FormMessage/>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={control}
-                    name={`versions.${index}.content`}
-                    render={({field}) => (
-                      <FormItem>
-                        <FormLabel>Content</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Content of the version.
-                        </FormDescription>
-                        <FormMessage/>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              );
-            })
-            }
-
-          </div>
-          <Button type="submit">Save</Button>
-        </div>
-      </form>
-    </Form>
-
-
+    <PromptEdit {...data}/>
   )
 }
 
 
-export default PromptEdit
+export default PromptDetail
