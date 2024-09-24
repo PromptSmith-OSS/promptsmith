@@ -14,7 +14,7 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Spinner} from "@/components/ui-ext/spinner";
+import {LoadingButton} from "@/components/ui-ext/loading-button";
 
 
 const getProjects = async (): Promise<Project[]> => {
@@ -79,7 +79,7 @@ const Login = () => {
       console.error('No projects found')
     }
     setLoading(false)
-    router.push('/dashboard')
+    router.push('/prompt')
   }
 
 
@@ -147,11 +147,12 @@ const Login = () => {
             </CardContent>
             <CardFooter>
               {
-                !loading ? <Button className="w-full" type="submit">
-                  Sign in
-                </Button> : <div className="w-full">
-                  <Spinner/>
-                </div>
+                !loading ? <Button className="w-full h-9" type="submit">
+                    Sign in
+                  </Button> :
+                  <LoadingButton className="w-full h-9" loading={loading} disabled >
+                    Signing in
+                  </LoadingButton>
               }
             </CardFooter>
           </form>
