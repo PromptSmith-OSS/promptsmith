@@ -2,7 +2,6 @@ from ninja import Router
 from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
 from .prompt import prompt_router
-from .prompt_details import prompt_details_router
 from .prompt_variant import prompt_variant_router
 from .prompt_version import version_router
 from ..auth import async_core_resource_auth
@@ -32,4 +31,3 @@ def ping(request):
 management_router.add_router("/prompt", prompt_router)
 management_router.add_router("/prompt", prompt_variant_router)
 management_router.add_router("/prompt", version_router)
-management_router.add_router("/prompt-details", prompt_details_router)
