@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SkeletonCard from "@/components/custom-ui/skeleton-card";
 import Link from "next/link";
+import ErrorAlert from "@/components/custom-ui/error-alert";
 
 
 function PromptTable() {
@@ -34,7 +35,7 @@ function PromptTable() {
   }
 
   if (error) {
-    return <div>Error loading prompts</div>
+    return <ErrorAlert open={!!error}/>
   }
 
   const prompts = data?.items as Prompt[]
@@ -81,7 +82,7 @@ function PromptTable() {
                       () => {
                         console.log('Disable')
                       }
-                  }
+                    }
                   >
                     Disable
                   </DropdownMenuItem>

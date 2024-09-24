@@ -16,6 +16,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
+import {resourceFetcher, usePaginatedSWR} from "@/lib/api/fetcher";
+import SkeletonCard from "@/components/custom-ui/skeleton-card";
+import ErrorAlert from "@/components/custom-ui/error-alert";
+import useSWR from "swr";
 
 const promptSchema = z.object({
 
@@ -52,21 +56,25 @@ const promptSchema = z.object({
 
 type PromptEditFormData = z.infer<typeof promptSchema>;
 
-function PromptEdit() {
+function PromptEdit({uuid}: { uuid: string }) {
   // fetch prompt data from api and use as default values todo
 
+  const {data, error, isLoading} = useSWR(`prompt/${uuid}/detail`, resourceFetcher)
 
   // 1. Define your form.
   const form = useForm<PromptEditFormData>({
     resolver: zodResolver(promptSchema),
     defaultValues: {
-      unique_key: "",
-      description: "",
+      unique_key: data?.unique_key || "",
+      description: data?.description || "",
       enabled: false,
       variants: [],
       versions: [],
     },
   })
+
+
+
 
   const {control} = form;
 
@@ -89,6 +97,18 @@ function PromptEdit() {
   });
 
 
+
+  if (isLoading) {
+    return <SkeletonCard/>
+  }
+
+  if (error) {
+    return <ErrorAlert open={!!error}/>
+  }
+
+  console.log(data)
+
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof promptSchema>) {
     // Do something with the form values.
@@ -109,7 +129,7 @@ function PromptEdit() {
                   <FormItem>
                     <FormLabel>Prompt Key</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input placeholder="" {...field} value={data?.unique_key} />
                     </FormControl>
                     <FormDescription>
                       Unique key for the prompt.
@@ -127,7 +147,7 @@ function PromptEdit() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input placeholder="" {...field} value={data?.description}/>
                     </FormControl>
                     <FormDescription>
                       Description of the prompt.
