@@ -34,7 +34,6 @@ class PromptDetailOutSchema(PromptCreateSchema):
     updated_at: datetime
     created_at: datetime
     variants: list[PromptVariantOutSchema]
-    versions: list[PromptVersionOutSchema]
 
     class Meta:
         exclude = EXCLUDE_FOR_RESPONSE + ('project',)
