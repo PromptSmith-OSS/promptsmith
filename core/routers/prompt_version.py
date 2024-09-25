@@ -1,22 +1,24 @@
+from functools import wraps
 from typing import List
 from uuid import UUID
-import uuid
 
-from core.models.prompt_variant import PromptVariant
 from django.db import models
 from django.shortcuts import aget_object_or_404, aget_list_or_404
 from ninja import Router
 from ninja.errors import ValidationError
 
-from core.models.prompt import Prompt
+from core.models.prompt_variant import PromptVariant
 from core.models.prompt_version import PromptVersion
 from core.schemas.prompt_version import PromptVersionCreateSchema, PromptVersionOutSchema, PromptVersionUpdateSchema
 
-from functools import wraps
 
-
-# Decorator for checking if a variant exists
 def check_variant_exists(func):
+    """
+    A decorator to check if the variant exists and belongs to the project/user
+    :param func:
+    :return:
+    """
+
     @wraps(func)
     async def wrapper(request, prompt_uuid: UUID, variant_uuid: UUID, *args, **kwargs):
         project = request.auth
@@ -63,6 +65,7 @@ async def get_all_versions(request, prompt_uuid: UUID, variant_uuid: UUID):
 
 
 @version_router.get('/{prompt_uuid}/{variant_uuid}/version/{uuid}', response=PromptVersionOutSchema)
+@check_variant_exists
 async def get_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: UUID):
     """
     Get the version by uuid
@@ -74,6 +77,7 @@ async def get_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: UUID
 
 
 @version_router.put('/{prompt_uuid}/{variant_uuid}/version/{uuid}', response=PromptVersionOutSchema)
+@check_variant_exists
 async def update_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: UUID,
                          version: PromptVersionUpdateSchema):
     """
@@ -91,6 +95,7 @@ async def update_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: U
 
 
 @version_router.delete('/{prompt_uuid}/{variant_uuid}/version/{uuid}')
+@check_variant_exists
 async def delete_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: UUID):
     """
     Delete a version
