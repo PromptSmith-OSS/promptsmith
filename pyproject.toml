@@ -17,6 +17,7 @@ python-dotenv = "^1.0.1"
 django-cors-headers = "^4.4.0"
 django-mailer = "^2.3.2"
 orjson = "^3.10.7"
+django-simple-history = "^3.7.0"
 
 
 [build-system]

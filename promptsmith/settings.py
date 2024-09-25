@@ -107,6 +107,9 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount',
     # 'allauth.mfa',
     # 'allauth.usersessions',
+
+
+    'simple_history',
 ]
 
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
@@ -121,6 +124,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     "allauth.account.middleware.AccountMiddleware",
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 TEMPLATES = [

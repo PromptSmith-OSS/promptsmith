@@ -1,15 +1,18 @@
+from core.models.prompt_variant import PromptVariant
 from django.db import models
 
 from shared.base_models import SoftDeleteUUIDBaseModel
 from .prompt import Prompt
+from simple_history.models import HistoricalRecords
 
 
 class PromptVersion(SoftDeleteUUIDBaseModel):
     name = models.TextField(max_length=128)
-    prompt = models.ForeignKey(Prompt, on_delete=models.CASCADE, related_name='versions')
+    variant = models.ForeignKey(PromptVariant, on_delete=models.CASCADE, related_name='versions')
     # created by
     # updated by
     content = models.TextField(max_length=1000000)  # hard limit to 1 million characters
+    history = HistoricalRecords() # no hard limit, but we need a soft limit
 
     def __str__(self):
         return self.unique_key + " - " + self.content[:50]
@@ -17,5 +20,5 @@ class PromptVersion(SoftDeleteUUIDBaseModel):
     class Meta:
         indexes = []
         constraints = [
-            models.UniqueConstraint(fields=['prompt', 'name'], name='unique_prompt_version_name')
+            models.UniqueConstraint(fields=['variant', 'name'], name='unique_variant_version_name')
         ]
