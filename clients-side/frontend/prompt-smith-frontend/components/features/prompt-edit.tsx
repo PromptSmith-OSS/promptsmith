@@ -1,6 +1,6 @@
 'use client'
 import {zodResolver} from "@hookform/resolvers/zod"
-import {useFieldArray, useForm} from "react-hook-form"
+import {useFieldArray, useForm, Controller, Control} from "react-hook-form"
 import {z} from "zod"
 
 import {Button} from "@/components/ui/button"
@@ -40,22 +40,59 @@ const promptSchema = z.object({
     selected_version_uuid: z.string().uuid().optional(),
     segment_uuid: z.string().uuid().optional(),
     uuid: z.string().uuid().optional(),
+    versions: z.array(z.object({
+      uuid: z.string().uuid().optional(),
+      name: z.string()
+        .min(4, 'Version Name must be at least 4 characters')
+        .max(128, 'Version Name must be at most 128 characters'),
+      content: z.string()
+        .min(10, 'Prompt Content must be at least 4 characters')
+        .max(100000, 'Prompt Content must be at most 1024 characters'),
+    })),
   })),
-  versions: z.array(z.object({
-    uuid: z.string().uuid().optional(),
-    name: z.string()
-      .min(4, 'Version Name must be at least 4 characters')
-      .max(128, 'Version Name must be at most 128 characters'),
-    content: z.string()
-      .min(10, 'Prompt Content must be at least 4 characters')
-      .max(100000, 'Prompt Content must be at most 1024 characters'),
-  })),
-
 });
 
 type PromptEditFormData = z.infer<typeof promptSchema>;
 
-function PromptEdit({unique_key, description, enabled, variants, versions}: PromptEditFormData) {
+
+// Separate component for rendering versions inside each variant
+const  VersionsFieldArray =({ control, variantIndex }: {
+  control: Control<PromptEditFormData>;
+  variantIndex: number;
+}) => {
+  const { fields: versionFields, append: appendVersion } = useFieldArray({
+    control,
+    name: `variants.${variantIndex}.versions`,
+  });
+
+  return (
+    <div>
+      {versionFields.map((version, versionIndex) => (
+        <div key={version.id}>
+          <h4>Version {versionIndex + 1}</h4>
+
+          <Controller
+            name={`variants.${variantIndex}.versions.${versionIndex}.name`}
+            control={control}
+            render={({ field }) => <input {...field} placeholder="Version Name" />}
+          />
+
+          <Controller
+            name={`variants.${variantIndex}.versions.${versionIndex}.content`}
+            control={control}
+            render={({ field }) => <textarea {...field} placeholder="Content" />}
+          />
+        </div>
+      ))}
+
+      <button type="button" onClick={() => appendVersion({ name: "", content: "" })}>
+        Add Version
+      </button>
+    </div>
+  );
+}
+
+const  PromptEdit =({unique_key, description, enabled, variants}: PromptEditFormData) => {
 
   // 1. Define your form.
   const form = useForm<PromptEditFormData>({
@@ -65,12 +102,11 @@ function PromptEdit({unique_key, description, enabled, variants, versions}: Prom
       description: description,
       enabled: enabled,
       variants: variants,
-      versions: versions,
     },
   })
 
 
-  const {control} = form;
+  const {control, handleSubmit} = form;
 
   const {
     fields: variantFields,
@@ -81,18 +117,9 @@ function PromptEdit({unique_key, description, enabled, variants, versions}: Prom
     name: "variants", // Manage the variants array
   });
 
-  const {
-    fields: versionFields,
-    append: appendVersion,
-    remove: removeVersion,
-  } = useFieldArray({
-    control,
-    name: "versions", // Manage the versions array
-  });
-
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof promptSchema>) {
+  function onSubmit(values: PromptEditFormData) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
@@ -100,7 +127,7 @@ function PromptEdit({unique_key, description, enabled, variants, versions}: Prom
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div>
           <div className="flex gap-4 flex-col md:flex-row">
             <div className="basis-full md:basis-1/3 flex flex-col gap-4">
@@ -180,6 +207,12 @@ function PromptEdit({unique_key, description, enabled, variants, versions}: Prom
                             </FormItem>
                           )}
                         />
+
+                                  <VersionsFieldArray
+            control={control}
+            variantIndex={index}
+            versions={field.versions}
+          />
                       </div>
                     );
                   })
@@ -187,45 +220,7 @@ function PromptEdit({unique_key, description, enabled, variants, versions}: Prom
               </div>
             </div>
             <div className="basis-full md:basis-2/3">
-              {versionFields.map((field, index) => {
-                return (
-                  <div key={field.id}>
-                    <FormField
-                      control={control}
-                      name={`versions.${index}.name`}
-                      render={({field}) => (
-                        <FormItem>
-                          <FormLabel>Version Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} />
-                          </FormControl>
-                          <FormDescription>
-                            Name of the version.
-                          </FormDescription>
-                          <FormMessage/>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name={`versions.${index}.content`}
-                      render={({field}) => (
-                        <FormItem>
-                          <FormLabel>Content</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} />
-                          </FormControl>
-                          <FormDescription>
-                            Content of the version.
-                          </FormDescription>
-                          <FormMessage/>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                );
-              })
-              }
+
 
             </div>
 
