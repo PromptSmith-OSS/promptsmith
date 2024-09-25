@@ -36,29 +36,29 @@ const SideBarContent = () => {
           <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
           Prompts
         </Link>
-        <div
-          className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-        >
-          <Users className="h-5 w-5 md:h-4 md:w-4"/>
-          <WIPHover>
-            Segments
-            <i>
-              (WIP)
-            </i>
-          </WIPHover>
-        </div>
+        {/*<div*/}
+        {/*  className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"*/}
+        {/*>*/}
+        {/*  <Users className="h-5 w-5 md:h-4 md:w-4"/>*/}
+        {/*  <WIPHover>*/}
+        {/*    Segments*/}
+        {/*    <i>*/}
+        {/*      (WIP)*/}
+        {/*    </i>*/}
+        {/*  </WIPHover>*/}
+        {/*</div>*/}
 
-        <div
-          className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-        >
-          <Package className="h-5 w-5 md:h-4 md:w-4"/>
-          <WIPHover>
-            Logs
-            <i>
-              (WIP)
-            </i>
-          </WIPHover>
-        </div>
+        {/*<div*/}
+        {/*  className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"*/}
+        {/*>*/}
+        {/*  <Package className="h-5 w-5 md:h-4 md:w-4"/>*/}
+        {/*  <WIPHover>*/}
+        {/*    Logs*/}
+        {/*    <i>*/}
+        {/*      (WIP)*/}
+        {/*    </i>*/}
+        {/*  </WIPHover>*/}
+        {/*</div>*/}
 
         <hr className="my-2"/>
 
