@@ -12,10 +12,6 @@ from core.models.prompt import Prompt
 from core.models.prompt_version import PromptVersion
 from core.schemas.prompt_version import PromptVersionCreateSchema, PromptVersionOutSchema, PromptVersionUpdateSchema
 
-version_router = Router(
-    tags=['Prompt Version'],
-)
-
 from functools import wraps
 
 
@@ -33,6 +29,11 @@ def check_variant_exists(func):
         return await func(request, prompt_uuid, variant_uuid, *args, **kwargs)
 
     return wrapper
+
+
+version_router = Router(
+    tags=['Prompt Version'],
+)
 
 
 @version_router.post('/{prompt_uuid}/{variant_uuid}/version', response=PromptVersionOutSchema)
@@ -55,7 +56,7 @@ async def get_all_versions(request, prompt_uuid: UUID, variant_uuid: UUID):
     """
     Get all versions for a prompt
     """
-    qs = PromptVersion.objects.filter(variant_uuid=variant_uuid).all().select_related('variant').annotate(
+    qs = PromptVersion.objects.filter(variant__uuid=variant_uuid).all().select_related('variant').annotate(
         variant_uuid=models.F('variant__uuid'),
     )
     return await aget_list_or_404(qs)
