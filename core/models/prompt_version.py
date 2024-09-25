@@ -12,6 +12,9 @@ class PromptVersion(SoftDeleteUUIDBaseModel):
     # created by
     # updated by
     content = models.TextField(max_length=1000000)  # hard limit to 1 million characters
+    temperature = models.FloatField(default=0.2)
+    top_p = models.FloatField(default=0.9)
+    maximum_tokens = models.IntegerField(default=256) # maximum tokens to generate
 
     history = HistoricalRecords(
         excluded_fields=['uuid', 'deleted_at', 'created_at', 'updated_at', 'variant']
