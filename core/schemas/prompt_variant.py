@@ -35,7 +35,7 @@ class PromptVariantOutSchema(PromptVariantCreateSchema):
     created_at: datetime
     prompt_uuid: Optional[UUID] = None
     segment_uuid: Optional[UUID] = None
-    versions: list[PromptVersionOutSchema]
+    versions: Optional[list[PromptVersionOutSchema]] = None
 
     class Meta:
         model = PromptVariant

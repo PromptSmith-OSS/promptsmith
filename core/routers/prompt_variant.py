@@ -53,10 +53,11 @@ async def get_prompt_variant(request, prompt_uuid: UUID, uuid: UUID):
     """
     Get the prompt variant by uuid
     """
-    qs = PromptVariant.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt', 'segment').annotate(
+    qs = (PromptVariant.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt', 'segment')
+    .prefetch_related('versions').annotate(
         prompt_uuid=models.F('prompt__uuid'),
         segment_uuid=models.F('segment__uuid'),
-    )
+    ))
     return await aget_object_or_404(qs)
 
 
