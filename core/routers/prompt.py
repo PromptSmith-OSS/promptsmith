@@ -58,16 +58,14 @@ async def get_prompt(request, uuid: UUID):
 
 
 @prompt_router.get('/{uuid}/detail', response=PromptDetailOutSchema)
-async def get_prompt_with_varians_versions(request, uuid: UUID):
+async def get_prompt_with_variants_versions(request, uuid: UUID):
     """
     Get the prompt by uuid
     """
     project_uuid = request.auth.uuid
-    qs = Prompt.objects.filter(uuid=uuid, project__uuid=project_uuid).prefetch_related('versions', 'variants').annotate(
+    qs = Prompt.objects.filter(uuid=uuid, project__uuid=project_uuid).prefetch_related('variants', 'variants__versions').annotate(
         project_uuid=models.F('project__uuid')
     )
-
-
 
     return await aget_object_or_404(qs)
 

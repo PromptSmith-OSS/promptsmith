@@ -12,7 +12,9 @@ class PromptVersion(SoftDeleteUUIDBaseModel):
     # created by
     # updated by
     content = models.TextField(max_length=1000000)  # hard limit to 1 million characters
-    history = HistoricalRecords() # no hard limit, but we need a soft limit
+    history = HistoricalRecords(
+        excluded_fields=['uuid', 'deleted_at', 'created_at', 'updated_at', 'variant']
+    ) # no hard limit, but a soft limit is required
 
     def __str__(self):
         return self.unique_key + " - " + self.content[:50]

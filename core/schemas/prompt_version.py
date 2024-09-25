@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import Optional
-
-from ninja import ModelSchema, Schema
-
-from core.models import Prompt, PromptVersion
-
-from shared.constants import EXCLUDE_FOR_CREATE, EXCLUDE_FOR_RESPONSE, EXCLUDE_FOR_UPDATE
-from pydantic import constr, validator, field_validator
 from uuid import UUID
+
+from ninja import ModelSchema
+from pydantic import constr
+
+from core.models import PromptVersion
+from shared.constants import EXCLUDE_FOR_CREATE, EXCLUDE_FOR_RESPONSE
 
 
 class PromptVersionCreateSchema(ModelSchema):
@@ -16,14 +15,14 @@ class PromptVersionCreateSchema(ModelSchema):
 
     class Meta:
         model = PromptVersion
-        exclude = EXCLUDE_FOR_CREATE + ('prompt',)
+        exclude = EXCLUDE_FOR_CREATE + ('variant',)
 
 
 class PromptVersionOutSchema(PromptVersionCreateSchema):
     uuid: UUID
     updated_at: datetime
     created_at: datetime
-    prompt_uuid: Optional[UUID] = None
+    variant_uuid: Optional[UUID] = None
 
     class Meta:
         model = PromptVersion
