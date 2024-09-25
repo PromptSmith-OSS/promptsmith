@@ -56,11 +56,11 @@ type PromptEditFormData = z.infer<typeof promptSchema>;
 
 
 // Separate component for rendering versions inside each variant
-const  VersionsFieldArray =({ control, variantIndex }: {
+const VersionsFieldArray = ({control, variantIndex}: {
   control: Control<PromptEditFormData>;
   variantIndex: number;
 }) => {
-  const { fields: versionFields, append: appendVersion } = useFieldArray({
+  const {fields: versionFields, append: appendVersion} = useFieldArray({
     control,
     name: `variants.${variantIndex}.versions`,
   });
@@ -74,25 +74,25 @@ const  VersionsFieldArray =({ control, variantIndex }: {
           <Controller
             name={`variants.${variantIndex}.versions.${versionIndex}.name`}
             control={control}
-            render={({ field }) => <input {...field} placeholder="Version Name" />}
+            render={({field}) => <input {...field} placeholder="Version Name"/>}
           />
 
           <Controller
             name={`variants.${variantIndex}.versions.${versionIndex}.content`}
             control={control}
-            render={({ field }) => <textarea {...field} placeholder="Content" />}
+            render={({field}) => <textarea {...field} placeholder="Content"/>}
           />
         </div>
       ))}
 
-      <button type="button" onClick={() => appendVersion({ name: "", content: "" })}>
+      <button type="button" onClick={() => appendVersion({name: "", content: ""})}>
         Add Version
       </button>
     </div>
   );
 }
 
-const  PromptEdit =({unique_key, description, enabled, variants}: PromptEditFormData) => {
+const PromptEdit = ({unique_key, description, enabled, variants}: PromptEditFormData) => {
 
   // 1. Define your form.
   const form = useForm<PromptEditFormData>({
@@ -129,8 +129,8 @@ const  PromptEdit =({unique_key, description, enabled, variants}: PromptEditForm
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div>
-          <div className="flex gap-4 flex-col md:flex-row">
-            <div className="basis-full md:basis-1/3 flex flex-col gap-4">
+          <div className="flex gap-4 flex-col">
+            <div className="">
               <Card className="">
                 <FormField
                   control={form.control}
@@ -168,60 +168,55 @@ const  PromptEdit =({unique_key, description, enabled, variants}: PromptEditForm
                 />
               </Card>
 
-
-              <div className="border">
-                {/*  variants field with list of options */}
-                {
-                  variantFields.map((field, index) => {
-                    return (
-                      <div key={field.id}>
-                        <FormField
-                          control={control}
-                          name={`variants.${index}.name`}
-                          render={({field}) => (
-                            <FormItem>
-                              <FormLabel>Variant Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                                Name of the variant.
-                              </FormDescription>
-                              <FormMessage/>
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={control}
-                          name={`variants.${index}.percentage`}
-                          render={({field}) => (
-                            <FormItem>
-                              <FormLabel>Percentage</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                                Percentage of the variant.
-                              </FormDescription>
-                              <FormMessage/>
-                            </FormItem>
-                          )}
-                        />
-
-                                  <VersionsFieldArray
-            control={control}
-            variantIndex={index}
-            versions={field.versions}
-          />
-                      </div>
-                    );
-                  })
-                }
-              </div>
             </div>
-            <div className="basis-full md:basis-2/3">
+            <div className="flex-row flex gap-6">
+              {/*  variants field with list of options */}
+              {
+                variantFields.map((field, index) => {
+                  return (
+                    <div key={field.id} className="basis-1/2 flex flex-col border">
+                      <FormField
+                        control={control}
+                        name={`variants.${index}.name`}
+                        render={({field}) => (
+                          <FormItem>
+                            <FormLabel>Variant Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Name of the variant.
+                            </FormDescription>
+                            <FormMessage/>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name={`variants.${index}.percentage`}
+                        render={({field}) => (
+                          <FormItem>
+                            <FormLabel>Percentage</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Percentage of the variant.
+                            </FormDescription>
+                            <FormMessage/>
+                          </FormItem>
+                        )}
+                      />
 
-
+                      <VersionsFieldArray
+                        control={control}
+                        variantIndex={index}
+                        versions={field.versions}
+                      />
+                    </div>
+                  );
+                })
+              }
             </div>
 
           </div>
