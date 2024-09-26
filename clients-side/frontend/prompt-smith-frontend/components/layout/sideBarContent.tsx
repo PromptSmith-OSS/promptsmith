@@ -3,15 +3,18 @@ import {Package, SquareLibrary, Users} from "lucide-react";
 import * as React from "react";
 import Logo from "@/components/custom-ui/logo";
 import WIPHover from "@/components/custom-ui/wip-hover";
+import SidebarLinkNav from "@/components/client/sidebar-link-nav";
 
 
 const SideBarContent = () => {
+
+
   return (
     <>
-      <nav className="grid items-start px-0 md:px-2 text-lg md:text-sm font-medium lg:px-4 gap-2 md:gap-0">
+      <nav className="grid items-start gap-2 px-0 text-lg font-medium md:gap-0 md:px-2 md:text-sm lg:px-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold md:hidden mb-4"
+          className="mb-4 flex items-center gap-2 text-lg font-semibold md:hidden"
         >
           {/*todo Logo and Title in Side Bar*/}
           <Logo/>
@@ -19,7 +22,7 @@ const SideBarContent = () => {
 
         {/*<Link*/}
         {/*  href="/"*/}
-        {/*  className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"*/}
+        {/*  className="flex items-center gap-4 rounded-lg px-3 py-2 transition-all mx-[-0.65rem] text-muted-foreground hover:text-primary md:mx-0 md:gap-3"*/}
         {/*>*/}
         {/*  <Home className="h-5 w-5 md:h-4 md:w-4"/>*/}
         {/*  Dashboard*/}
@@ -29,15 +32,17 @@ const SideBarContent = () => {
         {/* todo add metrics here  */}
         {/*</Link>*/}
 
-        <Link
-          href="/prompt"
-          className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-        >
-          <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
-          Prompts
-        </Link>
+        <section>
+          <span className="sr-only">Prompts Menu</span>
+          <SidebarLinkNav href="/prompt">
+            <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
+            Prompts
+          </SidebarLinkNav>
+        </section>
+
+
         {/*<div*/}
-        {/*  className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"*/}
+        {/*  className="flex items-center gap-4 rounded-lg px-3 py-2 transition-all mx-[-0.65rem] text-muted-foreground hover:text-primary md:mx-0 md:gap-3"*/}
         {/*>*/}
         {/*  <Users className="h-5 w-5 md:h-4 md:w-4"/>*/}
         {/*  <WIPHover>*/}
@@ -49,7 +54,7 @@ const SideBarContent = () => {
         {/*</div>*/}
 
         {/*<div*/}
-        {/*  className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"*/}
+        {/*  className="flex items-center gap-4 rounded-lg px-3 py-2 transition-all mx-[-0.65rem] text-muted-foreground hover:text-primary md:mx-0 md:gap-3"*/}
         {/*>*/}
         {/*  <Package className="h-5 w-5 md:h-4 md:w-4"/>*/}
         {/*  <WIPHover>*/}
@@ -62,25 +67,24 @@ const SideBarContent = () => {
 
         <hr className="my-2"/>
 
-        <Link
-          href="/support"
-          className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-        >
-          <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
-          Support
-        </Link>
-
-        <Link
-          href="/doc"
-          className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-        >
-          <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
-          Documentation
-        </Link>
+        <section>
+          <span className="sr-only">Support Page</span>
+          <SidebarLinkNav href="/support">
+            <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
+            Support
+          </SidebarLinkNav>
+        </section>
+        <section>
+          <span className="sr-only">Document Page</span>
+          <SidebarLinkNav href="/doc">
+            <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
+            Documentation
+          </SidebarLinkNav>
+        </section>
         {/*todo support audit logs*/}
         {/*<Link*/}
         {/*  href="/logs"*/}
-        {/*  className="mx-[-0.65rem] md:mx-0 flex items-center gap-4 md:gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"*/}
+        {/*  className="flex items-center gap-4 rounded-lg px-3 py-2 transition-all mx-[-0.65rem] text-muted-foreground hover:text-primary md:mx-0 md:gap-3"*/}
         {/*>*/}
         {/*  <LineChart className="h-5 w-5 md:h-4 md:w-4"/>*/}
         {/*  Audit Log*/}
