@@ -6,7 +6,7 @@ import WIPHover from "@/components/custom-ui/wip-hover";
 import SidebarLinkNav from "@/components/client/sidebar-link-nav";
 
 
-const SideBarContent = () => {
+const SidebarContent = () => {
 
 
   return (
@@ -94,4 +94,4 @@ const SideBarContent = () => {
   )
 }
 
-export default SideBarContent
+export default SidebarContent

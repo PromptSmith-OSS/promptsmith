@@ -1,11 +1,11 @@
 import Link from "next/link";
 import * as React from "react";
-import SideBarUpgradeCard from "@/components/layout/sideBarUpgradeCard";
-import SideBarContent from "@/components/layout/sideBarContent";
+import SidebarUpgradeCard from "@/components/layout/sidebar-upgrade-card";
+import SidebarContent from "@/components/layout/sidebar-content";
 import Logo from "@/components/custom-ui/logo";
 
 
-const SideBar = () => {
+const Sidebar = () => {
   return (
     <div className="sticky top-0 left-0 hidden h-screen border-r bg-muted/60 md:block">
       <div className="flex flex-col gap-2">
@@ -15,7 +15,7 @@ const SideBar = () => {
           </Link>
         </div>
         <div className="flex-1">
-          <SideBarContent/>
+          <SidebarContent/>
         </div>
         {/*<div className="mt-auto p-4">*/}
         {/*  <SideBarUpgradeCard/>*/}
@@ -25,4 +25,4 @@ const SideBar = () => {
   )
 }
 
-export default SideBar
+export default Sidebar

@@ -4,7 +4,7 @@ import "./globals.css";
 import {ThemeProvider} from "@/components/client/theme-provider"
 import Head from "next/head";
 import * as React from "react"
-import SideBar from "@/components/layout/sideBar";
+import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 
 

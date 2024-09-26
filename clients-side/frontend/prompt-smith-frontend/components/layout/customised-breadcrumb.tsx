@@ -10,7 +10,7 @@ import Link from "next/link";
 import * as React from "react";
 
 
-const CustomisedBreadCrumb = () => {
+const CustomisedBreadcrumb = () => {
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
@@ -34,4 +34,4 @@ const CustomisedBreadCrumb = () => {
   )
 }
 
-export default CustomisedBreadCrumb;
+export default CustomisedBreadcrumb;

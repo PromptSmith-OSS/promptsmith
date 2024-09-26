@@ -3,7 +3,7 @@ import {Button} from "@/components/ui/button";
 import * as React from "react";
 
 
-const SideBarUpgradeCard = () => {
+const SidebarUpgradeCard = () => {
   return (
       <Card x-chunk="dashboard-02-chunk-0">
         <CardHeader className="p-2 p-4">
@@ -23,4 +23,4 @@ const SideBarUpgradeCard = () => {
   )
 }
 
-export default SideBarUpgradeCard
+export default SidebarUpgradeCard

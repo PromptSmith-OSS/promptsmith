@@ -1,5 +1,5 @@
 import * as React from "react";
-import SideBar from "@/components/layout/sideBar";
+import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 import {Button} from "@/components/ui/button";
 import {Share} from "lucide-react";
@@ -14,7 +14,7 @@ const DashboardLayout = ({
   return (
     <>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-        <SideBar/>
+        <Sidebar/>
         <div className="flex flex-col">
           <Header/>
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6  max-w-screen-2xl w-full mx-auto">

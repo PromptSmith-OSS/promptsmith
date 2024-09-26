@@ -2,11 +2,11 @@ import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
 import {Menu} from "lucide-react";
 import * as React from "react";
-import SideBarUpgradeCard from "@/components/layout/sideBarUpgradeCard";
-import SideBarContent from "@/components/layout/sideBarContent";
+import SidebarUpgradeCard from "@/components/layout/sidebar-upgrade-card";
+import SidebarContent from "@/components/layout/sidebar-content";
 
 
-const SideBarWithToggleForMobile = () => {
+const SidebarMobile = () => {
   return (
     <div className='bg-muted/100'>
       <Sheet>
@@ -21,9 +21,9 @@ const SideBarWithToggleForMobile = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col bg-muted/90 min-w-64">
-          <SideBarContent />
+          <SidebarContent />
           <div className="mt-auto p-4">
-            <SideBarUpgradeCard/>
+            <SidebarUpgradeCard/>
           </div>
         </SheetContent>
       </Sheet>
@@ -31,4 +31,4 @@ const SideBarWithToggleForMobile = () => {
   )
 }
 
-export default SideBarWithToggleForMobile
+export default SidebarMobile
