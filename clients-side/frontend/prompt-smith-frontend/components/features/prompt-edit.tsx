@@ -19,9 +19,9 @@ import SkeletonCard from "@/components/custom-ui/skeleton-card";
 import ErrorAlert from "@/components/custom-ui/error-alert";
 import useSWR from "swr";
 import {Card} from "@/components/ui/card";
+import PromptVariant from "@/components/features/prompt-variant";
 
-const promptSchema = z.object({
-
+const promptWithVariantsVersionsSchema = z.object({
   uuid: z.string().uuid().optional(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),
@@ -40,6 +40,9 @@ const promptSchema = z.object({
     selected_version_uuid: z.string().uuid().optional(),
     segment_uuid: z.string().uuid().optional(),
     uuid: z.string().uuid().optional(),
+    created_at: z.date().optional(),
+    updated_at: z.date().optional(),
+    llm_model_name: z.string().optional(),
     versions: z.array(z.object({
       uuid: z.string().uuid().optional(),
       name: z.string()
@@ -48,15 +51,21 @@ const promptSchema = z.object({
       content: z.string()
         .min(10, 'Prompt Content must be at least 4 characters')
         .max(100000, 'Prompt Content must be at most 1024 characters'),
-    })),
+      top_p: z.number().optional(),
+      maximum_tokens: z.number().optional(),
+      temperature: z.number().optional(),
+      created_at: z.date().optional(),
+      updated_at: z.date().optional(),
+      deleted_at: z.date().optional(),
+    })).optional(),
   })),
 });
 
-type PromptEditFormData = z.infer<typeof promptSchema>;
+export type PromptEditFormData = z.infer<typeof promptWithVariantsVersionsSchema>;
 
 
 // Separate component for rendering versions inside each variant
-const VersionsFieldArray = ({control, variantIndex}: {
+export const VersionsFieldArray = ({control, variantIndex}: {
   control: Control<PromptEditFormData>;
   variantIndex: number;
 }) => {
@@ -74,13 +83,17 @@ const VersionsFieldArray = ({control, variantIndex}: {
           <Controller
             name={`variants.${variantIndex}.versions.${versionIndex}.name`}
             control={control}
-            render={({field}) => <input {...field} placeholder="Version Name"/>}
+            render={
+              ({field}) => <Input type="text" {...field} placeholder="Version Name"/>
+            }
           />
 
           <Controller
             name={`variants.${variantIndex}.versions.${versionIndex}.content`}
             control={control}
-            render={({field}) => <textarea {...field} placeholder="Content"/>}
+            render={
+              ({field}) => <Input type="textarea" {...field} placeholder="Content"/>
+            }
           />
         </div>
       ))}
@@ -94,14 +107,29 @@ const VersionsFieldArray = ({control, variantIndex}: {
 
 const PromptEdit = ({unique_key, description, enabled, variants}: PromptEditFormData) => {
 
+  const sorted_variants_versions = variants
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(variant => ({
+      ...variant,
+      versions: variant?.versions?.sort((a, b) => {
+        if (a.created_at === b.created_at) {
+          return 0;
+        } else if (a?.created_at && b?.created_at && a.created_at < b.created_at) {
+          return 1;
+        }
+        return -1;
+      }).slice(0, 1)
+    }));
+
+
   // 1. Define your form.
   const form = useForm<PromptEditFormData>({
-    resolver: zodResolver(promptSchema),
+    resolver: zodResolver(promptWithVariantsVersionsSchema),
     defaultValues: {
       unique_key: unique_key,
       description: description,
       enabled: enabled,
-      variants: variants,
+      variants: sorted_variants_versions,
     },
   })
 
@@ -170,11 +198,10 @@ const PromptEdit = ({unique_key, description, enabled, variants}: PromptEditForm
 
             </div>
             <div className="flex-row flex gap-6">
-              {/*  variants field with list of options */}
               {
-                variantFields.map((field, index) => {
+                variantFields.map((variantField, index) => {
                   return (
-                    <div key={field.id} className="basis-1/2 flex flex-col border">
+                    <div key={variantField.id} className="basis-1/2 flex flex-col border">
                       <FormField
                         control={control}
                         name={`variants.${index}.name`}
@@ -211,7 +238,7 @@ const PromptEdit = ({unique_key, description, enabled, variants}: PromptEditForm
                       <VersionsFieldArray
                         control={control}
                         variantIndex={index}
-                        versions={field.versions}
+                        versions={variantField?.versions}
                       />
                     </div>
                   );
@@ -241,10 +268,11 @@ const PromptDetail = ({uuid}: { uuid: string }) => {
     return <ErrorAlert open={!!error}/>
   }
 
-  console.log(data)
-
   return (
-    <PromptEdit {...data}/>
+    <>
+      <PromptEdit {...data}/>
+      <PromptVariant/>
+    </>
   )
 }
 
