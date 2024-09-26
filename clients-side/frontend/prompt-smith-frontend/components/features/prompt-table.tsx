@@ -30,6 +30,8 @@ import ErrorAlert from "@/components/custom-ui/error-alert";
 
 function PromptTable() {
   const {data, error, isLoading, pagination} = usePaginatedSWR('prompt', resourceFetcher)
+
+
   if (isLoading) {
     return <SkeletonCard/>
   }
@@ -38,8 +40,11 @@ function PromptTable() {
     return <ErrorAlert open={!!error}/>
   }
 
-  const prompts = data?.items as Prompt[]
-
+  // sort by unique_key
+  const prompts = data?.items.sort(
+    (a: Prompt, b: Prompt) => a.unique_key.localeCompare(b.unique_key)
+  ) as Prompt[]
+  
 
   return (
     <Table>

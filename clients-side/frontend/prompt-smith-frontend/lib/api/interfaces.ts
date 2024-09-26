@@ -1,10 +1,6 @@
-export type Prompt = {
-  unique_key: string
-  description: string
-  uuid: string
-  enabled: boolean
-  created_at: Date
-}
+import {z} from "zod";
+import {promptVariantSchema, promptVersionSchema, promptWithVariantsVersionsSchema} from "@/lib/api/schemas";
+
 export type Organization = {
   name: string
   description: string
@@ -36,3 +32,21 @@ export type UserResp = {
     is_authenticated: boolean
   }
 }
+
+export type PromptVersionFormData = z.infer<typeof promptVersionSchema>;
+
+
+export type PromptVariantFormData = z.infer<typeof promptVariantSchema> & {
+  versions?: PromptVersionFormData[]
+};
+
+
+export type PromptEditFormData = z.infer<typeof promptWithVariantsVersionsSchema> & {
+  variants?: PromptVariantFormData[];
+};
+
+export type Prompt = PromptEditFormData
+
+
+
+
