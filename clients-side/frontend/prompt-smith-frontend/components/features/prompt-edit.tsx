@@ -214,13 +214,6 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
                       isSubmitting ? "Saving..." : "Save"
                    }
                   </LoadingButton>
-
-
-                {/*<Button type="submit" className="ml-auto" disabled={!isDirty || isSubmitting}>*/}
-                {/*  Save*/}
-
-                {/*  {isSubmitting && <span className="ml-2">Saving...</span>}*/}
-                {/*</Button>*/}
               </div>
             </fieldset>
 
