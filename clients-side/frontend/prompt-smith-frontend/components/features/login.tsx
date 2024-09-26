@@ -150,7 +150,7 @@ const Login = () => {
                 !loading ? <Button className="w-full h-9" type="submit">
                     Sign in
                   </Button> :
-                  <LoadingButton className="w-full h-9" loading={loading} disabled >
+                  <LoadingButton className="w-full h-9" loading={loading} disabled>
                     Signing in
                   </LoadingButton>
               }

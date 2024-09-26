@@ -48,9 +48,9 @@ export const description =
 
 function VariantTextArea() {
   return (
-    <div className=" w-full">
-      <form className="w-full items-start gap-6 grid grid-cols-12">
-        <fieldset className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3  rounded-lg border p-4">
+    <div className="w-full">
+      <form className="grid w-full grid-cols-12 items-start gap-6">
+        <fieldset className="col-span-12 rounded-lg border p-4 md:col-span-6 lg:col-span-4 xl:col-span-3">
           <legend className="-ml-1 px-1 text-sm font-medium">
             Settings
           </legend>
@@ -130,7 +130,7 @@ function VariantTextArea() {
             </div>
           </div>
         </fieldset>
-        <fieldset className="col-span-12 md:col-span-6 lg:col-span-8 xl:col-span-9 rounded-lg border p-4">
+        <fieldset className="col-span-12 rounded-lg border p-4 md:col-span-6 lg:col-span-8 xl:col-span-9">
           <legend className="-ml-1 px-1 text-sm font-medium">
             Messages
           </legend>
