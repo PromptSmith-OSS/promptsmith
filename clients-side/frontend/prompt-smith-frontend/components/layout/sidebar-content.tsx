@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {Package, SquareLibrary, Users} from "lucide-react";
+import {KeyIcon, SquareLibrary, FileText, MessageSquare} from "lucide-react";
 import * as React from "react";
 import Logo from "@/components/custom-ui/logo";
 import WIPHover from "@/components/custom-ui/wip-hover";
@@ -40,7 +40,13 @@ const SidebarContent = () => {
           </SidebarLinkNav>
         </section>
 
-
+        <section>
+          <span className="sr-only">SDK Key</span>
+          <SidebarLinkNav href="/key">
+            <KeyIcon className="h-5 w-5 md:h-4 md:w-4"/>
+            SDK Keys
+          </SidebarLinkNav>
+        </section>
         {/*<div*/}
         {/*  className="flex items-center gap-4 rounded-lg px-3 py-2 transition-all mx-[-0.65rem] text-muted-foreground hover:text-primary md:mx-0 md:gap-3"*/}
         {/*>*/}
@@ -70,14 +76,14 @@ const SidebarContent = () => {
         <section>
           <span className="sr-only">Support Page</span>
           <SidebarLinkNav href="/support">
-            <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
+            <MessageSquare className="h-5 w-5 md:h-4 md:w-4"/>
             Support
           </SidebarLinkNav>
         </section>
         <section>
           <span className="sr-only">Document Page</span>
           <SidebarLinkNav href="/doc">
-            <SquareLibrary className="h-5 w-5 md:h-4 md:w-4"/>
+            <FileText className="h-5 w-5 md:h-4 md:w-4"/>
             Documentation
           </SidebarLinkNav>
         </section>
