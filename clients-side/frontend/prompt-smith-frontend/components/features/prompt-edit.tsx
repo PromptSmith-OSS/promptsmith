@@ -26,6 +26,7 @@ import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/compon
 import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
 import {updateWebAuthnCredential} from "@/lib/auth/authAPIWrapper";
 import {getCSRFToken} from "@/lib/auth/cookieUtils";
+import {LoadingButton} from "@/components/ui-ext/loading-button";
 
 const promptVariantSchema = z.object({
   name: z.string()
@@ -115,7 +116,7 @@ export const VersionsFieldArray = ({control, variantIndex}: {
   );
 }
 
-const PromptEdit = ({unique_key, description, enabled, variants, uuid}: PromptEditFormData) => {
+const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: PromptEditFormData & {mutate:(data)=>void}) => {
 
   const sorted_variants_versions = variants
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -144,24 +145,31 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid}: PromptEd
   })
 
 
-  const {control, handleSubmit, formState: {dirtyFields, isDirty, isSubmitted}} = form;
+  const {reset, watch, control, handleSubmit, formState: {dirtyFields, isDirty, isSubmitted, isSubmitting, isSubmitSuccessful}} = form;
 
+  // const watchAllFields = watch();
 
-  const onSubmit = async (data: PromptEditFormData) => {
+  const onUpdatePrompt = async (data: PromptEditFormData) => {
+    console.log(data)
 
-
-    const respData = resourceFetcher(`prompt/${uuid}`, 'PUT',
+    const respData = await resourceFetcher(`prompt/${uuid}`, 'PUT',
       {
         ...data
       }
     )
+    mutate({
+      ...data,
+      ...respData,
+      variants: sorted_variants_versions,
+    })
     console.log(respData)
+    reset(data)
   }
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={handleSubmit(onUpdatePrompt)} className="space-y-8">
           <div className="flex flex-col">
             <fieldset className="rounded-lg border p-4 w-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
@@ -200,7 +208,19 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid}: PromptEd
                 )}
               />
               <div className="w-full mt-3 flex">
-                <Button type="submit" className="ml-auto" disabled={!isDirty}>Save</Button>
+
+                 <LoadingButton type="submit" className="ml-auto" loading={isSubmitting} disabled={!isDirty || isSubmitting}>
+                   {
+                      isSubmitting ? "Saving..." : "Save"
+                   }
+                  </LoadingButton>
+
+
+                {/*<Button type="submit" className="ml-auto" disabled={!isDirty || isSubmitting}>*/}
+                {/*  Save*/}
+
+                {/*  {isSubmitting && <span className="ml-2">Saving...</span>}*/}
+                {/*</Button>*/}
               </div>
             </fieldset>
 
@@ -276,7 +296,7 @@ const PromptDetail = ({uuid}: { uuid: string }) => {
 
   return (
     <>
-      <PromptEdit {...data}/>
+      <PromptEdit {...data} mutate={mutate}/>
     </>
   )
 }
