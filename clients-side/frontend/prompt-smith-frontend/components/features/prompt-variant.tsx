@@ -7,7 +7,9 @@ import {PromptVariantFormData, PromptVersionFormData} from "@/lib/api/interfaces
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {promptVariantSchema, promptVersionSchema} from "@/lib/api/schemas";
-import {Form} from "@/components/ui/form";
+import {Form, FormField, FormItem, FormMessage} from "@/components/ui/form";
+import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
+import {LoadingButton} from "@/components/ui-ext/loading-button";
 
 
 export const description =
@@ -31,122 +33,101 @@ const PromptVariantEditor = ({data}: {
 
   const variantName = variantForm.watch('name');
 
-
-  const {name, percentage, versions} = data;
-
-  const onUpdateVariant = async (data: PromptVariantFormData) => {
+  const onUpdateVariant = async () => {
+  //   get the data from the form
 
   }
 
-  const onUpdateVersionContent = async (index: number, data: PromptVariantFormData) => {
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    variantForm.trigger('name');
+  }
+
+  const onUpdateVersionContent = async () => {
+    // get the data from the form
 
   }
 
   return (
     <div className="grid w-full grid-cols-12 items-start gap-4">
-      <div className="col-span-12 md:col-span-6 lg:col-span-8 xl:col-span-9">
-        <Form {...variantForm}>
-          <form className="">
-            <fieldset className="rounded-lg border p-4 ">
+      <div className="col-span-12 row-span-4 h-full md:col-span-6 lg:col-span-8 xl:col-span-9">
+        <Form {...versionForm}>
+          <form className="h-full" onSubmit={versionForm.handleSubmit(onUpdateVariant)}>
+            <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
                 {variantName}
               </legend>
-              <div className="grid gap-3">
-                <Label htmlFor="content">Prompt Content</Label>
-                <Textarea
-                  id="content"
-                  placeholder="You are a..."
-                  className="min-h-[10em]"
-                />
+              <FormField
+                control={versionForm.control}
+                name="content"
+                render={({field}) => (
+                  <FormItem className="">
+                    <Label htmlFor="content">Prompt Content</Label>
+                    <Textarea
+                      id="content"
+                      placeholder="You are a..."
+                      className="min-h-[10em]"
+                      {...field}
+                    />
+                                        <FormMessage/>
+                  </FormItem>
+                )}
+              />
+
+              <div className="mt-3 flex w-full">
+                <LoadingButton type="submit" className="ml-auto" loading={versionForm.formState.isSubmitting}
+                               disabled={!versionForm.formState.isDirty || versionForm.formState.isSubmitting}>
+                  {
+                    versionForm.formState.isSubmitting ? "Saving..." : "Save"
+                  }
+                </LoadingButton>
               </div>
             </fieldset>
           </form>
         </Form>
       </div>
-      <div className={"col-span-12  md:col-span-6 lg:col-span-4 xl:col-span-3"}>
+      <div className="col-span-12 row-span-4 h-full md:col-span-6 lg:col-span-4 xl:col-span-3">
         <Form {...variantForm}>
-          <form className="">
-            <fieldset className="rounded-lg border p-4">
+          <form className="h-full">
+            <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
                 {variantName} Configuration
               </legend>
-              <div className="grid gap-3">
-                <Label htmlFor="model">Model</Label>
-                <Select>
-                  <SelectTrigger
-                    id="model"
-                    className="items-start [&_[data-description]]:hidden"
-                  >
-                    <SelectValue placeholder="Select a model"/>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="genesis">
-                      <div className="flex items-start gap-3 text-muted-foreground">
-                        <Rabbit className="size-5"/>
-                        <div className="grid gap-0.5">
-                          <p>
-                            Neural{" "}
-                            <span className="font-medium text-foreground">
-                                Genesis
-                              </span>
-                          </p>
-                          <p className="text-xs" data-description>
-                            Our fastest model for general use cases.
-                          </p>
-                        </div>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="explorer">
-                      <div className="flex items-start gap-3 text-muted-foreground">
-                        <Bird className="size-5"/>
-                        <div className="grid gap-0.5">
-                          <p>
-                            Neural{" "}
-                            <span className="font-medium text-foreground">
-                                Explorer
-                              </span>
-                          </p>
-                          <p className="text-xs" data-description>
-                            Performance and speed for efficiency.
-                          </p>
-                        </div>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="quantum">
-                      <div className="flex items-start gap-3 text-muted-foreground">
-                        <Turtle className="size-5"/>
-                        <div className="grid gap-0.5">
-                          <p>
-                            Neural{" "}
-                            <span className="font-medium text-foreground">
-                                Quantum
-                              </span>
-                          </p>
-                          <p className="text-xs" data-description>
-                            The most powerful model for complex computations.
-                          </p>
-                        </div>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="temperature">Temperature</Label>
-                <Input id="temperature" type="number" placeholder="0.4"/>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="top-p">Top P</Label>
-                  <Input id="top-p" type="number" placeholder="0.7"/>
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="top-k">Top K</Label>
-                  <Input id="top-k" type="number" placeholder="0.0"/>
-                </div>
+              <FormField
+                control={variantForm.control}
+                name="name"
+                render={({field}) => (
+                  <FormItem>
+                    <FieldLabelWrapper name={"Variant Key"} description={"Variant key (A or B)"} required={true}/>
+                    <Input
+                      placeholder="A or B"
+                      {...field}
+                      onBlur={onNameChange}
+                    />
+                                        <FormMessage/>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={variantForm.control}
+                name="percentage"
+                render={({field}) => (
+                  <FormItem className="mt-2">
+                    <FieldLabelWrapper name={"Rollout"} description={"To match about this percentage of users. "}
+                                       required={true}/>
+                    <Input type="number" placeholder="0 - 100" {...field}/>
+                                        <FormMessage/>
+                  </FormItem>
+                )}
+              />
+              <div className="mt-3 flex w-full">
+                <LoadingButton type="submit" className="ml-auto" loading={variantForm.formState.isSubmitting}
+                               disabled={!variantForm.formState.isDirty || variantForm.formState.isSubmitting}>
+                  {
+                    variantForm.formState.isSubmitting ? "Saving..." : "Save"
+                  }
+                </LoadingButton>
               </div>
             </fieldset>
-
           </form>
         </Form>
       </div>

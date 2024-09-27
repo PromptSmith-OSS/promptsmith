@@ -35,7 +35,7 @@ export const promptVersionSchema = z.object({
 
 export const promptVariantSchema = z.object({
   name: z.string()
-    .regex(/^[A-Z]$/, 'Please use an uppercase letter for variant name')
+    .regex(/^[A-B]$/, 'Please use A or B for variant key')
     .min(1, 'Please use 1 uppercase letter for variant name')
     .max(1, 'Please use 1 uppercase letter for variant name'),
   percentage: z.number().min(0).max(100),
