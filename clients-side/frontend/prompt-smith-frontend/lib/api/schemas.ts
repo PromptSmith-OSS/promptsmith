@@ -38,7 +38,9 @@ export const promptVariantSchema = z.object({
     .regex(/^[A-B]$/, 'Please use A or B for variant key')
     .min(1, 'Please use 1 uppercase letter for variant name')
     .max(1, 'Please use 1 uppercase letter for variant name'),
-  percentage: z.number().min(0).max(100),
+  percentage: z.coerce.number().int()
+    .min(0, 'Rollout Percentage should be at least 0')
+    .max(100, 'Rollout Percentage should be at most 100'),
   selected_version_uuid: z.string().uuid().optional(),
   segment_uuid: z.string().uuid().optional(),
   uuid: z.string().uuid().optional(),

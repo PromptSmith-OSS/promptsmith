@@ -15,10 +15,18 @@ import {LoadingButton} from "@/components/ui-ext/loading-button";
 export const description =
   "An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."
 
-const PromptVariantEditor = ({data}: {
+const PromptVariantEditor = ({
+                               data,
+                               index,
+                               onMutate,
+                               percentages,
+                               setPercentages,
+                             }: {
   data: PromptVariantFormData,
   index: number,
-  onMutate: (index: number, data: PromptVariantFormData) => void
+  onMutate: (index: number, data: PromptVariantFormData) => void,
+  percentages: number[],
+  setPercentages: (percentages: number[]) => void,
 }) => {
 
   const variantForm = useForm<PromptVariantFormData>({
@@ -34,18 +42,28 @@ const PromptVariantEditor = ({data}: {
   const variantName = variantForm.watch('name');
 
   const onUpdateVariant = async () => {
-  //   get the data from the form
-
+    //   get the data from the form
   }
 
-  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onNameChange = () => {
     variantForm.trigger('name');
   }
+
+  const realTimePercentage = variantForm.watch('percentage');
+  const onPercentageChange = () => {
+    variantForm.trigger('percentage');
+    console.log('realTimePercentage', realTimePercentage, percentages);
+    setPercentages(percentages.map((p, i) => i === index ? parseInt(realTimePercentage) : p));
+    console.log('percentages', percentages);
+  }
+
 
   const onUpdateVersionContent = async () => {
     // get the data from the form
 
   }
+
+  const calculatedPercentage = realTimePercentage / percentages.reduce((a, b) => a + b, 0) * 100;
 
   return (
     <div className="grid w-full grid-cols-12 items-start gap-4">
@@ -54,7 +72,7 @@ const PromptVariantEditor = ({data}: {
           <form className="h-full" onSubmit={versionForm.handleSubmit(onUpdateVariant)}>
             <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
-                {variantName}
+                {variantName} - {calculatedPercentage.toFixed(2)}%
               </legend>
               <FormField
                 control={versionForm.control}
@@ -68,7 +86,7 @@ const PromptVariantEditor = ({data}: {
                       className="min-h-[10em]"
                       {...field}
                     />
-                                        <FormMessage/>
+                    <FormMessage/>
                   </FormItem>
                 )}
               />
@@ -103,7 +121,7 @@ const PromptVariantEditor = ({data}: {
                       {...field}
                       onBlur={onNameChange}
                     />
-                                        <FormMessage/>
+                    <FormMessage/>
                   </FormItem>
                 )}
               />
@@ -114,8 +132,12 @@ const PromptVariantEditor = ({data}: {
                   <FormItem className="mt-2">
                     <FieldLabelWrapper name={"Rollout"} description={"To match about this percentage of users. "}
                                        required={true}/>
-                    <Input type="number" placeholder="0 - 100" {...field}/>
-                                        <FormMessage/>
+                    <Input type="number"
+                           placeholder={"0 - 100"}
+                           {...field}
+                           onBlur={onPercentageChange}
+                    />
+                    <FormMessage/>
                   </FormItem>
                 )}
               />

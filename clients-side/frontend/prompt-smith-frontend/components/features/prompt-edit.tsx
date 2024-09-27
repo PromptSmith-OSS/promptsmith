@@ -13,28 +13,23 @@ import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
 import {LoadingButton} from "@/components/ui-ext/loading-button";
 import {promptWithVariantsVersionsSchema} from "@/lib/api/schemas";
 import {PromptEditFormData, PromptVariantFormData} from "@/lib/api/interfaces";
+import {useState} from "react";
 
 
 const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: PromptEditFormData & {
-  mutate: (data:PromptEditFormData) => void
+  mutate: (data: PromptEditFormData) => void
 }) => {
 
   console.log('variants', variants)
 
-  const sorted_variants_versions = variants
+  const sorted_variants_with_sorted_versions = variants
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(variant => ({
       ...variant,
-      versions: variant?.versions?.sort((a, b) => {
-        if (a.created_at === b.created_at) {
-          return 0;
-        } else if (a?.created_at && b?.created_at && a.created_at < b.created_at) {
-          return 1;
-        }
-        return -1;
-      }).slice(0, 1)
+      versions: variant?.versions?.sort((a, b) => (a.created_at < b.created_at ? 1 : -1)).slice(0, 1)
     }));
 
+  const [percentages, setPercentages] = useState<number[]>(sorted_variants_with_sorted_versions.map(variant => variant.percentage))
 
   // 1. Define your form.
   const form = useForm<PromptEditFormData>({
@@ -43,7 +38,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
       unique_key: unique_key,
       description: description,
       enabled: enabled,
-      variants: sorted_variants_versions,
+      variants: sorted_variants_with_sorted_versions,
     },
   })
 
@@ -51,7 +46,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
   const {
     reset,
     handleSubmit,
-    formState: { isDirty, isSubmitting}
+    formState: {isDirty, isSubmitting}
   } = form;
 
   const onUpdatePrompt = async (data: PromptEditFormData) => {
@@ -63,14 +58,14 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
     mutate({
       ...data, // form data
       ...respData, // updated data, we should limit to direct fields only
-      variants: sorted_variants_versions,
+      variants: sorted_variants_with_sorted_versions,
     })
     console.log(respData)
     reset(data)
   }
 
-  const onMutataVariant = (variantIndex:number, variantData: PromptVariantFormData) => {
-    const updatedVariants = [...sorted_variants_versions];
+  const onMutataVariant = (variantIndex: number, variantData: PromptVariantFormData) => {
+    const updatedVariants = [...sorted_variants_with_sorted_versions];
     updatedVariants[variantIndex] = variantData
     mutate({
       ...form.getValues(),
@@ -130,16 +125,20 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
                 </LoadingButton>
               </div>
             </fieldset>
-
-
-
           </div>
         </form>
       </Form>
       {
-        sorted_variants_versions.slice(0,2).map((variant, index) => {
+        sorted_variants_with_sorted_versions.slice(0, 2).map((variant, index) => {
           return (
-            <PromptVariant key={variant.uuid} data={variant} index={index} onMutate={onMutataVariant}/>
+            <PromptVariant
+              key={variant.uuid}
+              data={variant}
+              index={index}
+              onMutate={onMutataVariant}
+              percentages={percentages}
+              setPercentages={setPercentages}
+            />
           )
         })
       }
