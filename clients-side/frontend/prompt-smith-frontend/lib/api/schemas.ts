@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-export const promptWithVariantsVersionsSchema = z.object({
+export const variantSchema = z.object({
   uuid: z.string().uuid().optional(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),
@@ -16,7 +16,7 @@ export const promptWithVariantsVersionsSchema = z.object({
   enabled: z.boolean().optional(),
 });
 
-export const promptVersionSchema = z.object({
+export const versionSchema = z.object({
     uuid: z.string().uuid().optional(),
     name: z.string()
       .min(4, 'Version Name must be at least 4 characters')

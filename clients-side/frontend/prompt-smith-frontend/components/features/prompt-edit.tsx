@@ -11,29 +11,30 @@ import PromptVariant from "@/components/features/prompt-variant";
 import {Textarea} from "@/components/ui/textarea";
 import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
 import {LoadingButton} from "@/components/ui-ext/loading-button";
-import {promptWithVariantsVersionsSchema} from "@/lib/api/schemas";
-import {PromptEditFormData, PromptVariantFormData} from "@/lib/api/interfaces";
+import {variantSchema} from "@/lib/api/schemas";
+import {PromptFormData, VariantFormData} from "@/lib/api/interfaces";
 import {useState} from "react";
 
 
-const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: PromptEditFormData & {
-  mutate: (data: PromptEditFormData) => void
+const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: PromptFormData & {
+  mutate: (data: PromptFormData) => void
 }) => {
-
-  console.log('variants', variants)
-
-  const sorted_variants_with_sorted_versions = variants
+  const sorted_variants_with_sorted_versions = !variants?.length ? [] : variants
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(variant => ({
       ...variant,
-      versions: variant?.versions?.sort((a, b) => (a.created_at < b.created_at ? 1 : -1)).slice(0, 1)
+      versions: variant?.versions?.sort(
+        (a, b) => (
+          a.created_at && b.created_at && a.created_at < b.created_at ? 1 : -1
+        )
+      ).slice(0, 1)
     }));
 
   const [percentages, setPercentages] = useState<number[]>(sorted_variants_with_sorted_versions.map(variant => variant.percentage))
 
   // 1. Define your form.
-  const form = useForm<PromptEditFormData>({
-    resolver: zodResolver(promptWithVariantsVersionsSchema),
+  const form = useForm<PromptFormData>({
+    resolver: zodResolver(variantSchema),
     defaultValues: {
       unique_key: unique_key,
       description: description,
@@ -49,7 +50,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
     formState: {isDirty, isSubmitting}
   } = form;
 
-  const onUpdatePrompt = async (data: PromptEditFormData) => {
+  const onUpdatePrompt = async (data: PromptFormData) => {
     const respData = await resourceFetcher(`prompt/${uuid}`, 'PUT',
       {
         ...data
@@ -64,8 +65,8 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
     reset(data)
   }
 
-  const onMutataVariant = (variantIndex: number, variantData: PromptVariantFormData) => {
-    const updatedVariants = [...sorted_variants_with_sorted_versions];
+  const onMutateVariant = (variantIndex: number, variantData: VariantFormData) => {
+    const updatedVariants : VariantFormData[] = [...sorted_variants_with_sorted_versions];
     updatedVariants[variantIndex] = variantData
     mutate({
       ...form.getValues(),
@@ -133,9 +134,10 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
           return (
             <PromptVariant
               key={variant.uuid}
+              name={String.fromCharCode(65 + index)}
               data={variant}
               index={index}
-              onMutate={onMutataVariant}
+              onMutate={onMutateVariant}
               percentages={percentages}
               setPercentages={setPercentages}
             />

@@ -1,59 +1,50 @@
-import {Bird, Rabbit, Turtle,} from "lucide-react"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
 import {Textarea} from "@/components/ui/textarea"
-import {PromptVariantFormData, PromptVersionFormData} from "@/lib/api/interfaces";
+import {VariantFormData, VersionFormData} from "@/lib/api/interfaces";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {promptVariantSchema, promptVersionSchema} from "@/lib/api/schemas";
+import {promptVariantSchema, versionSchema} from "@/lib/api/schemas";
 import {Form, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
 import {LoadingButton} from "@/components/ui-ext/loading-button";
 
-
-export const description =
-  "An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."
-
 const PromptVariantEditor = ({
                                data,
                                index,
+                               name,
                                onMutate,
                                percentages,
                                setPercentages,
                              }: {
-  data: PromptVariantFormData,
+  data: VariantFormData,
+  name: string,
   index: number,
-  onMutate: (index: number, data: PromptVariantFormData) => void,
+  onMutate: (index: number, data: VariantFormData) => void,
   percentages: number[],
   setPercentages: (percentages: number[]) => void,
 }) => {
 
-  const variantForm = useForm<PromptVariantFormData>({
+  const variantForm = useForm<VariantFormData>({
     resolver: zodResolver(promptVariantSchema),
     defaultValues: data,
   });
 
-  const versionForm = useForm<PromptVersionFormData>({
-    resolver: zodResolver(promptVersionSchema),
-    defaultValues: data?.versions[0] || {},
+  const versionForm = useForm<VersionFormData>({
+    resolver: zodResolver(versionSchema),
+    defaultValues: data?.versions?.length ? data?.versions[0] : {},
   });
-
-  const variantName = variantForm.watch('name');
 
   const onUpdateVariant = async () => {
     //   get the data from the form
   }
 
-  const onNameChange = () => {
-    variantForm.trigger('name');
-  }
 
   const realTimePercentage = variantForm.watch('percentage');
   const onPercentageChange = () => {
     variantForm.trigger('percentage');
     console.log('realTimePercentage', realTimePercentage, percentages);
-    setPercentages(percentages.map((p, i) => i === index ? parseInt(realTimePercentage) : p));
+    setPercentages(percentages.map((p, i) => i === index ? parseInt(`${realTimePercentage}`) : p));
     console.log('percentages', percentages);
   }
 
@@ -72,7 +63,7 @@ const PromptVariantEditor = ({
           <form className="h-full" onSubmit={versionForm.handleSubmit(onUpdateVariant)}>
             <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
-                {variantName} - {calculatedPercentage.toFixed(2)}%
+                {name} - {calculatedPercentage.toFixed(2)}%
               </legend>
               <FormField
                 control={versionForm.control}
@@ -108,23 +99,8 @@ const PromptVariantEditor = ({
           <form className="h-full">
             <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
-                {variantName} Configuration
+                {name} Configuration
               </legend>
-              <FormField
-                control={variantForm.control}
-                name="name"
-                render={({field}) => (
-                  <FormItem>
-                    <FieldLabelWrapper name={"Variant Key"} description={"Variant key (A or B)"} required={true}/>
-                    <Input
-                      placeholder="A or B"
-                      {...field}
-                      onBlur={onNameChange}
-                    />
-                    <FormMessage/>
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={variantForm.control}
                 name="percentage"
