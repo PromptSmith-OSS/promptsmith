@@ -19,7 +19,7 @@ const FeildLabelWrapper = (
       {name}{required && <span className="text-red-500">*</span>}
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger className="hidden md:inline">
+          <TooltipTrigger className="hidden md:inline" type="button">
             <Info className={"inline w-4 h-4 ml-1"}/>
           </TooltipTrigger>
           <TooltipContent>

@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {promptVariantSchema, versionSchema, variantSchema} from "@/lib/api/schemas";
+import {variantSchema, versionSchema, promptSchema} from "@/lib/api/schemas";
 
 export type Organization = {
   name: string
@@ -36,12 +36,12 @@ export type UserResp = {
 export type VersionFormData = z.infer<typeof versionSchema>;
 
 
-export type VariantFormData = z.infer<typeof promptVariantSchema> & {
+export type VariantFormData = z.infer<typeof variantSchema> & {
   versions?: VersionFormData[]
 };
 
 
-export type PromptFormData = z.infer<typeof variantSchema> & {
+export type PromptFormData = z.infer<typeof promptSchema> & {
   variants?: VariantFormData[];
 };
 

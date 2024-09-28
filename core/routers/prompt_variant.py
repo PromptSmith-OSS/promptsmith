@@ -28,7 +28,7 @@ async def create_prompt_variant(request, prompt_uuid: UUID, variant: PromptVaria
 
     # check if the name is unique
     if await PromptVariant.objects.filter(prompt=the_prompt, name=variant.name).aexists():
-        raise ValidationError([{'type': 'duplication',  'name': version.name, 'msg': f'Same name has already existed.'}])
+        raise ValidationError([{'type': 'duplication', 'name': version.name, 'msg': f'Same name has already existed.'}])
 
     new_variant = await PromptVariant.objects.acreate(prompt=the_prompt, **variant.dict())
     new_variant.prompt_uuid = the_prompt.uuid
@@ -66,10 +66,10 @@ async def update_prompt_variant(request, prompt_uuid: UUID, uuid: UUID, variant:
     """
     Update an existing prompt variant
     """
-    qs = PromptVariant.objects.filter(prompt__uuid=prompt_uuid, uuid=uuid).select_related('prompt', 'segment').annotate(
-        prompt_uuid=models.F('prompt__uuid'),
-        segment_uuid=models.F('segment__uuid'),
-    )
+    qs = PromptVariant.objects.filter(
+        prompt__uuid=prompt_uuid,
+        uuid=uuid
+    ).prefetch_related('versions')
     obj = await aget_object_or_404(qs)
     for k, v in variant.dict().items():
         if v is not None and k != "uuid":

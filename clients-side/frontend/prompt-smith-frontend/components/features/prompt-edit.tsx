@@ -11,7 +11,7 @@ import PromptVariant from "@/components/features/prompt-variant";
 import {Textarea} from "@/components/ui/textarea";
 import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
 import {LoadingButton} from "@/components/ui-ext/loading-button";
-import {variantSchema} from "@/lib/api/schemas";
+import {promptSchema} from "@/lib/api/schemas";
 import {PromptFormData, VariantFormData} from "@/lib/api/interfaces";
 import {useState} from "react";
 
@@ -34,7 +34,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
 
   // 1. Define your form.
   const form = useForm<PromptFormData>({
-    resolver: zodResolver(variantSchema),
+    resolver: zodResolver(promptSchema),
     defaultValues: {
       unique_key: unique_key,
       description: description,
@@ -50,7 +50,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
     formState: {isDirty, isSubmitting}
   } = form;
 
-  const onUpdatePrompt = async (data: PromptFormData) => {
+  const onPromptFormSubmit = async (data: PromptFormData) => {
     const respData = await resourceFetcher(`prompt/${uuid}`, 'PUT',
       {
         ...data
@@ -66,7 +66,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
   }
 
   const onMutateVariant = (variantIndex: number, variantData: VariantFormData) => {
-    const updatedVariants : VariantFormData[] = [...sorted_variants_with_sorted_versions];
+    const updatedVariants: VariantFormData[] = [...sorted_variants_with_sorted_versions];
     updatedVariants[variantIndex] = variantData
     mutate({
       ...form.getValues(),
@@ -78,7 +78,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
   return (
     <div className="flex flex-col gap-4">
       <Form {...form}>
-        <form onSubmit={handleSubmit(onUpdatePrompt)} className="space-y-8">
+        <form onSubmit={handleSubmit(onPromptFormSubmit)} className="space-y-8">
           <div className="flex flex-col">
             <fieldset className="rounded-lg border p-4 w-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
@@ -117,7 +117,6 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
                 )}
               />
               <div className="w-full mt-3 flex">
-
                 <LoadingButton type="submit" className="ml-auto" loading={isSubmitting}
                                disabled={!isDirty || isSubmitting}>
                   {
@@ -130,7 +129,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
         </form>
       </Form>
       {
-        sorted_variants_with_sorted_versions.slice(0, 2).map((variant, index) => {
+        uuid && sorted_variants_with_sorted_versions.slice(0, 2).map((variant, index) => {
           return (
             <PromptVariant
               key={variant.uuid}
@@ -140,6 +139,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
               onMutate={onMutateVariant}
               percentages={percentages}
               setPercentages={setPercentages}
+              promptUuid={uuid}
             />
           )
         })
