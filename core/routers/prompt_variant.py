@@ -9,6 +9,7 @@ from ninja.errors import ValidationError
 from core.models.prompt import Prompt
 from core.models.prompt_variant import PromptVariant
 from core.schemas.prompt_variant import PromptVariantCreateSchema, PromptVariantOutSchema, PromptVariantUpdateSchema
+from core.models.segment import Segment
 
 prompt_variant_router = Router(
     tags=['Prompt Variant'],

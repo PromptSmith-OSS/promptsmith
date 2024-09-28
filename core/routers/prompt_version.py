@@ -47,7 +47,8 @@ async def create_version(request, prompt_uuid: UUID, variant_uuid: UUID, version
     # check if the name is unique
     if await PromptVersion.objects.filter(variant__uuid=variant_uuid, name=version.name).aexists():
         raise ValidationError([{'type': 'duplication', 'name': version.name, 'msg': f'Same name has already existed.'}])
-    obj = await PromptVersion.objects.acreate(variant__uuid=variant_uuid, **version.dict())
+    variant = await aget_object_or_404(PromptVariant, uuid=variant_uuid)
+    obj = await PromptVersion.objects.acreate(variant=variant, **version.dict())
     obj.variant_uuid = variant_uuid
     return obj
 

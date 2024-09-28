@@ -32,7 +32,10 @@ const PromptVariantEditor = ({
     defaultValues: variantData,
   });
 
-  const theSelectedVersion:VersionFormData = variantData?.versions?.length ? variantData?.versions[0] : {} as VersionFormData;
+  const theSelectedVersion: VersionFormData = variantData?.versions?.length ? variantData?.versions[0] : {
+    name: `${name}-${new Date().toISOString()}`,
+    content: "",
+  } as VersionFormData;
 
   const versionForm = useForm<VersionFormData>({
     resolver: zodResolver(versionSchema),
@@ -49,8 +52,8 @@ const PromptVariantEditor = ({
         versions: undefined,
       }
     )
-    console.log(respData);
-    onMutate(index, data);
+    onMutate(index, respData);
+    variantForm.reset(data);
   }
 
 
@@ -64,20 +67,30 @@ const PromptVariantEditor = ({
   const onVersionFormSubmit = async () => {
     // get the data from the form
     const data = versionForm.getValues();
-    const respData = await resourceFetcher(`prompt/${promptUuid}/${variantData.uuid}/version/${theSelectedVersion?.uuid}`, 'PUT',
-      {
-        ...data,
-      }
-    )
-    console.log(respData);
+    console.log("submitting version", data);
+    let respData: VersionFormData;
+    if (!theSelectedVersion?.uuid) {
+      // create version
+      respData = await resourceFetcher(`prompt/${promptUuid}/${variantData.uuid}/version`, 'POST',
+        {
+          ...data,
+        }
+      )
+    } else {
+      respData = await resourceFetcher(`prompt/${promptUuid}/${variantData.uuid}/version/${theSelectedVersion?.uuid}`, 'PUT',
+        {
+          ...data,
+        }
+      )
+    }
     onMutate(index, {
       ...variantForm.getValues(),
       versions: [{
         ...theSelectedVersion,
-        ...data
+        ...respData
       }]
     });
-
+    versionForm.reset(data);
   }
 
   const calculatedPercentage = !variantForm.formState.isDirty ?
@@ -90,7 +103,7 @@ const PromptVariantEditor = ({
           <form className="h-full" onSubmit={
             (e) => {
               console.log("submitting version form triggered");
-              console.log(versionForm.formState, versionForm.formState.errors);
+              console.log('version form state error', JSON.stringify(versionForm.formState.errors));
               versionForm.handleSubmit(onVersionFormSubmit)(e);
             }
           }>
@@ -140,6 +153,7 @@ const PromptVariantEditor = ({
       <div className="col-span-12 row-span-4 h-full md:col-span-6 lg:col-span-4 xl:col-span-3">
         <Form {...variantForm}>
           <form className="h-full" onSubmit={(e) => {
+            console.log('varaint form error', JSON.stringify(variantForm.formState.errors));
             variantForm.handleSubmit(onVariantFormSubmit)(e);
           }}>
             <fieldset className="rounded-lg border p-4 h-full">

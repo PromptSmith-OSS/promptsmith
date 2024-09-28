@@ -69,11 +69,10 @@ const PromptEdit = ({mutate, ...data}: PromptFormData & {
   }
 
   const onMutateVariant = (variantIndex: number, variantData: VariantFormData) => {
-    const updatedVariants: VariantFormData[] = [...sorted_variants_with_sorted_versions];
-    updatedVariants[variantIndex] = variantData
+    sorted_variants_with_sorted_versions[variantIndex] = variantData
     mutate({
       ...data,
-      variants: updatedVariants
+      variants: sorted_variants_with_sorted_versions
     })
   }
 

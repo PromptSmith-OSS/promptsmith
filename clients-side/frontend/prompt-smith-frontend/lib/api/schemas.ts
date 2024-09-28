@@ -22,8 +22,8 @@ export const versionSchema = z.object({
       .min(4, 'Version Name must be at least 4 characters')
       .max(128, 'Version Name must be at most 128 characters').optional().nullable(),
     content: z.string()
-      .min(10, 'Prompt Content must be at least 10 characters')
-      .max(100000, 'Prompt Content must be at most 1024 characters'),
+      .min(1, 'Prompt Content cannot be empty')
+      .max(100000, 'Prompt Content must be at most 100k characters'),
     top_p: z.number().optional().nullable(),
     maximum_tokens: z.number().optional().nullable(),
     temperature: z.number().optional().nullable(),
