@@ -16,9 +16,11 @@ import {PromptFormData, VariantFormData} from "@/lib/api/interfaces";
 import {useState} from "react";
 
 
-const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: PromptFormData & {
+const PromptEdit = ({mutate, ...data}: PromptFormData & {
   mutate: (data: PromptFormData) => void
 }) => {
+  const {unique_key, description, enabled, variants, uuid,} = data;
+
   const sorted_variants_with_sorted_versions = !variants?.length ? [] : variants
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(variant => ({
@@ -50,7 +52,8 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
     formState: {isDirty, isSubmitting}
   } = form;
 
-  const onPromptFormSubmit = async (data: PromptFormData) => {
+  const onPromptFormSubmit = async () => {
+    const data = form.getValues()
     const respData = await resourceFetcher(`prompt/${uuid}`, 'PUT',
       {
         ...data
@@ -69,11 +72,10 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
     const updatedVariants: VariantFormData[] = [...sorted_variants_with_sorted_versions];
     updatedVariants[variantIndex] = variantData
     mutate({
-      ...form.getValues(),
+      ...data,
       variants: updatedVariants
     })
   }
-
 
   return (
     <div className="flex flex-col gap-4">

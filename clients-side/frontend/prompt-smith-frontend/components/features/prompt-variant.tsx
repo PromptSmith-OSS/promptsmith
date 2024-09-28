@@ -90,7 +90,7 @@ const PromptVariantEditor = ({
           <form className="h-full" onSubmit={
             (e) => {
               console.log("submitting version form triggered");
-            console.log(versionForm.formState, versionForm.formState.errors);
+              console.log(versionForm.formState, versionForm.formState.errors);
               versionForm.handleSubmit(onVersionFormSubmit)(e);
             }
           }>
