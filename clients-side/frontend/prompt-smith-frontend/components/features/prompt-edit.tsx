@@ -134,7 +134,7 @@ const PromptEdit = ({unique_key, description, enabled, variants, uuid, mutate}: 
             <PromptVariant
               key={variant.uuid}
               name={String.fromCharCode(65 + index)}
-              data={variant}
+              variantData={variant}
               index={index}
               onMutate={onMutateVariant}
               percentages={percentages}

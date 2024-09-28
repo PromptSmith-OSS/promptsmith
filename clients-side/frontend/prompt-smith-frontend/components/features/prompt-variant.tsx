@@ -10,7 +10,7 @@ import {LoadingButton} from "@/components/ui-ext/loading-button";
 import {resourceFetcher} from "@/lib/api/fetcher";
 
 const PromptVariantEditor = ({
-                               data,
+                               variantData,
                                index,
                                name,
                                onMutate,
@@ -19,7 +19,7 @@ const PromptVariantEditor = ({
                                promptUuid
 
                              }: {
-  data: VariantFormData,
+  variantData: VariantFormData,
   name: string,
   index: number,
   onMutate: (index: number, data: VariantFormData) => void,
@@ -29,21 +29,23 @@ const PromptVariantEditor = ({
 }) => {
   const variantForm = useForm<VariantFormData>({
     resolver: zodResolver(variantSchema),
-    defaultValues: data,
+    defaultValues: variantData,
   });
+
+  const theSelectedVersion:VersionFormData = variantData?.versions?.length ? variantData?.versions[0] : {} as VersionFormData;
 
   const versionForm = useForm<VersionFormData>({
     resolver: zodResolver(versionSchema),
-    defaultValues: data?.versions?.length ? data?.versions[0] : {},
+    defaultValues: theSelectedVersion,
   });
 
   const onVariantFormSubmit = async () => {
     //   get the data from the form
-    console.log("Submitting variant form");
     const data = variantForm.getValues();
     const respData = await resourceFetcher(`prompt/${promptUuid}/variant/${data.uuid}`, 'PUT',
       {
         ...data,
+        name: name, // we use A and B for now
         versions: undefined,
       }
     )
@@ -61,28 +63,50 @@ const PromptVariantEditor = ({
 
   const onVersionFormSubmit = async () => {
     // get the data from the form
+    const data = versionForm.getValues();
+    const respData = await resourceFetcher(`prompt/${promptUuid}/${variantData.uuid}/version/${theSelectedVersion?.uuid}`, 'PUT',
+      {
+        ...data,
+      }
+    )
+    console.log(respData);
+    onMutate(index, {
+      ...variantForm.getValues(),
+      versions: [{
+        ...theSelectedVersion,
+        ...data
+      }]
+    });
 
   }
 
-  const calculatedPercentage = realTimePercentage / percentages.reduce((a, b) => a + b, 0) * 100;
+  const calculatedPercentage = !variantForm.formState.isDirty ?
+    (realTimePercentage / percentages.reduce((a, b) => a + b, 0) * 100).toFixed(2) : '~';
 
   return (
     <div className="grid w-full grid-cols-12 items-start gap-4">
       <div className="col-span-12 row-span-4 h-full md:col-span-6 lg:col-span-8 xl:col-span-9">
         <Form {...versionForm}>
-          <form className="h-full" onSubmit={versionForm.handleSubmit(onVersionFormSubmit)}>
+          <form className="h-full" onSubmit={
+            (e) => {
+              console.log("submitting version form triggered");
+            console.log(versionForm.formState, versionForm.formState.errors);
+              versionForm.handleSubmit(onVersionFormSubmit)(e);
+            }
+          }>
             <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
-                {name} - {calculatedPercentage.toFixed(2)}%
+                {name} ({calculatedPercentage}%)
               </legend>
               <FormField
                 control={versionForm.control}
                 name="content"
                 render={({field}) => (
                   <FormItem className="">
-                    <FieldLabelWrapper name={"Prompt Content"}
-                                       description={"Prompt Content. "}
-                                       required={true}
+                    <FieldLabelWrapper
+                      name={"Prompt Content"}
+                      description={"Prompt Content. "}
+                      required={true}
                     />
                     <FormControl>
                       <Textarea
@@ -116,14 +140,30 @@ const PromptVariantEditor = ({
       <div className="col-span-12 row-span-4 h-full md:col-span-6 lg:col-span-4 xl:col-span-3">
         <Form {...variantForm}>
           <form className="h-full" onSubmit={(e) => {
-            console.log("Form submit triggered", e);
-            console.log(variantForm.formState, variantForm.formState.errors);
             variantForm.handleSubmit(onVariantFormSubmit)(e);
           }}>
             <fieldset className="rounded-lg border p-4 h-full">
               <legend className="-ml-1 px-1 text-sm font-medium">
                 {name} Configuration
               </legend>
+              <FormField
+                control={variantForm.control}
+                name="name"
+                render={({field}) => (
+                  <FormItem className="sr-only">
+                    <FieldLabelWrapper name={"Variant Key"} description={"Variant key (A or B)"} required={true}/>
+                    <FormControl>
+                      <Input
+                        type="hidden"
+                        placeholder="A or B"
+                        {...field}
+                        value={name}
+                      />
+                    </FormControl>
+                    <FormMessage/>
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={variantForm.control}
                 name="percentage"
