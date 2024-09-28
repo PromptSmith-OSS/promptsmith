@@ -83,9 +83,7 @@ async def update_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: U
     """
     Update an existing version
     """
-    qs = PromptVersion.objects.filter(variant_uuid=variant_uuid, uuid=uuid).select_related('variant').annotate(
-        variant_uuid=models.F('variant__uuid'),
-    )
+    qs = PromptVersion.objects.filter(variant__uuid=variant_uuid, uuid=uuid)
     obj = await aget_object_or_404(qs)
     for k, v in version.dict().items():
         if v is not None and k != "uuid":
