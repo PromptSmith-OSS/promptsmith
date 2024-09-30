@@ -13,7 +13,7 @@ from shared.constants import EXCLUDE_FOR_CREATE, EXCLUDE_FOR_RESPONSE
 class PromptCreateSchema(Schema):
     unique_key: constr(max_length=256, min_length=4)
     description: str
-    project_uuid: Optional[UUID] = None
+    # project_uuid: Optional[UUID] = None
     enabled: Optional[bool] = True
 
     class Meta:

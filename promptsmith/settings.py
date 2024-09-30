@@ -73,6 +73,7 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CSRF_COOKIE_DOMAIN = '{}'.format(SITE_DOMAIN)
 CSRF_COOKIE_SAMESITE = 'Strict'  # default
+CSRF_COOKIE_AGE = 60 * 60 * 24 * 30 # 365 days default from django, we use 30 days here
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
