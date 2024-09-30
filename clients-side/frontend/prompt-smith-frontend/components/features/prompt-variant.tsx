@@ -14,8 +14,8 @@ const PromptVariantEditor = ({
                                index,
                                name,
                                onMutate,
-                               percentages,
-                               setPercentages,
+                               displayingPercentages,
+                               setDisplayingPercentages,
                                promptUuid
 
                              }: {
@@ -23,8 +23,8 @@ const PromptVariantEditor = ({
   name: string,
   index: number,
   onMutate: (index: number, data: VariantFormData) => void,
-  percentages: number[],
-  setPercentages: (percentages: number[]) => void,
+  displayingPercentages: number[],
+  setDisplayingPercentages: (percentages: number[]) => void,
   promptUuid: string
 }) => {
   const variantForm = useForm<VariantFormData>({
@@ -58,9 +58,9 @@ const PromptVariantEditor = ({
 
 
   const realTimePercentage = variantForm.watch('percentage');
-  const onPercentageChange = () => {
+    const onPercentageChange = () => {
     variantForm.trigger('percentage');
-    setPercentages(percentages.map((p, i) => i === index ? parseInt(`${realTimePercentage}`) : p));
+    setDisplayingPercentages(displayingPercentages.map((p, i) => i === index ? parseInt(`${realTimePercentage}`) : p));
   }
 
 
@@ -94,7 +94,7 @@ const PromptVariantEditor = ({
   }
 
   const calculatedPercentage = !variantForm.formState.isDirty ?
-    (realTimePercentage / percentages.reduce((a, b) => a + b, 0) * 100).toFixed(2) : '~';
+    (realTimePercentage / displayingPercentages.reduce((a, b) => a + b, 0) * 100).toFixed(2) : '~';
 
   return (
     <div className="grid w-full grid-cols-12 items-start gap-4">

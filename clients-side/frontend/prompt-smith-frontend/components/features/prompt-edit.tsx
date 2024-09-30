@@ -14,14 +14,22 @@ import {LoadingButton} from "@/components/ui-ext/loading-button";
 import {promptSchema} from "@/lib/api/schemas";
 import {PromptFormData, VariantFormData} from "@/lib/api/interfaces";
 import {useState} from "react";
+import {Button} from "@/components/ui/button";
 
 
 const PromptEdit = ({mutate, ...data}: PromptFormData & {
   mutate: (data: PromptFormData) => void
 }) => {
-  const {unique_key, description, enabled, variants, uuid,} = data;
+  const {unique_key, description, enabled, variants: variantsDatas, uuid,} = data;
 
-  const sorted_variants_with_sorted_versions = !variants?.length ? [] : variants
+  const sorted_variants_with_sorted_versions = !variantsDatas?.length ? [
+    {
+      // no uuid, it means to create
+      name: "A",
+      percentage: 100,
+      versions: []
+    }
+  ] : variantsDatas
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(variant => ({
       ...variant,
@@ -31,6 +39,22 @@ const PromptEdit = ({mutate, ...data}: PromptFormData & {
         )
       ).slice(0, 1)
     }));
+
+
+  const [variants, setVariants] = useState<VariantFormData[]>(sorted_variants_with_sorted_versions)
+
+  const addVariant = () => {
+    if (variants.length >= 2) {
+      return
+    }
+    const newVariant = {
+      name: String.fromCharCode(65 + variants.length),
+      percentage: 0,
+      versions: []
+    }
+    setVariants([...variants, newVariant])
+  }
+
 
   const [percentages, setPercentages] = useState<number[]>(sorted_variants_with_sorted_versions.map(variant => variant.percentage))
 
@@ -130,7 +154,7 @@ const PromptEdit = ({mutate, ...data}: PromptFormData & {
         </form>
       </Form>
       {
-        uuid && sorted_variants_with_sorted_versions.slice(0, 2).map((variant, index) => {
+        uuid && variants.slice(0, 2).map((variant, index) => {
           return (
             <PromptVariant
               key={variant.uuid}
@@ -138,13 +162,14 @@ const PromptEdit = ({mutate, ...data}: PromptFormData & {
               variantData={variant}
               index={index}
               onMutate={onMutateVariant}
-              percentages={percentages}
-              setPercentages={setPercentages}
+              displayingPercentages={percentages}
+              setDisplayingPercentages={setPercentages}
               promptUuid={uuid}
             />
           )
         })
       }
+      <Button onClick={addVariant} disabled={variants.length >= 2}>Add Variant</Button>
     </div>
   )
 }
