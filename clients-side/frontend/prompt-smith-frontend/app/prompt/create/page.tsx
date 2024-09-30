@@ -1,10 +1,11 @@
-import PromptCreate from "@/components/features/prompt-create";
 
 function CreatePage() {
 
   return (
     <>
-      <PromptCreate/>
+      <div className='w-full'>
+
+      </div>
     </>
   )
 }

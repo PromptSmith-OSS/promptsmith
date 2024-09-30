@@ -1,4 +1,4 @@
-import PromptEdit from "@/components/features/prompt-edit";
+import PromptDetail from "@/components/features/prompt-detail";
 
 
 const EditPage = ({params}: { params: { uuid: string }}) => {
@@ -7,7 +7,7 @@ const EditPage = ({params}: { params: { uuid: string }}) => {
 
   return (
     <div className='w-full'>
-      <PromptEdit uuid={uuid}/>
+      <PromptDetail uuid={uuid}/>
     </div>
   )
 

@@ -12,7 +12,7 @@ import {
 
 
 import {Prompt} from "@/lib/api/interfaces";
-import {resourceFetcher, usePaginatedSWR} from "@/lib/api/fetcher";
+import {resourceFetcher} from "@/lib/api/fetcher";
 import {formatRelativeTime} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
 import {Ellipsis} from "lucide-react";
@@ -26,6 +26,7 @@ import {
 import SkeletonCard from "@/components/custom-ui/skeleton-card";
 import Link from "next/link";
 import ErrorAlert from "@/components/custom-ui/error-alert";
+import {usePaginatedSWR} from "@/lib/hooks/paginatedSWR";
 
 
 function PromptTable() {

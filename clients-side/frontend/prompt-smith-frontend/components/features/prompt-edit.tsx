@@ -4,9 +4,6 @@ import {useForm} from "react-hook-form"
 import {Form, FormControl, FormField, FormItem, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {resourceFetcher} from "@/lib/api/fetcher";
-import SkeletonCard from "@/components/custom-ui/skeleton-card";
-import ErrorAlert from "@/components/custom-ui/error-alert";
-import useSWR from "swr";
 import PromptVariant from "@/components/features/prompt-variant";
 import {Textarea} from "@/components/ui/textarea";
 import FieldLabelWrapper from "@/components/custom-ui/field-label-wrapper";
@@ -17,7 +14,8 @@ import {useState} from "react";
 import {Button} from "@/components/ui/button";
 
 
-const PromptEdit = ({mutate, ...data}: PromptFormData & {
+const PromptEdit = ({mutate, promptDetailData: data}: {
+  promptDetailData: PromptFormData,
   mutate: (data: PromptFormData) => void
 }) => {
   const {unique_key, description, enabled, variants: variantsDatas, uuid,} = data;
@@ -174,27 +172,5 @@ const PromptEdit = ({mutate, ...data}: PromptFormData & {
   )
 }
 
-const PromptDetail = ({uuid}: { uuid: string }) => {
 
-  // fetch prompt data from api and use as default values todo
-  const {data, error, isLoading, mutate} = useSWR(`prompt/${uuid}/detail`, resourceFetcher)
-
-  console.log('data', data)
-
-  if (isLoading) {
-    return <SkeletonCard/>
-  }
-
-  if (error) {
-    return <ErrorAlert open={!!error}/>
-  }
-
-  return (
-    <>
-      <PromptEdit {...data} mutate={mutate}/>
-    </>
-  )
-}
-
-
-export default PromptDetail
+export default PromptEdit
