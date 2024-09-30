@@ -5,6 +5,7 @@ from .prompt import prompt_router
 from .prompt_variant import prompt_variant_router
 from .prompt_version import version_router
 from ..auth import async_core_resource_auth
+from .key import key_router
 
 management_router = Router(
     tags=['Recourse Management'],
@@ -31,3 +32,4 @@ def ping(request):
 management_router.add_router("/prompt", prompt_router)
 management_router.add_router("/prompt", prompt_variant_router)
 management_router.add_router("/prompt", version_router)
+management_router.add_router("/key", key_router)
