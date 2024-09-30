@@ -1,6 +1,7 @@
 import os
 from typing import Optional, Any
 
+from django.contrib.auth.models import User
 from django.http import HttpRequest
 
 from ninja.errors import AuthenticationError
@@ -30,7 +31,7 @@ class AsyncDjangoNinjaAuth(SessionAuth):
     This decouple the authentication from Ninja routers and Django All Auth
     https://docs.allauth.org/en/latest/headless/openapi-specification/
     """
-    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[Any]:
+    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[User]:
         """
         Authenticate the user
         Get session id from cookies

@@ -21,7 +21,7 @@ def check_variant_exists(func):
 
     @wraps(func)
     async def wrapper(request, prompt_uuid: UUID, variant_uuid: UUID, *args, **kwargs):
-        project = request.auth
+        project = request.auth.project
         variant_qs = PromptVariant.objects.filter(uuid=variant_uuid, prompt__uuid=prompt_uuid, prompt__project=project)
 
         the_variant = await aget_object_or_404(variant_qs, uuid=variant_uuid)

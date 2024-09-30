@@ -19,7 +19,7 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
     https://docs.allauth.org/en/latest/headless/openapi-specification/
     """
 
-    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[Project]:
+    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[dict]:
         """
         Authenticate the user
         Get session id from cookies
@@ -51,7 +51,7 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
         # check if user has view permission
         if not await project.is_viewable_to_user_organization(user):
             return None
-        return project
+        return {'project': project, 'user': user}
 
 
 async_core_resource_auth = AsyncCoreResourceAuthenticationAndAuthorization()
