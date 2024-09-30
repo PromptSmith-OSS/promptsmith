@@ -29,7 +29,31 @@ import ErrorAlert from "@/components/custom-ui/error-alert";
 
 
 function PromptTable() {
-  const {data, error, isLoading, pagination} = usePaginatedSWR('prompt', resourceFetcher)
+  const {data, error, isLoading, pagination, mutate} = usePaginatedSWR('prompt', resourceFetcher)
+
+  const disablePrompt = async (uuid: string) => {
+    await resourceFetcher(`prompt/${uuid}`, 'PUT', {
+      enabled: false
+    })
+    mutate(
+      {
+        ...data,
+        enabled: false
+      }
+    )
+  }
+
+  const enablePrompt = async (uuid: string) => {
+    await resourceFetcher(`prompt/${uuid}`, 'PUT', {
+      enabled: true
+    })
+    mutate(
+      {
+        ...data,
+        enabled: true
+      }
+    )
+  }
 
 
   if (isLoading) {
@@ -44,7 +68,7 @@ function PromptTable() {
   const prompts = data?.items.sort(
     (a: Prompt, b: Prompt) => a.unique_key.localeCompare(b.unique_key)
   ) as Prompt[]
-  
+
 
   return (
     <Table>
@@ -76,20 +100,31 @@ function PromptTable() {
               <DropdownMenu>
                 <DropdownMenuTrigger><Ellipsis/></DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link href={`/prompt/${prompt?.uuid}`}>
+                  <Link href={`/prompt/${prompt?.uuid}`}>
+                    <DropdownMenuItem>
                       Edit
-                    </Link>
-                  </DropdownMenuItem>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuSeparator/>
                   <DropdownMenuItem
                     onClick={
-                      () => {
+                      async () => {
                         console.log('Disable')
+                        if (prompt?.uuid) {
+                          if (prompt?.enabled) {
+                            await disablePrompt(prompt.uuid)
+                          } else {
+                            await enablePrompt(prompt.uuid)
+                          }
+                        }
                       }
                     }
                   >
-                    Disable
+                    {
+                      prompt?.enabled
+                        ? 'Disable'
+                        : 'Enable'
+                    }
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
