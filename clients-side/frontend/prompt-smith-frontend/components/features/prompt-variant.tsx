@@ -22,7 +22,7 @@ const PromptVariantEditor = ({
   variantData: VariantFormData,
   name: string,
   index: number,
-  onMutateVariant: (index: number, data: VariantFormData) => void,
+  onMutateVariant: (index: number, data: VariantFormData) => Promise<void>,
   displayingPercentages: number[],
   setDisplayingPercentages: (percentages: number[]) => void,
   promptUuid: string
@@ -55,7 +55,7 @@ const PromptVariantEditor = ({
           versions: undefined,
         }
       )
-      onMutateVariant(index, respData);
+      await onMutateVariant(index, respData);
       variantForm.reset(respData);
       return;
     }
@@ -67,14 +67,14 @@ const PromptVariantEditor = ({
         versions: undefined,
       }
     )
-    onMutateVariant(index, respData);
+    await onMutateVariant(index, respData);
     variantForm.reset(data);
   }
 
 
   const realTimePercentage = variantForm.watch('percentage');
-  const onPercentageChange = () => {
-    variantForm.trigger('percentage');
+  const onPercentageChange = async () => {
+    await variantForm.trigger('percentage');
     setDisplayingPercentages(displayingPercentages.map((p, i) => i === index ? parseInt(`${realTimePercentage}`) : p));
   }
 
@@ -104,7 +104,7 @@ const PromptVariantEditor = ({
         }
       )
     }
-    onMutateVariant(index, {
+    await onMutateVariant(index, {
       ...variantForm.getValues(),
       versions: [{
         ...theSelectedVersion,

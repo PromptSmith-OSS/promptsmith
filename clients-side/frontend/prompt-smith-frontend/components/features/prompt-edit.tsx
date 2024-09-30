@@ -16,7 +16,7 @@ import {Button} from "@/components/ui/button";
 
 const PromptEdit = ({mutate, promptDetailData: data}: {
   promptDetailData: PromptFormData,
-  mutate: (data: PromptFormData) => void
+  mutate: (data: PromptFormData) => Promise<void>
 }) => {
   const {unique_key, description, enabled, variants: variantsDatas, uuid,} = data;
 
@@ -81,7 +81,7 @@ const PromptEdit = ({mutate, promptDetailData: data}: {
         ...data
       }
     )
-    mutate({
+    await mutate({
       ...data, // form data
       ...respData, // updated data, we should limit to direct fields only
       variants: sorted_variants_with_sorted_versions,
@@ -90,9 +90,11 @@ const PromptEdit = ({mutate, promptDetailData: data}: {
     reset(data)
   }
 
-  const onMutateVariant = (variantIndex: number, variantData: VariantFormData) => {
+  const onMutateVariant = async (variantIndex: number, variantData: VariantFormData) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     sorted_variants_with_sorted_versions[variantIndex] = variantData
-    mutate({
+    await mutate({
       ...data,
       variants: sorted_variants_with_sorted_versions
     })
