@@ -128,7 +128,7 @@ const PromptVariantEditor = ({
               versionForm.handleSubmit(onVersionFormSubmit)(e);
             }
           }>
-            <fieldset className="rounded-lg border p-4 h-full">
+            <fieldset className="h-full rounded-lg border p-4">
               <legend className="-ml-1 px-1 text-sm font-medium">
                 {name} ({calculatedPercentage}%)
               </legend>
@@ -177,7 +177,7 @@ const PromptVariantEditor = ({
             console.log('varaint form error', JSON.stringify(variantForm.formState.errors));
             variantForm.handleSubmit(onVariantFormSubmit)(e);
           }}>
-            <fieldset className="rounded-lg border p-4 h-full">
+            <fieldset className="h-full rounded-lg border p-4">
               <legend className="-ml-1 px-1 text-sm font-medium">
                 {name} Configuration
               </legend>
