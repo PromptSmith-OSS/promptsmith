@@ -16,7 +16,7 @@ import {Button} from "@/components/ui/button";
 
 const PromptEdit = ({mutate, promptDetailData: data}: {
   promptDetailData: PromptFormData,
-  mutate: (data: PromptFormData) => Promise<void>
+  mutate?: (data: PromptFormData) => Promise<void> | void
 }) => {
   const {unique_key, description, enabled, variants: variantsDatas, uuid,} = data;
 
@@ -75,26 +75,36 @@ const PromptEdit = ({mutate, promptDetailData: data}: {
   } = form;
 
   const onPromptFormSubmit = async () => {
-    const data = form.getValues()
-    const respData = await resourceFetcher(`prompt/${uuid}`, 'PUT',
-      {
-        ...data
-      }
-    )
-    await mutate({
-      ...data, // form data
-      ...respData, // updated data, we should limit to direct fields only
+    const formData = form.getValues()
+    let respData;
+    if (!uuid) {
+      respData = await resourceFetcher(`prompt`, 'POST',
+        {
+          ...formData
+        }
+      )
+    } else {
+      respData = await resourceFetcher(`prompt/${uuid}`, 'PUT',
+        {
+          ...formData
+        }
+      )
+
+    }
+    mutate && await mutate({
+      ...formData, // form data
+      ...respData, // updated data inject uuid, we should limit to direct fields only
       variants: sorted_variants_with_sorted_versions,
     })
     console.log(respData)
-    reset(data)
+    reset(formData)
   }
 
   const onMutateVariant = async (variantIndex: number, variantData: VariantFormData) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     sorted_variants_with_sorted_versions[variantIndex] = variantData
-    await mutate({
+    mutate && await mutate({
       ...data,
       variants: sorted_variants_with_sorted_versions
     })
@@ -169,7 +179,7 @@ const PromptEdit = ({mutate, promptDetailData: data}: {
           )
         })
       }
-      <Button onClick={addVariant} disabled={variants.length >= 2}>Add Variant</Button>
+      <Button onClick={addVariant} disabled={variants.length >= 2 || !uuid}>Add Variant</Button>
     </div>
   )
 }
