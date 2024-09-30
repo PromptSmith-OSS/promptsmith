@@ -2,10 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from project.models import Project
-from shared.base_models import BaseModel
+from shared.base_models import UUIDBasedBaseModel
 
 
-class ClientPublicKey(BaseModel):
+class ClientPublicKey(UUIDBasedBaseModel):
     """
     Client public key, which can be used in Front-End
     Which is used in remote evaluation mode
@@ -15,16 +15,14 @@ class ClientPublicKey(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    def __str__(self):
-        return self.project.unique_key + " " + self.public_key[:10]
-
     class Meta:
         indexes = [
             models.Index(fields=['project']),
         ]
 
 
-class ServerPrivateKey(BaseModel):
+
+class ServerPrivateKey(UUIDBasedBaseModel):
     """
     Server private key
     Private Key, which should be kept secret
@@ -34,9 +32,6 @@ class ServerPrivateKey(BaseModel):
     private_key = models.CharField(max_length=2048, unique=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return self.project.unique_key + " " + self.private_key[:10]
 
     class Meta:
         indexes = [
