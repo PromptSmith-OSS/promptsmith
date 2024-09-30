@@ -146,7 +146,7 @@ const Login = () => {
               />
             </CardContent>
             <CardFooter>
-              <LoadingButton className="w-full h-9" loading={loading} disabled={!loading}>
+              <LoadingButton className="w-full h-9" loading={loading} disabled={loading}>
                 {
                   loading ? 'Signing... in' : 'Sign in'
                 }
