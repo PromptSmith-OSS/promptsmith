@@ -13,7 +13,7 @@ const PromptVariantEditor = ({
                                variantData,
                                index,
                                name,
-                               onMutate,
+                               onMutateVariant,
                                displayingPercentages,
                                setDisplayingPercentages,
                                promptUuid
@@ -22,11 +22,12 @@ const PromptVariantEditor = ({
   variantData: VariantFormData,
   name: string,
   index: number,
-  onMutate: (index: number, data: VariantFormData) => void,
+  onMutateVariant: (index: number, data: VariantFormData) => void,
   displayingPercentages: number[],
   setDisplayingPercentages: (percentages: number[]) => void,
   promptUuid: string
 }) => {
+
   const variantForm = useForm<VariantFormData>({
     resolver: zodResolver(variantSchema),
     defaultValues: variantData,
@@ -45,6 +46,20 @@ const PromptVariantEditor = ({
   const onVariantFormSubmit = async () => {
     //   get the data from the form
     const data = variantForm.getValues();
+    if (!data.uuid) {
+      // create variant
+      const respData = await resourceFetcher(`prompt/${promptUuid}/variant`, 'POST',
+        {
+          ...data,
+          name: name, // we use A and B for now
+          versions: undefined,
+        }
+      )
+      onMutateVariant(index, respData);
+      variantForm.reset(respData);
+      return;
+    }
+    // update
     const respData = await resourceFetcher(`prompt/${promptUuid}/variant/${data.uuid}`, 'PUT',
       {
         ...data,
@@ -52,38 +67,44 @@ const PromptVariantEditor = ({
         versions: undefined,
       }
     )
-    onMutate(index, respData);
+    onMutateVariant(index, respData);
     variantForm.reset(data);
   }
 
 
   const realTimePercentage = variantForm.watch('percentage');
-    const onPercentageChange = () => {
+  const onPercentageChange = () => {
     variantForm.trigger('percentage');
     setDisplayingPercentages(displayingPercentages.map((p, i) => i === index ? parseInt(`${realTimePercentage}`) : p));
   }
 
 
   const onVersionFormSubmit = async () => {
+    if (!variantData?.uuid) {
+      // init Variant A if it's not there, so we can have a variant to attach the version to
+      await onVariantFormSubmit();
+    }
+    const variantUUID = variantForm.getValues().uuid;
+
     // get the data from the form
     const data = versionForm.getValues();
     console.log("submitting version", data);
     let respData: VersionFormData;
     if (!theSelectedVersion?.uuid) {
       // create version
-      respData = await resourceFetcher(`prompt/${promptUuid}/${variantData.uuid}/version`, 'POST',
+      respData = await resourceFetcher(`prompt/${promptUuid}/${variantUUID}/version`, 'POST',
         {
           ...data,
         }
       )
     } else {
-      respData = await resourceFetcher(`prompt/${promptUuid}/${variantData.uuid}/version/${theSelectedVersion?.uuid}`, 'PUT',
+      respData = await resourceFetcher(`prompt/${promptUuid}/${variantUUID}/version/${theSelectedVersion?.uuid}`, 'PUT',
         {
           ...data,
         }
       )
     }
-    onMutate(index, {
+    onMutateVariant(index, {
       ...variantForm.getValues(),
       versions: [{
         ...theSelectedVersion,
@@ -183,7 +204,7 @@ const PromptVariantEditor = ({
                 name="percentage"
                 render={({field}) => (
                   <FormItem className="mt-2">
-                    <FieldLabelWrapper name={"Rollout"} description={"To match about this percentage of users. "}
+                    <FieldLabelWrapper name={"Rollout Weight"} description={"To match about this percentage of users. "}
                                        required={true}/>
                     <FormControl>
                       <Input type="number"
