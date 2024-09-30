@@ -100,12 +100,16 @@ function PromptTable() {
               <DropdownMenu>
                 <DropdownMenuTrigger><Ellipsis/></DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <Link href={`/prompt/${prompt?.uuid}`}>
-                    <DropdownMenuItem>
-                      Edit
-                    </DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuSeparator/>
+                  {
+                    prompt?.enabled && <>
+                      <Link href={`/prompt/${prompt?.uuid}`}>
+                        <DropdownMenuItem>
+                          Edit
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuSeparator/>
+                    </>
+                  }
                   <DropdownMenuItem
                     onClick={
                       async () => {
