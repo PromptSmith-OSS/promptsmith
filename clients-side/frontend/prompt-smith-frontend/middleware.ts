@@ -75,9 +75,9 @@ const pageMiddleware = async (req: NextRequest) => {
   if (
     isPublicRoute &&
     authenticatedInSession &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
+    !req.nextUrl.pathname.startsWith('/prompt')
   ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+    return NextResponse.redirect(new URL('/prompt', req.nextUrl))
   }
   return NextResponse.next()
 }

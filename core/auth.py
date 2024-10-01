@@ -1,5 +1,8 @@
-from typing import Optional, Any, Union
+from typing import Optional, Union
+from typing import TypedDict
 
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.shortcuts import aget_object_or_404, get_object_or_404
 from ninja.errors import ValidationError, AuthenticationError
@@ -9,7 +12,10 @@ from core.models import ServerPrivateKey, ClientPublicKey
 from project.models import Project
 from shared.auth import AsyncDjangoNinjaAuth
 
-from django.conf import settings
+
+class UserProject:
+    user: User
+    project: Project
 
 
 class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
@@ -19,7 +25,7 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
     https://docs.allauth.org/en/latest/headless/openapi-specification/
     """
 
-    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[dict]:
+    async def authenticate(self, request: HttpRequest, key: Optional[str]) -> Optional[UserProject]:
         """
         Authenticate the user
         Get session id from cookies
@@ -51,7 +57,10 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
         # check if user has view permission
         if not await project.is_viewable_to_user_organization(user):
             return None
-        return {'project': project, 'user': user}
+        use_project = UserProject()
+        use_project.user = user
+        use_project.project = project
+        return use_project
 
 
 async_core_resource_auth = AsyncCoreResourceAuthenticationAndAuthorization()
