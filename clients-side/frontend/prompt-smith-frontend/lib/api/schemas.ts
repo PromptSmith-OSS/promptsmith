@@ -60,3 +60,12 @@ export const variantSchema = z.object({
     .optional().nullable(),
   llm_model_name: z.string().optional().nullable(),
 });
+
+
+export const publicKeySchema = z.object({
+  key: z.string().optional().nullable(),
+  uuid: z.string().uuid().optional().nullable(),
+  created_at: z.string()
+    .refine((val) => !isNaN(Date.parse(val)), {message: "Invalid date string"})
+    .transform((val) => new Date(val)).optional().nullable(),
+});

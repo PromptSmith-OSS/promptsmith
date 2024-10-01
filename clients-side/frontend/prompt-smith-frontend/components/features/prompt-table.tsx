@@ -31,7 +31,6 @@ import {usePaginatedSWR} from "@/lib/hooks/paginatedSWR";
 
 function PromptTable() {
   const {data, error, isLoading, pagination, mutate} = usePaginatedSWR('prompt', resourceFetcher)
-  console.debug('prompt page meta', pagination)
   const disablePrompt = async (uuid: string) => {
     await resourceFetcher(`prompt/${uuid}`, 'PUT', {
       enabled: false

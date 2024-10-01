@@ -7,6 +7,9 @@ export const defaultFetcher = (...args: any[]) => fetch(...args).then(res => res
 
 
 export const resourceFetcher = async (path: string, method: 'GET' | 'POST' | 'DELETE' | 'PUT' = 'GET', body?: unknown,) => {
+
+  console.log('resourceFetcher', path, method, body)
+
   const response = await fetch(
     `${PROXIED_API_URL}/api/${path}`,
     {
@@ -17,7 +20,7 @@ export const resourceFetcher = async (path: string, method: 'GET' | 'POST' | 'DE
         'Accept': 'application/json',
         'X-CSRFToken': method !== 'GET' ? getCSRFToken() || '' : '',
       },
-      body: JSON.stringify(body)
+      body: body ? JSON.stringify(body) : undefined,
     }
   )
   return response.json()
