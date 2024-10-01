@@ -33,13 +33,20 @@ const KeyTable = () => {
 
 
   const initilizeNewKey = async () => {
-    console.log('initilizeNewKey')
     const resp = await resourceFetcher('key', 'POST', {});
-    console.log(resp)
-    mutate(
+    await mutate(
       {
         ...data,
         resp,
+      }
+    )
+  }
+
+  const deleteKey = async (uuid: string) => {
+    await resourceFetcher(`key/${uuid}`, 'DELETE', {});
+    await mutate(
+      {
+        ...data.items.filter((key: PublicKeyData) => key.uuid !== uuid)
       }
     )
   }
@@ -94,12 +101,17 @@ const KeyTable = () => {
                   {key?.created_at ? formatRelativeTime(key.created_at) : 'N/A'}
                 </TableCell>
                 <TableHead className="text-right w-5 ">
-                  <LoadingButton variant={"outline"}>Delete</LoadingButton>
+                  <LoadingButton variant={"outline"} onClick={
+                    async () => {
+                      if (key.uuid) {
+                        await deleteKey(key.uuid)
+                      }
+                    }
+                  }>Delete</LoadingButton>
                 </TableHead>
               </TableRow>
             ))
           }
-
         </TableBody>
       </Table>
     </>

@@ -14,6 +14,18 @@ key_router = Router(
 )
 
 
+@key_router.post('', response=APIKeyOutSchema)
+async def create_key(request, key: APIKeyInSchema):
+    """
+    Create a new key
+    """
+    return await APIKey.objects.acreate(
+        project=request.auth.project,
+        created_by=request.auth.user,
+        **key.dict()
+    )
+
+
 @key_router.get('', response=List[APIKeyOutSchema])
 @paginate
 async def get_all_keys(request, ):
@@ -27,12 +39,12 @@ async def get_all_keys(request, ):
         is_private=False
     ).order_by(
         '-created_at'
-    ).select_related('project','created_by')
+    ).select_related('project', 'created_by')
     results = await aget_list_or_404(qs)
     return results
 
 
-@key_router.delete('/uuid', response=APIKeyOutSchema)
+@key_router.delete('/{uuid}', response=dict)
 async def delete_key(request, uuid: str):
     """
     Delete the key by uuid
@@ -41,17 +53,5 @@ async def delete_key(request, uuid: str):
     project_uuid = request.auth.project.uuid
     qs = APIKey.objects.filter(uuid=uuid, project__uuid=project_uuid)
     obj = await aget_object_or_404(qs)
-    await obj.delete()
+    await obj.adelete()
     return {'status': 'deleted'}
-
-
-@key_router.post('', response=APIKeyOutSchema)
-async def create_key(request, key: APIKeyInSchema):
-    """
-    Create a new key
-    """
-    return await APIKey.objects.acreate(
-        project=request.auth.project,
-        created_by=request.auth.user,
-        **key.dict()
-    )

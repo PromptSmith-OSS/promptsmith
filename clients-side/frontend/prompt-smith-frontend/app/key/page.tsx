@@ -1,6 +1,4 @@
 import KeyTable from "@/components/features/key-table";
-import {Button} from "@/components/ui/button";
-import Link from "next/link";
 
 
 const Page = () => {
