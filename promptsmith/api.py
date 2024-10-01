@@ -3,7 +3,7 @@ from ninja import NinjaAPI
 from ninja.renderers import BaseRenderer
 
 from core.routers.management_router import management_router
-from core.routers.sdk import sdk_router
+from core_sdk.router import sdk_router
 from project.routers.project_router import project_router
 
 

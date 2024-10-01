@@ -1,14 +1,11 @@
-from typing import Optional, Union
-from typing import TypedDict
+from typing import Optional
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpRequest
-from django.shortcuts import aget_object_or_404, get_object_or_404
-from ninja.errors import ValidationError, AuthenticationError
-from ninja.security import HttpBearer
+from django.shortcuts import aget_object_or_404
+from ninja.errors import ValidationError
 
-from core.models import APIKey
 from project.models import Project
 from shared.auth import AsyncDjangoNinjaAuth
 
@@ -66,15 +63,3 @@ class AsyncCoreResourceAuthenticationAndAuthorization(AsyncDjangoNinjaAuth):
 async_core_resource_auth = AsyncCoreResourceAuthenticationAndAuthorization()
 
 
-class ProjectKeyAuthentication(HttpBearer):
-    """
-    Authenticate the project key (private key or public key)
-    """
-
-    def authenticate(self, request, token) -> APIKey:
-        # this is a client side token
-        # this is for remote evaluation on customer client or server side
-        try:
-            return get_object_or_404(APIKey, key=token)
-        except APIKey.DoesNotExist:
-            raise AuthenticationError('Invalid token')

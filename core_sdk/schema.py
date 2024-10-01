@@ -1,8 +1,8 @@
 from typing import List, Optional
 from ninja import Schema
 
-from .prompt_variant import PromptVariantOutSchema
-from .prompt_version import PromptVersionOutSchema
+from core.schemas.prompt_variant import PromptVariantOutSchema
+from core.schemas.prompt_version import PromptVersionOutSchema
 
 from uuid import UUID
 

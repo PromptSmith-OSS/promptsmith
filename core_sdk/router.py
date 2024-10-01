@@ -10,7 +10,7 @@ from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
 from shared.auth import SDKAuthBearer
 from core.models import PromptVariant, PromptVersion
-from core.schemas.sdk import PromptSchema
+from core_sdk.schema import PromptSchema
 
 sdk_router = Router(
     tags=['SDK'],

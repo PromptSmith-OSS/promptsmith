@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'project.apps.ProjectConfig',
     'user_organization.apps.UserOrganisationConfig',
+    "core_sdk.apps.CoreSdkConfig",
 
     # mailer
     "mailer",
