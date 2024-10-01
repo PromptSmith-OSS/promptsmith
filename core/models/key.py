@@ -38,13 +38,15 @@ class APIKey(UUIDBasedBaseModel):
         await super().asave(*args, **kwargs)
 
     @staticmethod
-    def generate_public_api_key():
-        # Generates a secure random string of 256 characters (128 bytes encoded in hex)
+    def generate_api_key():
+        # Generates a secure random string of 64 characters (32 bytes encoded in hex)， 128 bits, same as AES
         # This is used as the API key for the client, should be very rate to collide
-        return 'pub_' + secrets.token_hex(128)
+        return secrets.token_hex(32)
+
+    @staticmethod
+    def generate_public_api_key():
+        return 'pub_' + APIKey.generate_api_key()
 
     @staticmethod
     def generate_private_api_key():
-        # Generates a secure random string of 256 characters
-        # This is used as the API key for the client, should be very rate to collide
-        return 'pri_' + secrets.token_hex(128)
+        return 'pri_' + APIKey.generate_api_key()
