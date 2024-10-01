@@ -1,21 +1,17 @@
-from typing import List, Optional
-from ninja import Schema
-
-from core.schemas.prompt_variant import PromptVariantOutSchema
-from core.schemas.prompt_version import PromptVersionOutSchema
-
+from typing import Optional
 from uuid import UUID
 
+from ninja import Schema
 
-class PromptSchema(Schema):
-    uuid: UUID
-    prompt_key: str
-    prompt_description: Optional[str] = None
-    name: str
+
+class SDKPromptSchema(Schema):
+    unique_key: str
+    description: Optional[str] = None
+    name: Optional[str] = None
 
     # from variant
     llm_model_name: Optional[str] = None
 
     # from version
+    uuid: UUID
     content: str
-

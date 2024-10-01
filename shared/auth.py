@@ -1,28 +1,9 @@
-import os
-from typing import Optional, Any
+from typing import Optional
 
+from asgiref.sync import sync_to_async
 from django.contrib.auth.models import User
 from django.http import HttpRequest
-
-from ninja.errors import AuthenticationError
-from ninja.security import HttpBearer, SessionAuth
-from asgiref.sync import sync_to_async
-
-
-class SDKAuthBearer(HttpBearer):
-    def authenticate(self, request, token) -> bool:
-        if token == os.getenv('SDK_KEY'):
-            return True
-        else:
-            raise AuthenticationError('Invalid token')
-
-
-class ManagementAuthBearer(HttpBearer):
-    def authenticate(self, request, token) -> bool:
-        if token == os.getenv('MANAGEMENT_KEY'):
-            return True
-        else:
-            raise AuthenticationError('Invalid token')
+from ninja.security import SessionAuth
 
 
 class AsyncDjangoNinjaAuth(SessionAuth):

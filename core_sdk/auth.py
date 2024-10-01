@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from ninja.errors import AuthenticationError
 from ninja.security import HttpBearer
 
@@ -10,10 +9,12 @@ class ProjectKeyAuthentication(HttpBearer):
     Authenticate the project key (private key or public key)
     """
 
-    def authenticate(self, request, token) -> APIKey:
-        # this is a client side token
-        # this is for remote evaluation on customer client or server side
+    async def authenticate(self, request, token) -> APIKey:
         try:
-            return get_object_or_404(APIKey, key=token)
+            api_key = await APIKey.objects.select_related('project').aget(key=token)
+            if not api_key:
+                raise AuthenticationError('Invalid token')
+            return api_key
         except APIKey.DoesNotExist:
             raise AuthenticationError('Invalid token')
+

@@ -1,6 +1,7 @@
 import random
 from typing import List
 
+from allauth.account.utils import Optional
 from django.db import models
 # import 404 error
 from django.http import Http404
@@ -8,9 +9,10 @@ from django.shortcuts import aget_list_or_404
 from ninja import Router
 from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
-from shared.auth import SDKAuthBearer
+from core_sdk.auth import ProjectKeyAuthentication as SDKAuthBearer
 from core.models import PromptVariant, PromptVersion
-from core_sdk.schema import PromptSchema
+from core_sdk.schema import SDKPromptSchema
+from decimal import Decimal
 
 sdk_router = Router(
     tags=['SDK'],
@@ -20,8 +22,6 @@ sdk_router = Router(
     ],
     auth=SDKAuthBearer(),
 )
-
-
 def random_choose_variant(variants: List[dict]) -> dict:
     """
     Randomly choose the variant based on the percentage
@@ -44,8 +44,8 @@ def random_choose_variant(variants: List[dict]) -> dict:
     return variant
 
 
-@sdk_router.get('/prompt/{prompt_key}/', response=PromptSchema)
-async def get_prompt(request, prompt_key: str, distinct_id: str = None, llm_model_name: str = None):
+@sdk_router.get('/prompt/{prompt_key}', response=SDKPromptSchema)
+async def get_prompt(request, prompt_key: str, distinct_id: Optional[str] = None, llm_model_name: Optional[str] = None):
     """
     Get the prompt by prompt key
     - Get prompt
@@ -53,7 +53,10 @@ async def get_prompt(request, prompt_key: str, distinct_id: str = None, llm_mode
     - Get related versions based on the version uuid from the variant
     """
 
-    prompt_variant_qs = PromptVariant.objects.select_related('prompt').filter(prompt__unique_key=prompt_key)
+    project = request.auth.project
+
+    prompt_variant_qs = PromptVariant.objects.select_related('prompt').filter(prompt__unique_key=prompt_key,
+                                                                              prompt__project=project)
 
     if llm_model_name:
         prompt_variant_qs = prompt_variant_qs.filter(llm_model_name=llm_model_name)
@@ -78,32 +81,32 @@ async def get_prompt(request, prompt_key: str, distinct_id: str = None, llm_mode
         prompt_variant_qs = prompt_variant_qs.select_related('segment').filter(
             segment__distinct_ids__contains=[distinct_id])
         prompt_variant = await prompt_variant_qs.afirst()
+        prompt_variant_uuid = prompt_variant.uuid
+
     else:
         # get the random prompt variant based on the weight percentage
         all_prompt_variants = await aget_list_or_404(prompt_variant_qs)
         # choose the prompt variant based on the percentage
         prompt_variant = random_choose_variant(all_prompt_variants)
 
+        # convert prompt_variant from diction to PromptVariant object
+        prompt_variant_uuid = prompt_variant['uuid']
+
+
     # use selected version uuid from the variant to get the version content
-    version_qs = PromptVersion.objects.filter(prompt__unique_key=prompt_key).annotate(
-        prompt_key=models.F('prompt__unique_key'),
-        prompt_description=models.F('prompt__description'),
-    ).values(
+    version_qs = PromptVersion.objects.filter(variant__uuid=prompt_variant_uuid).values(
         'uuid',
         'name',
         'content',
-        'prompt_key',
-        'prompt_description',
     )
 
-    if prompt_variant['selected_version_uuid']:
-        version = await version_qs.aget(uuid=prompt_variant['selected_version_uuid'])
-    else:
-        # find latest version
-        version = await (version_qs.order_by('-created_at')).afirst()
-        if not version:
-            raise Http404("Prompt not found")
+    # find latest version
+    version = await (version_qs.order_by('-created_at')).afirst()
+    if not version:
+        raise Http404("Prompt not found")
 
     version['llm_model_name'] = prompt_variant['llm_model_name']
+    version['unique_key'] = prompt_variant['unique_key']
+    version['description'] = prompt_variant['description']
 
     return version
