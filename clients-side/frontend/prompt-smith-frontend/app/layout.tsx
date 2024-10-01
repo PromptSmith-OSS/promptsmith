@@ -4,9 +4,8 @@ import "./globals.css";
 import {ThemeProvider} from "@/components/client/theme-provider"
 import Head from "next/head";
 import * as React from "react"
-import Sidebar from "@/components/layout/sidebar";
-import Header from "@/components/layout/header";
 
+import {Toaster} from "@/components/ui/toaster"
 
 const geistSans = localFont({
   src: "../assets/fonts/GeistVF.woff",
@@ -48,6 +47,7 @@ export default function RootLayout({
       disableTransitionOnChange
     >
       {children}
+      <Toaster/>
     </ThemeProvider>
     </body>
     </html>

@@ -8,10 +8,15 @@ import {PublicKeyData} from "@/lib/api/interfaces";
 import {formatRelativeTime} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {LoadingButton} from "@/components/ui-ext/loading-button";
-import Link from "next/link";
+import {Copy} from "lucide-react";
+import {Badge} from "@/components/ui/badge";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {useToast} from "@/hooks/use-toast"
 
 
 const KeyTable = () => {
+  const {toast} = useToast()
+
   const {data, error, isLoading, mutate} = usePaginatedSWR('key', resourceFetcher)
 
 
@@ -25,7 +30,6 @@ const KeyTable = () => {
 
 
   const keys: PublicKeyData[] = data?.items || [];
-
 
 
   const initilizeNewKey = async () => {
@@ -55,23 +59,42 @@ const KeyTable = () => {
           <TableRow>
             <TableHead>Key</TableHead>
             <TableHead className="text-right">Created</TableHead>
-            <TableHead className="text-right w-5 "></TableHead>
+            <TableHead className="text-right w-8 "></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {
             keys.map((key) => (
               <TableRow key={key.uuid}>
-                <TableCell className="w-40 max-w-40 truncate text-ellipsis overflow-hidden">
-                  {key.key}
-                                    <Button>Copy</Button>
+                <TableCell className="flex flex-row gap-2 items-center ">
+                  <div className="max-w-20 md:max-w-40  lg:max-w-80  truncate text-ellipsis overflow-hidden">
+                    {key.key}
+                  </div>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button variant="outline" size="sm" onClick={async () => {
+                          await navigator.clipboard.writeText(key?.key || '');
+                          toast({
+                            title: "API Key Copied",
+                            description: key?.key?.slice(0, 20) + '...',
+                            duration: 1000,
+                          })
+                        }}>
+                          <Copy/>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Copy the API Key</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </TableCell>
                 <TableCell className="text-right">
                   {key?.created_at ? formatRelativeTime(key.created_at) : 'N/A'}
                 </TableCell>
                 <TableHead className="text-right w-5 ">
-
-                  <LoadingButton>Delete</LoadingButton>
+                  <LoadingButton variant={"outline"}>Delete</LoadingButton>
                 </TableHead>
               </TableRow>
             ))
