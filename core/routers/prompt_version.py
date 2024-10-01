@@ -101,4 +101,4 @@ async def delete_version(request, prompt_uuid: UUID, variant_uuid: UUID, uuid: U
     """
     obj = await aget_object_or_404(PromptVersion, variant_uuid=variant_uuid, uuid=uuid)
     await obj.adelete()
-    return {'success': True}
+    return {'status': 'deleted'}

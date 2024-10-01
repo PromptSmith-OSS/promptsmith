@@ -107,4 +107,4 @@ async def delete_prompt(request, uuid: UUID):
         project_uuid=models.F('project__uuid'))
     obj = await aget_object_or_404(qs)
     await obj.adelete()
-    return {'success': True}
+    return {'status': 'deleted'}

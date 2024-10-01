@@ -90,4 +90,4 @@ async def delete_prompt_variant(request, prompt_uuid: UUID, uuid: UUID):
     """
     obj = await aget_object_or_404(PromptVariant, prompt__uuid=prompt_uuid, uuid=uuid)
     await obj.adelete()
-    return {'success': True}
+    return {'status': 'deleted'}
