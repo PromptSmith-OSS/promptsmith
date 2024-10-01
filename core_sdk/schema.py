@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 from uuid import UUID
 
@@ -11,6 +12,7 @@ class SDKPromptSchema(Schema):
 
     # from variant
     llm_model_name: Optional[str] = None
+    percentage: Optional[float] = None
 
     # from version
     uuid: UUID

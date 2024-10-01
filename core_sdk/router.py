@@ -22,6 +22,8 @@ sdk_router = Router(
     ],
     auth=SDKAuthBearer(),
 )
+
+
 def random_choose_variant(variants: List[dict]) -> dict:
     """
     Randomly choose the variant based on the percentage
@@ -81,7 +83,6 @@ async def get_prompt(request, prompt_key: str, distinct_id: Optional[str] = None
         prompt_variant_qs = prompt_variant_qs.select_related('segment').filter(
             segment__distinct_ids__contains=[distinct_id])
         prompt_variant = await prompt_variant_qs.afirst()
-        prompt_variant_uuid = prompt_variant.uuid
 
     else:
         # get the random prompt variant based on the weight percentage
@@ -89,12 +90,8 @@ async def get_prompt(request, prompt_key: str, distinct_id: Optional[str] = None
         # choose the prompt variant based on the percentage
         prompt_variant = random_choose_variant(all_prompt_variants)
 
-        # convert prompt_variant from diction to PromptVariant object
-        prompt_variant_uuid = prompt_variant['uuid']
-
-
     # use selected version uuid from the variant to get the version content
-    version_qs = PromptVersion.objects.filter(variant__uuid=prompt_variant_uuid).values(
+    version_qs = PromptVersion.objects.filter(variant__uuid=prompt_variant['uuid']).values(
         'uuid',
         'name',
         'content',
@@ -108,5 +105,6 @@ async def get_prompt(request, prompt_key: str, distinct_id: Optional[str] = None
     version['llm_model_name'] = prompt_variant['llm_model_name']
     version['unique_key'] = prompt_variant['unique_key']
     version['description'] = prompt_variant['description']
+    version['percentage'] = prompt_variant['percentage']
 
     return version
