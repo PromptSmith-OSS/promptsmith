@@ -18,7 +18,6 @@ import Logout from "@/components/features/logout";
 const Header = () => {
 
 
-
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <SidebarMobile/>
@@ -35,10 +34,10 @@ const Header = () => {
         </form>
       </div>
       <ModeToggle/>
-      <Button variant="outline" size="icon" className="ml-auto h-9 w-9">
-        <Bell className="h-4 w-4"/>
-        <span className="sr-only">Toggle notifications</span>
-      </Button>
+      {/*<Button variant="outline" size="icon" className="ml-auto h-9 w-9">*/}
+      {/*  <Bell className="h-4 w-4"/>*/}
+      {/*  <span className="sr-only">Toggle notifications</span>*/}
+      {/*</Button>*/}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
@@ -48,13 +47,11 @@ const Header = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          {/*<DropdownMenuSeparator/>*/}
+          {/*<DropdownMenuItem>Settings</DropdownMenuItem>*/}
+          {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
           <DropdownMenuSeparator/>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator/>
-          <DropdownMenuItem>
-            <Logout/>
-          </DropdownMenuItem>
+          <Logout/>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

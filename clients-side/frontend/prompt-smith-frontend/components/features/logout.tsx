@@ -3,6 +3,7 @@ import * as React from "react";
 import {logout} from "@/lib/auth/authAPIWrapper";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
+import {DropdownMenuItem} from "@/components/ui/dropdown-menu";
 
 const Logout = () => {
 
@@ -14,7 +15,9 @@ const Logout = () => {
 
   }
   return <>
-    <Button onClick={onLogout}>Logout</Button>
+    <DropdownMenuItem onClick={onLogout} className="align-middle justify-center">
+      <Button onClick={onLogout}>Logout</Button>
+    </DropdownMenuItem>
   </>
 }
 
