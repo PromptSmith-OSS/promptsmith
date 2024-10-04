@@ -22,9 +22,9 @@ const SidebarMobile = () => {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col bg-muted/90 min-w-64">
           <SidebarContent />
-          <div className="mt-auto p-4">
-            <SidebarUpgradeCard/>
-          </div>
+          {/*<div className="mt-auto p-4">*/}
+          {/*  <SidebarUpgradeCard/>*/}
+          {/*</div>*/}
         </SheetContent>
       </Sheet>
     </div>

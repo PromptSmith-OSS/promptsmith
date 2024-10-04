@@ -23,15 +23,15 @@ const DashboardLayout = ({
             {/*</div>*/}
             <section className=" top-0 z-10 flex items-center gap-1 bg-background px-4">
               <h1 className="text-lg font-semibold lg:text-2xl">{pageTitle}</h1>
-              <Button
-                variant="outline"
-                size="sm"
-                className="ml-auto gap-1.5 text-sm"
-              >
-                <Share className="size-3.5"/>
-                Share
-              {/*  todo share function */}
-              </Button>
+              {/*<Button*/}
+              {/*  variant="outline"*/}
+              {/*  size="sm"*/}
+              {/*  className="ml-auto gap-1.5 text-sm"*/}
+              {/*>*/}
+              {/*  <Share className="size-3.5"/>*/}
+              {/*  Share*/}
+              {/*/!*  todo share function *!/*/}
+              {/*</Button>*/}
             </section>
             <div
               className="flex flex-1 justify-center rounded-lg border border-dashed shadow-sm p-4 md:p-6 "
