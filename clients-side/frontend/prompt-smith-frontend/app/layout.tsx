@@ -36,6 +36,7 @@ export default function RootLayout({
     <Head>
       <meta charSet="utf-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <link rel="icon" href="/favicon.png" type="image/x-icon"/>
     </Head>
     <body
       className={`${geistSans.variable} ${geistMono.variable} antialiased min-w-sm`}

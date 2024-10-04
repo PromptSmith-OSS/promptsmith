@@ -65,7 +65,7 @@ function PromptTable() {
   }
 
   // sort by unique_key
-  const prompts = data?.items.sort(
+  const prompts = data?.items?.sort(
     (a: Prompt, b: Prompt) => a.unique_key.localeCompare(b.unique_key)
   ) as Prompt[]
 
