@@ -1,0 +1,7 @@
+promptsmith/.env
+node_modules/*
+venv/
+CONTRIBUTING.md
+.editorconfig
+.gitignore
+pyrightconfig.json
