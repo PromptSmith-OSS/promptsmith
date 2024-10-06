@@ -1,8 +1,7 @@
 import Link from "next/link";
-import {KeyIcon, SquareLibrary, FileText, MessageSquare} from "lucide-react";
+import {FileText, KeyIcon, MessageSquare, SquareLibrary} from "lucide-react";
 import * as React from "react";
 import Logo from "@/components/custom-ui/logo";
-import WIPHover from "@/components/custom-ui/wip-hover";
 import SidebarLinkNav from "@/components/client/sidebar-link-nav";
 
 

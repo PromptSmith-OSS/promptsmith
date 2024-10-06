@@ -9,7 +9,6 @@ import {formatRelativeTime} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {LoadingButton} from "@/components/ui-ext/loading-button";
 import {Copy} from "lucide-react";
-import {Badge} from "@/components/ui/badge";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {useToast} from "@/hooks/use-toast"
 

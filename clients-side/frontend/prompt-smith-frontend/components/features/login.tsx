@@ -1,7 +1,6 @@
 'use client'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 
 import {init, login} from "@/lib/auth/authAPIWrapper";
@@ -44,7 +43,6 @@ const Login = () => {
   const [userResp, setUserResp] = useState<UserResp | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -91,7 +89,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userResp && !userResp?.meta.is_authenticated) {
-      console.error('User not authenticated')
+      console.error('User not authenticated', error)
       alert('User authenticated failed, please try again')
     }
   }, [userResp])

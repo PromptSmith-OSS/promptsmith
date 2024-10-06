@@ -1,6 +1,5 @@
 import Link from "next/link";
 import * as React from "react";
-import SidebarUpgradeCard from "@/components/layout/sidebar-upgrade-card";
 import SidebarContent from "@/components/layout/sidebar-content";
 import Logo from "@/components/custom-ui/logo";
 

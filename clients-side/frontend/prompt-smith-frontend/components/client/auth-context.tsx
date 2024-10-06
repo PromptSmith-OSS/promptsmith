@@ -1,5 +1,5 @@
 import {createContext, ReactNode, useEffect, useState} from 'react'
-import {getAuth, init as getConfig} from '../../lib/auth/wrapper'
+import {getAuth, init as getConfig} from '@/lib/auth/authAPIWrapper'
 import {Loading, LoadingError} from "@/components/custom-ui/loading";
 
 export const AuthContext = createContext<{ auth: boolean | undefined, config: { status?: number } | undefined }

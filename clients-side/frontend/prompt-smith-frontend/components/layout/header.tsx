@@ -1,10 +1,8 @@
 import {Button} from "@/components/ui/button";
-import {Bell, CircleUser, Search} from "lucide-react";
-import {Input} from "@/components/ui/input";
+import {CircleUser} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
@@ -12,7 +10,6 @@ import {
 import * as React from "react";
 import {ModeToggle} from "@/components/client/theme-toggle";
 import SidebarMobile from "./sidebar-mobile";
-import Link from "next/link";
 import Logout from "@/components/features/logout";
 
 const Header = () => {

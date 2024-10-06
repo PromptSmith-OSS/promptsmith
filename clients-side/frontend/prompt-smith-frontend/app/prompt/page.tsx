@@ -3,7 +3,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
 
-export async function Page() {
+function Page() {
   return (
     <div className='w-full'>
       <div className="flex flex-row w-full justify-between pb-2 mb-2">

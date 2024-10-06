@@ -2,7 +2,6 @@ import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
 import {Menu} from "lucide-react";
 import * as React from "react";
-import SidebarUpgradeCard from "@/components/layout/sidebar-upgrade-card";
 import SidebarContent from "@/components/layout/sidebar-content";
 
 
