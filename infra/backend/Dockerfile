@@ -1,4 +1,4 @@
-# Reference https://github.com/Antioch-Tech/bible-vector-search-api/blob/5d0eb2a3c699c0ddfbf7ba83b1a89cb655ebc023/Dockerfile
+# Credits/Reference:  https://github.com/Antioch-Tech/bible-vector-search-api/blob/5d0eb2a3c699c0ddfbf7ba83b1a89cb655ebc023/Dockerfile
 
 FROM python:3.12.7-slim-bookworm AS builder
 
