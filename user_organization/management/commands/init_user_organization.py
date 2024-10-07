@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 # Create user
                 existing_user = User.objects.filter(Q(email=email) | Q(username=username)).exists()
                 if existing_user:
-                    raise ValueError(f"User {email} already exists")
+                    return
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
                 self.stdout.write(self.style.SUCCESS(f'User {username} created successfully!'))
