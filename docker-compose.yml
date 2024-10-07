@@ -20,10 +20,7 @@ services:
   backend:
     build:
       context: .
-#    command:
-#      - /app/infra/scripts/start.sh
-    volumes:
-      - ./backend:/app
+    command: "infra/scripts/start.sh"
     ports:
       - "8000:8000"
     environment:
@@ -42,9 +39,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./clients-side/frontend/prompt-smith-frontend/
-#    command: "node /app/server.js"
-    volumes:
-      - ./frontend:/app
+    command: "node /app/server.js"
     ports:
       - "3000:3000"
     environment:

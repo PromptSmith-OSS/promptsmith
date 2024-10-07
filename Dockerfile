@@ -41,4 +41,4 @@ RUN rm -Rf app/clients-side
 
 
 RUN chmod -R +x infra/scripts/start.sh
-#ENTRYPOINT ["infra/scripts/start.sh"]
+ENTRYPOINT ["infra/scripts/start.sh"]
