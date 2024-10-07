@@ -5,3 +5,6 @@ CONTRIBUTING.md
 .editorconfig
 .gitignore
 pyrightconfig.json
+.env
+# ignroe all .env files
+clients-side/frontend/prompt-smith-frontend/.env

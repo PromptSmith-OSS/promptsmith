@@ -29,6 +29,9 @@ services:
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
       - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=your_django_secret
+      - DEBUG=0
+      - JWT_SECRET=your_jwt_secret_here
     depends_on:
       - postgres
       - redis
@@ -43,7 +46,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+      - API_URL=http://backend:8000
+      - SESSION_SECRET=your_secret_key
     depends_on:
       - backend
     networks:
