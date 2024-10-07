@@ -5,4 +5,4 @@ export DJANGO_SETTINGS_MODULE=promptsmith.settings_production
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
 #poetry run python manage.py runserver
-gunicorn --env promptsmith.wsgi:application --bind 0.0.0.0:8000 --workers 2 --log-level=info
+gunicorn --env DJANGO_SETTINGS_MODULE=promptsmith.settings_production promptsmith.wsgi:application --bind 0.0.0.0:8000 --workers 2 --log-level=info

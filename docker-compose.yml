@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: promptsmith_db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.4-alpine
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: .
+#    command:
+#      - /app/infra/scripts/start.sh
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=promptsmith_db
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./clients-side/frontend/prompt-smith-frontend/
+#    command: "node /app/server.js"
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - frontend
+
+networks:
+  backend:
+  frontend:
+
+volumes:
+  postgres_data:

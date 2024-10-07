@@ -156,6 +156,7 @@ DATABASES = {
         'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
         'NAME': os.getenv('POSTGRES_DB', 'postgres'),
         'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
     }
 }
 

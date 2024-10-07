@@ -34,10 +34,11 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-COPY .. /app/
+COPY . /app/
+COPY ./infra/scripts /app/infra/scripts
 # remove client-side folder we don't need it for backend api docker image
-RUN rm -Rf app/client-side
+RUN rm -Rf app/clients-side
 
 
-RUN chmod -R +x infra/scripts/*
-ENTRYPOINT ["gunicorn --env promptsmith.settings_production promptsmith.wsgi:application --bind 0.0.0.0:8000 --workers 2 --log-level=info"]
+RUN chmod -R +x infra/scripts/start.sh
+#ENTRYPOINT ["infra/scripts/start.sh"]
