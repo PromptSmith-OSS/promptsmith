@@ -1,4 +1,4 @@
-name: PromptSmithBackend
+name: PromptSmithAPI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}-api
 
 
 jobs:
