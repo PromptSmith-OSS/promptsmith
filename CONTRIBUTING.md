@@ -13,6 +13,15 @@
 
 ## How to run the project locally
 
+### Run on local machine using docker-compose
+
+1. Clone the repository
+2. Run the docker-compose
+   - `docker-compose up --build`
+
+
+
+### Run on local machine natively
 > please set up your local db firstly and set up .env file properly
 
 1. Clone the repository
