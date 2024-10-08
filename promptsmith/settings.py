@@ -47,6 +47,7 @@ ENABLE_DJANGO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'backend',
 ]
 
 SITE_DOMAIN = os.getenv('DOMAIN', 'localhost')
@@ -281,3 +282,5 @@ if DEBUG or RUNNING_DEVELOPMENT_SERVER:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     CORS_ALLOW_ALL_ORIGINS = True
+
+    ALLOWED_HOSTS = ['*']

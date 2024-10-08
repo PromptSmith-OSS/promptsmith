@@ -3,10 +3,11 @@ import {useEffect} from "react";
 
 
 import {getCSRFToken} from "@/lib/auth/cookieUtils";
+import {PROXIED_API_URL} from "@/lib/constants";
 
 
 const CSRFInit = () => {
-  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const url = PROXIED_API_URL;
 
   useEffect(() => {
     // fetch init url to set up csrf and session cookie
