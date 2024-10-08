@@ -109,7 +109,7 @@ async function request(method: string, path: string, data?: PayloadBody, headers
     options.headers['X-CSRFToken'] = getCSRFToken()
   }
 
-  if (!!data) {
+  if (!!data && method !== 'GET' && method !== 'OPTION') {
     options.body = JSON.stringify(data)
     options.headers['Content-Type'] = 'application/json'
   }

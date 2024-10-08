@@ -1,9 +1,11 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {cookies} from 'next/headers'
-import {IS_IN_DEVELOPMENT} from "@/lib/utils";
 
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:8000',].concat(IS_IN_DEVELOPMENT ? ['*'] : [])
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:8000', "http://frontend:3000"]
+const METHODS_EXCLUDE_ORIGIN = ['GET', 'OPTION']; // no origin for same site get and option
+
+// .concat(IS_IN_DEVELOPMENT ? ['*'] : [])
 const authRoutes = ['/login', '/signup']
 const authAPIRoutes = ['/api/login-through-management-key'] // to be same as api route endpoint
 
@@ -21,19 +23,21 @@ const apiMiddleware = async (req: NextRequest) => {
     // if the route is not protected, then we can skip the auth check
     response = NextResponse.next()
   } else {
-    const origin = req.headers.get('Origin') || '*' // todo * only be allowed in development
-    if (!allowedOrigins.includes(origin)) {
-      // secure middleware
+
+    const origin = req.headers.get('Origin') || ''; // origin '' will be set for same site get
+    console.log('request origin', origin)
+
+
+    if (
+      !(
+        origin && allowedOrigins.includes(origin) ||  // allow all origins
+        !origin && METHODS_EXCLUDE_ORIGIN.includes(req.method) // no origin from same site get and option
+      )
+    ) {
       console.error('403 Forbidden', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
       return new Response('Forbidden', {status: 403})
     }
-    // const auth = req.headers.get('Authorization') || false
-    // if (!auth) {
-    //   // secure auth
-    //   // check authorization between server side pages to api routes
-    //   console.error('401 Unauthorized', origin, req.headers.get('Referer'), req.headers.get('User-Agent'))
-    //   return new Response('Unauthorized', {status: 401})
-    // }
+
     response = NextResponse.next()
 
 
