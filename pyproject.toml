@@ -19,6 +19,7 @@ django-mailer = "^2.3.2"
 orjson = "^3.10.7"
 django-simple-history = "^3.7.0"
 gunicorn = "^23.0.0"
+redis = "^5.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
