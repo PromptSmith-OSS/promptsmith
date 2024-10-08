@@ -24,10 +24,7 @@ const apiMiddleware = async (req: NextRequest) => {
     response = NextResponse.next()
   } else {
 
-    const origin = req.headers.get('Origin') || ''; // origin '' will be set for same site get
-    console.log('request origin', origin)
-
-
+    const origin = req.headers.get('Origin') || ''; // origin '' will be set for same site under GET, OPTION
     if (
       !(
         origin && allowedOrigins.includes(origin) ||  // allow all origins
