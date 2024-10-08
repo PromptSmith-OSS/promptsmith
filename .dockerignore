@@ -8,3 +8,12 @@ pyrightconfig.json
 .env
 # ignroe all .env files
 clients-side/frontend/prompt-smith-frontend/.env
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next
+.git
+.idea

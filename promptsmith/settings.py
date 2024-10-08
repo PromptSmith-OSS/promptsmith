@@ -54,6 +54,8 @@ SITE_DOMAIN = os.getenv('DOMAIN', 'localhost')
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'http://backend:8000',
+    'http://backend:3000',
     'http://127.0.0.1:3000',
     'http://localhost',
     'http://localhost:8000',
@@ -74,7 +76,7 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CSRF_COOKIE_DOMAIN = '{}'.format(SITE_DOMAIN)
 CSRF_COOKIE_SAMESITE = 'Strict'  # default
-CSRF_COOKIE_AGE = 60 * 60 * 24 * 30 # 365 days default from django, we use 30 days here
+CSRF_COOKIE_AGE = 60 * 60 * 24 * 30  # 365 days default from django, we use 30 days here
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -110,7 +112,6 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount',
     # 'allauth.mfa',
     # 'allauth.usersessions',
-
 
     'simple_history',
 ]
