@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 
-const api_url = process.env.API_URL;
+
 
 const nextConfig = {
-
     /**
      * Use rewrites to proxy requests to the API server
      * API server will not consider this as CORS request but same region request
@@ -13,11 +12,11 @@ const nextConfig = {
         return [
             {
                 source: "/api/bff/:path*",
-                destination: api_url + "/:path*",
+                destination: (process.env.API_URL || 'http://0.0.0.0:8000') + "/:path*",
             },
         ];
     },
-    output: 'standalone',
+    // output: 'standalone',
 };
 
 export default nextConfig;
