@@ -9,13 +9,11 @@ services:
       POSTGRES_PASSWORD: mypassword
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
+
 
   redis:
     image: redis:7.4-alpine
-    networks:
-      - backend
+
 
   backend:
     build:
@@ -30,13 +28,12 @@ services:
       - POSTGRES_PASSWORD=mypassword
       - REDIS_URL=redis://redis:6379
       - SECRET_KEY=your_django_secret
-      - DEBUG=0
+      - DEBUG='1'
       - JWT_SECRET=your_jwt_secret_here
     depends_on:
       - postgres
       - redis
-    networks:
-      - backend
+
 
   frontend:
     build:
@@ -49,14 +46,9 @@ services:
       - NEXT_PUBLIC_BASE_URL=http://localhost:3000
       - API_URL=http://backend:8000
       - SESSION_SECRET=your_secret_key
-    depends_on:
-      - backend
-    networks:
-      - frontend
-
-networks:
-  backend:
-  frontend:
+      - NEXT_DEBUG=true   # Enable Next.js debug logging
+      - DEBUG=*
+      - NODE_ENV=development
 
 volumes:
   postgres_data:

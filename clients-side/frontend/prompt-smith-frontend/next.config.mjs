@@ -12,11 +12,16 @@ const nextConfig = {
         return [
             {
                 source: "/api/bff/:path*",
-                destination: (process.env.API_URL || 'http://0.0.0.0:8000') + "/:path*",
+                destination: (process.env.API_URL || 'http://backend:8000') + "/:path*",
             },
         ];
     },
-    // output: 'standalone',
+    output: 'standalone',
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
+    },
 };
 
 export default nextConfig;

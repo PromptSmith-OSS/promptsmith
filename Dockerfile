@@ -33,11 +33,10 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-
-COPY . /app/
-COPY ./infra/scripts /app/infra/scripts
+COPY . /app
 # remove client-side folder we don't need it for backend api docker image
-RUN rm -Rf app/clients-side
+RUN rm -Rf clients-side/
+COPY clients-side/frontend/prompt-smith-frontend/config/ /app/clients-side/frontend/prompt-smith-frontend/config/
 
 
 RUN chmod -R +x infra/scripts/start.sh
