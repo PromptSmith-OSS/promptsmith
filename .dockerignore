@@ -17,3 +17,5 @@ yarn-error.log*
 .next
 .git
 .idea
+.DS_Store
+docs/
