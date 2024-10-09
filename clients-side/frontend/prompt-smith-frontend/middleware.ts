@@ -1,8 +1,8 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {cookies} from 'next/headers'
+import {SITE_URL} from "@/lib/constants";
 
-
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:8000', "http://frontend:3000"]
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:8000', "http://frontend:3000", SITE_URL]
 const METHODS_EXCLUDE_ORIGIN = ['GET', 'OPTION']; // no origin for same site get and option
 
 // .concat(IS_IN_DEVELOPMENT ? ['*'] : [])
