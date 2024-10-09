@@ -87,7 +87,8 @@ CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simpli
 CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
 CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
-CSRF_COOKIE_DOMAIN = '.{}'.format(SITE_DOMAIN) if SITE_DOMAIN != 'localhost' else 'localhost'  # allow from subdomain with .
+CSRF_COOKIE_DOMAIN = '.{}'.format(
+    SITE_DOMAIN) if SITE_DOMAIN != 'localhost' else 'localhost'  # allow from subdomain with .
 CSRF_COOKIE_SAMESITE = 'Strict'  # default
 CSRF_COOKIE_AGE = 60 * 60 * 24 * 30  # 365 days default from django, we use 30 days here
 
@@ -275,15 +276,7 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True) != 'False'
 
 
 # setting in local development and debug mode
-if DEBUG or RUNNING_DEVELOPMENT_SERVER:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        }
-    }
-
-    SESSION_ENGINE = "django.contrib.sessions.backends.file"  # use file session for development, we cannot use cache, because it will be deleted immediately
-
+if RUNNING_DEVELOPMENT_SERVER:
     SESSION_COOKIE_SECURE = False  # not using https
     CSRF_COOKIE_SECURE = False  # not using https
     CSRF_COOKIE_DOMAIN = 'localhost'
@@ -298,3 +291,12 @@ if DEBUG or RUNNING_DEVELOPMENT_SERVER:
     CORS_ALLOW_ALL_ORIGINS = True
 
     ALLOWED_HOSTS = ['*']
+
+if DEBUG:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
+
+    SESSION_ENGINE = "django.contrib.sessions.backends.file"  # use file session for development, we cannot use cache, because it will be deleted immediately
