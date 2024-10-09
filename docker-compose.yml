@@ -30,6 +30,8 @@ services:
       - SECRET_KEY=your_django_secret
       - DEBUG='1'
       - JWT_SECRET=your_jwt_secret_here
+      - ENABLE_DJANGO_ADMIN='0'
+      - SITE_DOMAIN='localhost'
     depends_on:
       - postgres
       - redis

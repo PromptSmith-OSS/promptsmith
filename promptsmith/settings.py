@@ -44,23 +44,31 @@ DEBUG = os.getenv('DEBUG', False) == '1'
 RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 ENABLE_DJANGO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
 
+SITE_DOMAIN = os.getenv('DOMAIN_NAME', 'localhost')
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'backend',
+    'frontend',
+    SITE_DOMAIN,
 ]
-
-SITE_DOMAIN = os.getenv('DOMAIN', 'localhost')
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
     'http://backend:8000',
-    'http://backend:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://frontend:3000',
+    'http://frontend',
+    'http://localhost',
+    'http://{}'.format(SITE_DOMAIN),
+    'http://api.{}'.format(SITE_DOMAIN),
+    'http://app.{}'.format(SITE_DOMAIN),
+    'http://www.{}'.format(SITE_DOMAIN),
 ]
+
 CORS_ALLOW_CREDENTIALS = True  # allow cookies in Lax mode managed in session cookie same site
 
 ROOT_URLCONF = 'promptsmith.urls'
@@ -74,7 +82,7 @@ CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simpli
 CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
 CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
-CSRF_COOKIE_DOMAIN = '{}'.format(SITE_DOMAIN)
+CSRF_COOKIE_DOMAIN = '.{}'.format(SITE_DOMAIN) if SITE_DOMAIN != 'localhost' else 'localhost'  # allow from subdomain with .
 CSRF_COOKIE_SAMESITE = 'Strict'  # default
 CSRF_COOKIE_AGE = 60 * 60 * 24 * 30  # 365 days default from django, we use 30 days here
 

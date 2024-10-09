@@ -21,7 +21,6 @@ from django.urls import path, include, re_path
 
 from django.http import JsonResponse
 
-
 from .api import api
 
 
@@ -58,7 +57,6 @@ def not_found_view(request, *args, **kwargs):
     )
 
 
-
 def unsupported_view(request, *args, **kwargs):
     return JsonResponse(
         {'error': 'Unsupported'},
@@ -90,7 +88,7 @@ urlpatterns += [
     path("auth/", include("allauth.headless.urls")),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG or settings.ENABLE_DJANGO_ADMIN:
     urlpatterns += [
         path("admin/", admin.site.urls),
     ]
