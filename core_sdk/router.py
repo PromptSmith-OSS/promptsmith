@@ -46,6 +46,16 @@ def random_choose_variant(variants: List[dict]) -> dict:
     return variant
 
 
+@sdk_router.get("/protected-ping")
+def ping(request):
+    """
+    Ping the server - Protected Health Check
+    :param request:
+    :return:
+    """
+    return {"ping": "pong"}
+
+
 @sdk_router.get('/prompt/{prompt_key}', response=SDKPromptSchema)
 async def get_prompt(request, prompt_key: str, distinct_id: Optional[str] = None, llm_model_name: Optional[str] = None):
     """
