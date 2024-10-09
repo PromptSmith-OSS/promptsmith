@@ -31,7 +31,8 @@ services:
       - DEBUG='1'
       - JWT_SECRET=your_jwt_secret_here
       - ENABLE_DJANGO_ADMIN='0'
-      - DOMAIN_NAME='localhost'
+      - SITE_DOMAIN='localhost'
+      - FRONTEND_DOMAIN='localhost'
     depends_on:
       - postgres
       - redis

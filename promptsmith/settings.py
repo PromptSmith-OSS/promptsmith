@@ -44,7 +44,8 @@ DEBUG = os.getenv('DEBUG', False) == '1'
 RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 ENABLE_DJANGO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
 
-SITE_DOMAIN = os.getenv('DOMAIN_NAME', 'localhost')
+SITE_DOMAIN = os.getenv('SITE_DOMAIN', 'localhost')
+FRONTEND_DOMAIN = os.getenv('FRONTEND_DOMAIN', 'localhost')
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -52,6 +53,7 @@ ALLOWED_HOSTS = [
     'backend',
     'frontend',
     SITE_DOMAIN,
+    FRONTEND_DOMAIN,
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -67,6 +69,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://api.{}'.format(SITE_DOMAIN),
     'http://app.{}'.format(SITE_DOMAIN),
     'http://www.{}'.format(SITE_DOMAIN),
+    'https://{}'.format(FRONTEND_DOMAIN),
+    'https://www.{}'.format(FRONTEND_DOMAIN),
+    'https://app.{}'.format(FRONTEND_DOMAIN),
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # allow cookies in Lax mode managed in session cookie same site
