@@ -173,7 +173,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": '{}/1'.format(os.getenv('REDIS_URL', 'redis://localhost:6379')),
+        "LOCATION": '{}/promptsmith'.format(os.getenv('REDIS_URL', 'redis://localhost:6379')),
     }
 }
 
