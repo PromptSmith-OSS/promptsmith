@@ -3,6 +3,7 @@ import {Button} from "@/components/ui/button";
 import {Menu} from "lucide-react";
 import * as React from "react";
 import SidebarContent from "@/components/layout/sidebar-content";
+import SidebarDemoCard from "@/components/layout/sidebar-demo-card";
 
 
 const SidebarMobile = () => {
@@ -21,9 +22,9 @@ const SidebarMobile = () => {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col bg-muted/90 min-w-64">
           <SidebarContent />
-          {/*<div className="mt-auto p-4">*/}
-          {/*  <SidebarUpgradeCard/>*/}
-          {/*</div>*/}
+          <div className="mt-auto p-4">
+            <SidebarDemoCard/>
+          </div>
         </SheetContent>
       </Sheet>
     </div>

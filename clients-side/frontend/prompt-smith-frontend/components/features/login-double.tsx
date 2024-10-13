@@ -16,7 +16,6 @@ export function LoginDouble() {
             </p>
           </div>
           <LoginForm/>
-
           {
             IS_IN_DEMO_MODE && (
               <Card className="mx-6 p-4 text-left border-red-400">
