@@ -2,6 +2,7 @@ import {type ClassValue, clsx} from "clsx"
 import {twMerge} from "tailwind-merge"
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import {IS_IN_DEVELOPMENT} from "@/lib/constants";
 
 
 dayjs.extend(relativeTime)
@@ -15,8 +16,6 @@ dayjs.extend(relativeTime)
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
-export const IS_IN_DEVELOPMENT = process.env.NODE_ENV === 'development'
 
 export function disableConsoleLogWhenNotInDevelopment() {
   if (!IS_IN_DEVELOPMENT) {

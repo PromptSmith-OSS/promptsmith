@@ -10,3 +10,6 @@ export const PROXIED_API_URL = SITE_URL + '/api/bff';
 export const SESSION_AGE = configuration.session_age
 export const ORG_COOKIE_NAME = configuration.org_cookie_key
 export const PROJECT_COOKIE_NAME = configuration.project_cookie_key
+export const IS_IN_DEVELOPMENT = process.env.NODE_ENV === 'development'
+
+export const IS_IN_DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE !== '0'

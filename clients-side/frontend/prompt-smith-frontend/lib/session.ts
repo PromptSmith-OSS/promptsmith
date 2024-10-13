@@ -2,7 +2,8 @@ import 'server-only' // this could not be used in the client side
 import {cookies} from 'next/headers'
 import {jwtVerify, SignJWT} from 'jose'
 import {SessionPayload} from '@/lib/definitions'
-import {IS_IN_DEVELOPMENT} from "@/lib/utils";
+
+import {IS_IN_DEVELOPMENT} from "@/lib/constants";
 
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
