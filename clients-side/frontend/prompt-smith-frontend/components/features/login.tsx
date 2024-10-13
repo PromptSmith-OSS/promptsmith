@@ -71,7 +71,7 @@ const Login = () => {
 
     // fetch user project, this should not block user login
     const projects = await getProjects()
-    if (projects.length > 0) {
+    if (projects?.length) {
       setCookieProjectUUID(projects[0].uuid)
     } else {
       console.error('No projects found')
@@ -88,7 +88,7 @@ const Login = () => {
 
 
   useEffect(() => {
-    if (userResp && !userResp?.meta.is_authenticated) {
+    if (userResp && !userResp?.meta?.is_authenticated) {
       console.error('User not authenticated', error)
       alert('User authenticated failed, please try again')
     }
@@ -144,7 +144,7 @@ const Login = () => {
               />
             </CardContent>
             <CardFooter>
-              <LoadingButton className="w-full h-9" loading={loading} disabled={loading}>
+              <LoadingButton className="w-full h-9" loading={loading} disabled={loading || !!error}>
                 {
                   loading ? 'Signing... in' : 'Sign in'
                 }
