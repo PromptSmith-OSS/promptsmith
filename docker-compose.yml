@@ -33,6 +33,8 @@ services:
       - ENABLE_DJANGO_ADMIN='0'
       - SITE_DOMAIN='localhost'
       - FRONTEND_DOMAIN='localhost'
+      - USER_EMAIL='admin@localhost.lan'
+      - USER_PASSWORD='AwesomePromptsManagement'
     depends_on:
       - postgres
       - redis
