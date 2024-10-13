@@ -19,24 +19,25 @@ export function LoginDouble() {
 
           {
             IS_IN_DEMO_MODE && (
-              <Card className="mx-6 p-4 text-left ">
+              <Card className="mx-6 p-4 text-left border-red-400">
                 <p className="">
                   This is a demo instance of PromptSmith.
                 </p>
                 <ul className="text-sm list-disc mt-2 pl-2">
                   <li>
-                    Please be aware that the data you enter will be visible to other users of the instance.
+                    Please note that the data you enter will be visible to other users of the instance.
                   </li>
                   <li>
-                    Your data will be reset in a certain interval.
+                    The data for this instance will be reset at regular intervals.
                   </li>
                 </ul>
-                <p className="text-sm mt-2">
-                  You can login with the following credentials:
+                <hr className="my-1"/>
+                <p className="text-sm">
+                  <strong>You can login with the following credentials:</strong>
                   <br/>
-                  email: admin@localhost.lan
+                  email: <i>admin@localhost.lan</i>
                   <br/>
-                  password: AwesomePromptsManagement
+                  password: <i>AwesomePromptsManagement</i>
                 </p>
               </Card>
             )
