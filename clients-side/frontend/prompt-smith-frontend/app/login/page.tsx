@@ -1,18 +1,18 @@
-import Login from "@/components/features/login";
-import {IS_IN_DEMO_MODE} from "@/lib/constants";
+import {LoginDouble} from "@/components/features/login-double";
 
 
 function LoginForm() {
   return (
     <>
 
-      <Login/>
-      {
-        IS_IN_DEMO_MODE && (
-          <>
-            DEMO</>
-        )
-      }
+      {/*<Login/>*/}
+      {/*{*/}
+      {/*  IS_IN_DEMO_MODE && (*/}
+      {/*    <>*/}
+      {/*      DEMO</>*/}
+      {/*  )*/}
+      {/*}*/}
+      <LoginDouble />
     </>
   )
 }

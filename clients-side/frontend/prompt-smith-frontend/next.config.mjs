@@ -3,6 +3,9 @@
 
 
 const nextConfig = {
+    images: {
+        domains: ['localhost', 'backend', 'picsum.photos'],
+    },
     /**
      * Use rewrites to proxy requests to the API server
      * API server will not consider this as CORS request but same region request
