@@ -74,14 +74,21 @@ const SidebarContent = () => {
 
         <section>
           <span className="sr-only">Support Page</span>
-          <SidebarLinkNav href="/support">
+          <SidebarLinkNav href="https://github.com/PromptSmith-OSS/promptsmith/issues">
             <MessageSquare className="h-5 w-5 md:h-4 md:w-4"/>
             Support
           </SidebarLinkNav>
         </section>
         <section>
           <span className="sr-only">Document Page</span>
-          <SidebarLinkNav href="/doc">
+          <SidebarLinkNav href="https://github.com/PromptSmith-OSS/promptsmith/wiki">
+            <FileText className="h-5 w-5 md:h-4 md:w-4"/>
+            Documentation
+          </SidebarLinkNav>
+        </section>
+        <section>
+          <span className="sr-only">Contact</span>
+          <SidebarLinkNav href="https://promptsmith.dev/contact">
             <FileText className="h-5 w-5 md:h-4 md:w-4"/>
             Documentation
           </SidebarLinkNav>
