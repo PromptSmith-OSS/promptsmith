@@ -29,8 +29,8 @@ curl "http://localhost:3000/api/bff/api/sdk/prompt/{prompt-key}" \
      -H 'Content-Type: application/json; charset=utf-8' 
 ```
 6. Or Get prompts through SDK
-   - [Python SDK](https://github.com/PromptSmith-OSS/promptsmith-python-sdk)
-   - [Node.js SDK](https://github.com/PromptSmith-OSS/promptsmith-js-sdk)
+   - [Python SDK and Python Example](https://github.com/PromptSmith-OSS/promptsmith-python-sdk)
+   - [Node.js SDK and JS/TS Example](https://github.com/PromptSmith-OSS/promptsmith-js-sdk)
 
 
 
