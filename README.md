@@ -44,8 +44,11 @@ curl "http://localhost:3000/api/bff/api/sdk/prompt/{prompt-key}" \
 
 
 ### Features in the future
+> These features were not planned in the beginning but could be added in the future.
+
 - [ ] Prompt Compression, to reduce the cost of token usage but still maintain the quality of prompts
 - [ ] SaaS version of Prompt Smith.
+- [ ] Trace of prompt usage.
 - [ ] Webhook support.
 - [ ] Prompt Management through CLI.
 - [ ] Integration with analytics tools, such as Google Analytics, Mixpanel, etc.
