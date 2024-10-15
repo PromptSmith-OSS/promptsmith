@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {FileText, KeyIcon, MessageSquare, SquareLibrary} from "lucide-react";
+import {FileText, KeyIcon, MessageSquare, SquareLibrary, BadgeAlert} from "lucide-react";
 import * as React from "react";
 import Logo from "@/components/custom-ui/logo";
 import SidebarLinkNav from "@/components/client/sidebar-link-nav";
@@ -75,7 +75,7 @@ const SidebarContent = () => {
         <section>
           <span className="sr-only">Support Page</span>
           <SidebarLinkNav href="https://github.com/PromptSmith-OSS/promptsmith/issues">
-            <MessageSquare className="h-5 w-5 md:h-4 md:w-4"/>
+            <BadgeAlert className="h-5 w-5 md:h-4 md:w-4"/>
             Support
           </SidebarLinkNav>
         </section>
@@ -89,8 +89,8 @@ const SidebarContent = () => {
         <section>
           <span className="sr-only">Contact</span>
           <SidebarLinkNav href="https://promptsmith.dev/contact">
-            <FileText className="h-5 w-5 md:h-4 md:w-4"/>
-            Documentation
+            <MessageSquare className="h-5 w-5 md:h-4 md:w-4"/>
+            Contact
           </SidebarLinkNav>
         </section>
         {/*todo support audit logs*/}
