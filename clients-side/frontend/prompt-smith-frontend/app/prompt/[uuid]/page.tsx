@@ -10,8 +10,6 @@ const EditPage = ({params}: { params: { uuid: string }}) => {
       <PromptDetail uuid={uuid}/>
     </div>
   )
-
-
 }
 
 export default EditPage
