@@ -56,6 +56,19 @@ const LoginForm = () => {
       const response = await login({email, password})
 
       setUserResp({...response})
+
+      if (response?.meta?.is_authenticated) {
+        // fetch user project, this should not block user login
+        const projects = await getProjects()
+        if (projects?.length) {
+          setCookieProjectUUID(projects[0].uuid)
+        } else {
+          console.error('No projects found')
+        }
+        setLoading(false)
+        router.push('/prompt')
+      }
+
     } catch (e) {
       console.error(e)
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -63,16 +76,6 @@ const LoginForm = () => {
       setError(e.message as string)
       alert('Login failed') // todo display error message properly
     }
-
-    // fetch user project, this should not block user login
-    const projects = await getProjects()
-    if (projects?.length) {
-      setCookieProjectUUID(projects[0].uuid)
-    } else {
-      console.error('No projects found')
-    }
-    setLoading(false)
-    router.push('/prompt')
   }
 
 
@@ -132,7 +135,7 @@ const LoginForm = () => {
           />
         </CardContent>
         <CardFooter>
-          <LoadingButton className="w-full h-9" loading={loading} disabled={loading || !!error}>
+          <LoadingButton className="w-full h-9" loading={loading} disabled={loading}>
             {
               loading ? 'Signing... in' : 'Sign in'
             }

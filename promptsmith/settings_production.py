@@ -56,3 +56,5 @@ LOGGING = {
         },
     }
 }
+
+logging.info("load production settings")

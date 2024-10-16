@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -46,6 +47,12 @@ ENABLE_DJANGO_ADMIN = os.getenv('ENABLE_DJANGO_ADMIN', False) == '1'
 
 SITE_DOMAIN = os.getenv('SITE_DOMAIN', 'localhost')
 FRONTEND_DOMAIN = os.getenv('FRONTEND_DOMAIN', 'localhost')
+
+logging.info("load settings")
+logging.info("DEBUG: {}".format(DEBUG))
+logging.info("RUNNING_DEVELOPMENT_SERVER: {}".format(RUNNING_DEVELOPMENT_SERVER))
+logging.info("SITE_DOMAIN: {}".format(SITE_DOMAIN))
+logging.info("FRONTEND_DOMAIN: {}".format(FRONTEND_DOMAIN))
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -277,6 +284,7 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True) != 'False'
 
 # setting in local development and debug mode
 if RUNNING_DEVELOPMENT_SERVER:
+    logging.info("Running development server")
     SESSION_COOKIE_SECURE = False  # not using https
     CSRF_COOKIE_SECURE = False  # not using https
     CSRF_COOKIE_DOMAIN = 'localhost'

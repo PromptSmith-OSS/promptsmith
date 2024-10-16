@@ -10,7 +10,11 @@ const Logout = () => {
   const router = useRouter()
 
   const onLogout = async () => {
-    await logout()
+    try {
+      await logout()
+    } catch (e) {
+      console.error(e)
+    }
     router.push('/')
 
   }
