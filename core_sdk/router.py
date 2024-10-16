@@ -6,13 +6,14 @@ from django.db import models
 # import 404 error
 from django.http import Http404
 from django.shortcuts import aget_list_or_404
+from django.views.decorators.cache import cache_page
 from ninja import Router
+from ninja.decorators import decorate_view
 from ninja.throttling import AnonRateThrottle, AuthRateThrottle
 
-from core_sdk.auth import ProjectKeyAuthentication as SDKAuthBearer
 from core.models import PromptVariant, PromptVersion
+from core_sdk.auth import ProjectKeyAuthentication as SDKAuthBearer
 from core_sdk.schema import SDKPromptSchema
-from decimal import Decimal
 
 sdk_router = Router(
     tags=['SDK'],
@@ -57,6 +58,7 @@ def ping(request):
 
 
 @sdk_router.get('/prompt/{prompt_key}', response=SDKPromptSchema)
+@decorate_view(cache_page(5)) # cache for 5 seconds
 async def get_prompt(request, prompt_key: str, distinct_id: Optional[str] = None, llm_model_name: Optional[str] = None):
     """
     Get the prompt by prompt key
