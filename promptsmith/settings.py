@@ -49,10 +49,10 @@ SITE_DOMAIN = os.getenv('SITE_DOMAIN', 'localhost')
 FRONTEND_DOMAIN = os.getenv('FRONTEND_DOMAIN', 'localhost')
 
 logging.info("load settings")
-logging.info("DEBUG: {}".format(DEBUG))
-logging.info("RUNNING_DEVELOPMENT_SERVER: {}".format(RUNNING_DEVELOPMENT_SERVER))
-logging.info("SITE_DOMAIN: {}".format(SITE_DOMAIN))
-logging.info("FRONTEND_DOMAIN: {}".format(FRONTEND_DOMAIN))
+print("DEBUG: {}".format(DEBUG))
+print("RUNNING_DEVELOPMENT_SERVER: {}".format(RUNNING_DEVELOPMENT_SERVER))
+print("SITE_DOMAIN: {}".format(SITE_DOMAIN))
+print("FRONTEND_DOMAIN: {}".format(FRONTEND_DOMAIN))
 
 ALLOWED_HOSTS = [
     'localhost',

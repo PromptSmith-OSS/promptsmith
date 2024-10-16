@@ -57,4 +57,4 @@ LOGGING = {
     }
 }
 
-logging.info("load production settings")
+print("load production settings")
