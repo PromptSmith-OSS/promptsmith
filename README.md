@@ -13,6 +13,9 @@ A prompt engineering solution to manage Gen AI prompts easily.
   - Variants
   - Versioning (database level)
 
+> - [PromptSmith Intro](https://www.youtube.com/watch?v=IDMKOcQxICs)
+> This is a video to demonstrate the features of Prompt Smith
+
 ## How to use
 
 1. Start the service locally `docker-compose up --build`
