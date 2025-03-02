@@ -18,11 +18,11 @@ from django.conf import settings
 from django.contrib import admin
 from django.middleware.csrf import get_token
 from django.urls import path, include, re_path
+from django.views.decorators.csrf import csrf_exempt
 
 from django.http import JsonResponse
 
 from .api import api
-
 
 def get_csrf_token_view(request, client):
     # Ensure the CSRF token is set

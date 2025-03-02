@@ -81,7 +81,9 @@ const LoginForm = () => {
 
   useEffect(() => {
     setError(null)
-    init()
+    init().then(() => {
+      console.log('init csrf')
+    })
   }, [])
 
 

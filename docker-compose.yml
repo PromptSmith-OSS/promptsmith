@@ -35,6 +35,8 @@ services:
       - FRONTEND_DOMAIN='localhost'
       - USER_EMAIL='admin@localhost.lan'
       - USER_PASSWORD='AwesomePromptsManagement'
+      - SITE_DOMAIN='localhost:8000'
+      - FRONTEND_DOMAIN='localhost:3000'
     depends_on:
       - postgres
       - redis

@@ -92,10 +92,9 @@ SESSION_COOKIE_AGE = SHARED_CONFIGURATION.get('session_age', 60 * 60 * 24 * 7)  
 
 CSRF_USE_SESSIONS = False  # not use session but use cookies for csrf, to simplify the frontend authentication
 CSRF_COOKIE_HTTPONLY = False  # see why here, https://docs.djangoproject.com/en/5.1/ref/settings/#csrf-cookie-httponly
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', '0') == '1'  # use secure cookie when you set it up a https
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
-CSRF_COOKIE_DOMAIN = '.{}'.format(
-    SITE_DOMAIN) if SITE_DOMAIN != 'localhost' else 'localhost'  # allow from subdomain with .
+CSRF_COOKIE_DOMAIN = '.{}'.format(FRONTEND_DOMAIN)  # allow from subdomain with .
 CSRF_COOKIE_SAMESITE = 'Strict'  # default
 CSRF_COOKIE_AGE = 60 * 60 * 24 * 30  # 365 days default from django, we use 30 days here
 

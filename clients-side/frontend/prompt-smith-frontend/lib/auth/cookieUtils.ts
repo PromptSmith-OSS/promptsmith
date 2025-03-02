@@ -1,4 +1,5 @@
 import {ORG_COOKIE_NAME, PROJECT_COOKIE_NAME, SESSION_AGE} from "@/lib/constants"; // shared configuation file between frontend and backend
+import {init} from "./authAPIWrapper";
 
 
 /**
@@ -38,5 +39,18 @@ export const setCookieOrgUUID = (uuid: string) => {
 
 
 export function getCSRFToken() {
-  return getCookie('csrftoken')
+  const csrfCookie = getCookie('csrftoken')
+  if (csrfCookie) {
+    return csrfCookie
+  } else {
+    console.error('CSRF cookie not found')
+    init().then(
+      () => {
+        return getCookie('csrftoken')
+      },
+      (e) => {
+        console.error('CSRF cookie refresh 2nd time failed', e)
+      }
+    )
+  }
 }
