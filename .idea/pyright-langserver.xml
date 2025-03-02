@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.insyncwithfoo.pyrightls.configuration.project.ConfigurationService">
+    <option name="diagnosticMode" value="WORKSPACE" />
+    <option name="projectExecutable" value="$USER_HOME$/.local/bin/pyright-langserver" />
+  </component>
+</project>

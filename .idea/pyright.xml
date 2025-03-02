@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectConfigurations">
+    <option name="projectConfigurationFile" value="$PROJECT_DIR$/pyrightconfig.json" />
+  </component>
+</project>
